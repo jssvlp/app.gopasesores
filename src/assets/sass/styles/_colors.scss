@@ -1,0 +1,59 @@
+
+$theme: 'sky';
+
+
+
+@function  primary_color() {
+    @if $theme == 'sky' {
+       @return  #275ed3;
+    }
+    @if $theme == 'fire' {
+        @return #c81912;
+    }
+    @if $theme == 'dark' {
+        @return #414141;
+    }
+}
+
+@function  s_color() {
+    @if $theme == 'sky' {
+       @return  #ffffff;
+    }
+    @if $theme == 'fire' {
+        @return #ffffff;
+    }
+    @if $theme == 'dark' {
+        @return #525252;
+    }
+}
+
+
+@function  t_color() {
+    @if $theme == 'sky' {
+       @return  #a6acb1;
+    }
+    @if $theme == 'fire' {
+        @return #f64b3c;
+    }
+    @if $theme == 'dark' {
+        @return #313131;
+    }
+}
+
+@mixin transform-y($value) {
+    -webkit-transform: translateY($value);
+        -ms-transform: translateY($value);
+       -moz-transform: translateY($value);
+         -o-transform: translateY($value);
+            transform: translateY($value);
+}
+
+
+$p_color: primary_color();
+$s_color: s_color();
+$t_color: t_color();
+$xl: 87.5em; // 4k and hi-res desktop
+$lg: 60em; // 1080 and hi-res laptops
+$med: 40em; // hi-res tablets and low-res laptops
+$sm: 28em; // mobile and low-res tablets
+$xs: 20em; // mobile only
