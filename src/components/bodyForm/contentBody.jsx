@@ -3,7 +3,7 @@ import {
     Grid,
   } from "react-bootstrap";
   import Select from "react-select";
-  import Body from '../../components/bodyForm/body'
+  import Body from './body'
   import {observer} from "mobx-react";
   import Button from "components/CustomButton/CustomButton.jsx";
 
@@ -50,14 +50,14 @@ class createBody extends Component {
         return (
             <div>
                <form>
-                   <Grid fluid>
-                      <Body fields={this.props.fields || []} errors={this.props.errors} onChange={this.props.setValue||{}} fieldValues={this.state.values}/>
+                   <Grid fluid style={{minHeight:200}}>
+                      <Body fields={this.props.fields || []}  alertLoading={this.props.alertLoading} alertMessage={this.props.alertMessage} view={this.props.view} errors={this.props.errors} onChange={this.props.setValue||{}} fieldValues={this.state.values}/>
                       
                    </Grid>
                    {this.props.method&&(
                         <div style={{paddingRight:'1%',}}>
                             <Button
-                                style={{postion:'relative',marginLeft:'2%'}}
+                                style={{postion:'relative',marginLeft:'2%',marginTop: this.props.showSteps===false?'-4%':''}}
                                 bsStyle="success"
                                 fill
                                 wd

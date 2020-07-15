@@ -6,7 +6,8 @@ import Card from "components/Card/Card.jsx";
 import Select from "react-select";
 import Checkbox from "components/CustomCheckbox/CustomCheckbox.jsx";
 import Skeleton from "react-loading-skeleton";
-
+import Datetime from "react-datetime";
+  import moment from 'moment';
 export default class Datatable extends Component {
 
 
@@ -17,7 +18,8 @@ export default class Datatable extends Component {
       pageSelect: 1,
       fistPage: 1,
       lastPage: 1,
-      itemsPage:[]
+      itemsPage:[],
+      filter: false
     }
   }
 
@@ -79,6 +81,7 @@ export default class Datatable extends Component {
           );
     }
     render() {
+      console.log('this.props.tdArray', this.props.tdArray)
         return (
             <Grid fluid>
             <Row>
@@ -99,34 +102,61 @@ export default class Datatable extends Component {
                     content={
                     <div style={{padding: 2}}>
 
-                    {this.props.deleteMethod&& this.props.items.length>0&&(
-                      <OverlayTrigger placement="top" overlay={ <Tooltip id="remove">Eliminar Registro</Tooltip>}>
-                        <Button simple bsStyle="danger" onClick={()=>this.props.deleteMethod()} bsSize="lg">
-                          <i className="fa fa-trash" />
-                        </Button>
-                      </OverlayTrigger>
-                    )}
+                    
 
-                    <div style={{ justifyContent: 'flex-end', display: 'flex', paddingRight:20}}>
-
-                     <Button simple bsStyle="default"  bsSize="md">
-                      <i className="fa fa-filter" />
-                    </Button>
-
-                    {this.props.loading&&(<Skeleton  height={30} width={80}/>)}
-                    {!this.props.loading&&(
-                      <select onChange={(e)=>this.props.changeFilterValue(e)} className="form-control" align="left" style={{width:100, height:35}}>
-                      <option value={"Filtrar"}>Filtrar</option>
-                      {this.props.filterDataSelect.length>0&&
-                        this.props.filterDataSelect.map((data,i)=>(
-                          <option value={data.value}>{data.name}</option>
-                        )
+                    <div >
+                      <div style={{ justifyContent: 'space-between ', display: 'flex',  flexSelf:'felx-end'}}>
+                        <div>
+                        {this.props.deleteMethod&& this.props.items.length>0&&(
+                          <OverlayTrigger placement="top" overlay={ <Tooltip id="remove">Eliminar Registro</Tooltip>}>
+                            <Button simple bsStyle="danger" onClick={()=>this.props.deleteMethod()} bsSize="xl">
+                              <i className="fa fa-trash" style={{fontSize: 20}} />
+                            </Button>
+                          </OverlayTrigger>
+                        )}
+                        </div>
+                       
+                        {this.props.filter&&(
+                          <div  style={{ justifyContent: 'space-around', display: 'flex', paddingRight:20}}>
+                          <Button bsStyle="dark"  style={{height:35}} onClick={()=>this.setState({filter:!this.state.filter})}><i className="fa fa-filter"  />{"Filtros"}</Button>
+                            &ensp;
+                            {this.props.loading&&(<Skeleton  height={30} width={180}/>)}
+                            {!this.props.loading&&( <input  className="form-control" align="left" style={{width:300, height:35}} onChange={(e)=> this.props.searchFilter(e)}   placeholder="Buscar..." name="serchCompanies"  type="serch" />)}
+                   
+                        </div>
+                        )}
+                        
+                      </div>
+                    </div>
+                    <div style={{ justifyContent: 'flex-start', display: 'flex', paddingLeft:20}}>
+                    {this.state.filter&&
+                      this.props.filterDate&&(
+                        <div style={{ justifyContent: 'space-around', display: 'flex',}}>
+                          <div>
+                            <label>Desde</label>
+                            <Datetime 
+                            timeFormat={false} 
+                            name={"dateStart"} 
+                            inputProps={{ placeholder: 'Desde' }} 
+                            onChange={(e)=> this.props.filterDate(moment(e).format('YYYY-MM-DD'),'dateStart')} 
+                            defaultValue={new Date()}  
+                            />
+                          </div>
+                          &ensp;
+                          &ensp;
+                          <div>
+                            <label>Hasta</label>
+                            <Datetime 
+                            timeFormat={false} 
+                            name={"dateEnd"} 
+                            inputProps={{ placeholder: 'Hasta'}} 
+                            onChange={(e)=>  this.props.filterDate(moment(e).format('YYYY-MM-DD'),'dateEnd')} 
+                            defaultValue={new Date()}  
+                            />
+                          </div>
+                          
+                        </div>
                       )}
-                      </select>
-                    )}
-                    &nbsp;
-                    {this.props.loading&&(<Skeleton  height={30} width={180}/>)}
-                    {!this.props.loading&&( <input  className="form-control" align="left" style={{width:300, height:35}} onChange={(e)=> this.props.searchFilter(e)}   placeholder="Buscar..." name="serchCompanies"  type="serch" />)}
                     </div>
                     {this.props.loading&&( <Table striped hover responsive><Skeleton  height={300} width={'100%'}/></Table>)}     
                    {!this.props.loading&&(
@@ -144,7 +174,7 @@ export default class Datatable extends Component {
                           {this.props.tdArray.data&&this.props.tdArray.data.map((prop, key) => {
                               return (
                               <tr key={key} style={{cursor:'pointer'}}>
-                              <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key}/></td>
+                              <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key+prop[0]+prop[1]}/></td>
                               <td onClick={()=>this.props.openDetail&&this.props.openDetail(prop[0])} >{key+1}</td>
                                   {prop.map((item, i) => {
                                     
@@ -152,6 +182,7 @@ export default class Datatable extends Component {
                                       return <td  onClick={()=>this.props.openDetail&&this.props.openDetail(prop[0])} key={i}><img src={item} alt="logo" className="img-fluid" width="40"/></td>
                                     }
                                     if(i===0) return;
+                                    if(prop.length-1===i) return  <td key={i}>{item}</td>;
                                     return <td  onClick={()=>this.props.openDetail&&this.props.openDetail(prop[0])} key={i}>{item}</td>
                                   
                                   })}

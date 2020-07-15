@@ -2,7 +2,6 @@ import { observable, computed } from "mobx";
 import React, { Component } from "react";
 import { Clients } from "../../services/index";
 import {ClientsForm} from '../../jsonForms/index'
-import Switch from "react-bootstrap-switch";
 
     class ClientController  extends Component  {
 
@@ -13,6 +12,7 @@ import Switch from "react-bootstrap-switch";
     @observable clients = []
     @observable clientById = []
     @observable allUsers = []
+    @observable isActive = false
     @observable typeClient = "people"
 
 
@@ -52,6 +52,29 @@ import Switch from "react-bootstrap-switch";
         this.typeClient = type;
     }
 
+    async  getActivitiesEconomic() {
+        const result = await Clients.getActivitiesEconomic();
+        let positions = result.data.data
+        console.log('positions', positions)
+        let array = []
+        for (const i in positions) {
+            array.push({label: positions[i].name,value:positions[i].id})
+        }
+        return array;
+    }
+
+    async initValues(){
+        const fields = this.fields.company.fields;
+        const activity = await this.getActivitiesEconomic();
+
+        for (const i in fields) {
+            if(fields[i].name ==='economic_activity_id'){
+                fields[i].value = activity;
+            }
+        }
+
+    }
+
     async getClientById(id){
         const result = await Clients.getClientsById(id);
         if(result.data.success && result.status ===200) this.clientById = result.data.client
@@ -66,7 +89,8 @@ import Switch from "react-bootstrap-switch";
 
 
     async getAllClients(page){
-        const result = await Clients.getClients(page);
+        await this.initValues();
+        const result = await Clients.getClients(page||1);
         if(result.status === 200 && result.data){
             let data = result.data.data;
             let json = [];
@@ -79,20 +103,49 @@ import Switch from "react-bootstrap-switch";
                     data[i].document_number, 
                     data[i].type==="people"?'Persona':'Empresa', 
                     data[i].email,
-                    <Switch
-                    onText="Activo"
-                    offText="Inactivo"
-                    defaultValue={data[i].status === "Prospecto"}/>
+                    data[i].created_at,
                 ])
             }
             
             result.data.data = json
             this.clients =  result.data
-            console.log('this.clients', result.data)
+            console.log('this.clients all clients%%%%%', result.data)
 
         }else{
             this.clients = []
         }
+    }
+    
+    async activeClicent(isActive,id){
+        const result = await Clients.activeClient(isActive,id);
+        return result.data
+    }
+    async filterClient(field,page,body){
+        const result = await Clients.filterDateClient(field,page,body);
+        if(result.status === 200 && result.data){
+            console.log('!!!!!!!!!result.data.data', result.data.data)
+            let data = result.data.data;
+            let json = [];
+            for (const i in data) {
+                json.push([
+                    data[i].id, 
+                    data[i].name, 
+                    data[i].cell_phone_number,
+                    data[i].document_number, 
+                    data[i].type==="people"?'Persona':'Empresa', 
+                    data[i].email,
+                    data[i].created_at,
+                ])
+            }
+            
+            result.data.data = json
+            this.clients =  result.data
+            console.log('this.clients filter data %%%%%%%', result.data)
+
+        }else{
+            this.clients = []
+        }
+    
     }
 
     async saveClient(body){

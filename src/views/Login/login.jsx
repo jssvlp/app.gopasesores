@@ -86,6 +86,7 @@ const styles = {
       const result = await users.loginServices({email:this.state.email,password:this.state.password})
       if(result.access_token){
           localStorage.setItem("token-gop",result.access_token)
+          localStorage.setItem("name-gop",result.user_data.username)
           window.location.href = '/admin/dashboard'
       }else{
           this.successDelete(result.error,"Favor de verificar los datos","error");

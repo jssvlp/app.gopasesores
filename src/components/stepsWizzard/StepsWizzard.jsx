@@ -20,6 +20,7 @@ import StepZilla from "react-stepzilla";
 import { Grid, Row, Col } from "react-bootstrap";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Card from "components/Card/Card.jsx";
+import StepWizard from 'react-step-wizard';
 
 
 class StepsWizzard extends Component {
@@ -30,7 +31,8 @@ class StepsWizzard extends Component {
 
   render() {
 
-    const {steps,title,subtitle,navigation} = this.props
+    const {steps,title,subtitle,showNavigation,showSteps,stepsNavigation} = this.props
+    console.log('steps!!!!', steps)
     return (
       <div className="">
         <Grid fluid>
@@ -47,6 +49,9 @@ class StepsWizzard extends Component {
                 content={
                   <StepZilla
                     steps={steps}
+                    showNavigation={showNavigation}
+                    showSteps={showSteps}
+                    stepsNavigation={stepsNavigation}
                     nextButtonCls="btn btn-prev btn-info btn-fill pull-right btn-wd"
                     backButtonCls="btn btn-next btn-default btn-fill pull-left btn-wd"
                     nextButtonText={"Siguiente"}

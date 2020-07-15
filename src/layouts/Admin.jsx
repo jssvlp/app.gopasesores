@@ -31,7 +31,8 @@ import image from "assets/img/full-screen-image-3.jpg";
 // dinamically create dashboard routes
 import routes from "routes.js";
 import SweetAlert from "react-bootstrap-sweetalert";
-
+import Select from "react-select";
+import Protect from './protect';
 // style for notifications
 import { style } from "variables/Variables.jsx";
 
@@ -180,16 +181,21 @@ class Dashboard extends Component {
     this.setState({
       alert: (
         <SweetAlert
-          style={{ display: "block", marginTop: "-100px" }}
+          style={{ display: "block",paddingBottom:100 }}
           title={title}
           onCancel={() => this.hideAlert(false)}
           showConfirm={false}
         >
-          <select className="form-control" onChange={(e)=>[method(e.target.value), this.hideAlert(false)]}>
-                <option selected disabled>Seleccione</option>
-                <option value="people">Persona</option>
-                <option value="company">Empresa</option>
-            </select>
+            <Select
+            className="react-select primary"
+            classNamePrefix="react-select"
+            onChange={(e)=> [method(e.value), this.hideAlert(false)]}
+            options={[
+              {label: 'Persona',value:'people'},
+              {label: 'Empresa',value:'company'},
+            ]}
+            placeholder={"Seleccione el tipo"}
+            />
         </SweetAlert>
       )
     });
@@ -217,19 +223,23 @@ class Dashboard extends Component {
       }
       if (prop.layout === "/admin") {
         return (
-          <Route
-            path={prop.layout + prop.path}
-            key={key}
-            render={routeProps => (
-              <prop.component
-                {...routeProps}
-                handleClick={this.handleNotificationClick}
-                alertMessage={this.alertMessage}
-                htmlAlert={this.htmlAlert}
-                alertLoading={this.alertLoading}
-              />
-            )}
-          />
+         
+            <Route
+              path={prop.layout + prop.path}
+              key={key}
+              render={routeProps => ( 
+              <Protect path={prop.path} layout={prop.layout }>
+                <prop.component
+                  {...routeProps}
+                  handleClick={this.handleNotificationClick}
+                  alertMessage={this.alertMessage}
+                  htmlAlert={this.htmlAlert}
+                  alertLoading={this.alertLoading}
+                />
+              </Protect>
+                
+              )}
+            />
         );
       } else {
         return null;

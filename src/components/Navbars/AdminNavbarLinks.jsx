@@ -25,8 +25,26 @@ import {
   FormControl,
   InputGroup
 } from "react-bootstrap";
+import { inject,observer} from "mobx-react";
+import { logout } from "services/collections/users";
 
+@inject('users')
+@observer
 class HeaderLinks extends Component {
+
+
+
+
+  async logout(){
+    const {users} = this.props
+    let token = localStorage.getItem('token-gop')
+    const result = await users.logout(token)
+    if(result.success){
+      localStorage.removeItem('token-gop')
+      window.location.href = '#/auth/login-page'
+    }
+    console.log('Error logout =======', result)
+  }
   render() {
     return (
       <div>
@@ -115,9 +133,9 @@ class HeaderLinks extends Component {
             <MenuItem eventKey={4.4}>
               <i className="pe-7s-lock" /> Lock Screen
             </MenuItem>
-            <MenuItem eventKey={4.5}>
+            <MenuItem eventKey={4.5} onClick={()=>this.logout()}>
               <div className="text-danger">
-                <i className="pe-7s-close-circle" /> Log out
+                <i className="pe-7s-close-circle"  /> Cerrar Sesion
               </div>
             </MenuItem>
           </NavDropdown>

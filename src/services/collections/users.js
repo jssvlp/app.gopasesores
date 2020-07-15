@@ -41,8 +41,12 @@ function forgetPassword(id) {
 
 function getUsers() {
 
-    return api.get('/users')
+    return api.get('/auth/users')
 
+}
+
+function logout(token){
+    return api.post('/auth/logout',token)
 }
 
 
@@ -52,5 +56,6 @@ export {
     updateUser,
     getUsersById,
     getUsers,
-    forgetPassword
+    forgetPassword,
+    logout
 }

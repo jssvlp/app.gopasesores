@@ -19,7 +19,10 @@ import Buttons from "views/Components/Buttons.jsx";
 import GridSystem from "views/Components/GridSystem.jsx";
 import Login from 'views/Login/login'
 import Client from 'views/Clients/clients'
-  // import Panels from "views/Components/Panels.jsx";
+import Employees from 'views/Employees/employees'
+import Security from 'views/security/security'
+
+// import Panels from "views/Components/Panels.jsx";
   // import SweetAlert from "views/Components/SweetAlertPage.jsx";
   // import Notifications from "views/Components/Notifications.jsx";
   // import Icons from "views/Components/Icons.jsx";
@@ -38,6 +41,20 @@ var routes = [
     name: "Clientes",
     icon: "pe-7s-user",
     component: Client
+  },
+  {
+    path: "/employees",
+    layout: "/admin",
+    name: "Empleados",
+    icon: "pe-7s-users",
+    component: Employees
+  },
+  {
+    path: "/security",
+    layout: "/admin",
+    name: "Seguridad",
+    icon: "pe-7s-unlock",
+    component: Security
   },
   
   {

@@ -214,7 +214,7 @@ class Sidebar extends Component {
                 }}
               >
                 <span>
-                  Tania Andrew
+                  {localStorage.getItem("name-gop")||'Ningun nombre'}
                   <b
                     className={
                       this.state.openAvatar ? "caret rotate-180" : "caret"

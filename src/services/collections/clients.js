@@ -16,6 +16,15 @@ function getClientsById(id) {
 
 }
 
+function getActivitiesEconomic(id) {
+
+    return api.get('/economicActivities')
+
+}
+
+
+
+
 
 function saveClient(body) {
 
@@ -35,6 +44,19 @@ function updateClient(id,body) {
 
 }
 
+function activeClient(isActive,id) {
+
+    return api.put('/clients/'+id+'/'+isActive)
+
+}
+
+function filterDateClient(field,page,body) {
+    console.log('field,body', field,body)
+    return api.post('/clients/filterby/'+field+'?per_page='+page,body)
+    
+
+}
+
 
 
 export {
@@ -42,5 +64,8 @@ export {
     saveClient,
     getClientsById,
     deleteClient,
-    updateClient
+    updateClient,
+    filterDateClient,
+    activeClient,
+    getActivitiesEconomic
 }

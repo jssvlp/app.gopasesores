@@ -6,7 +6,7 @@ import { Users } from "../../services/index";
     @observable model = []
     @observable user = []
     @observable allUsers = []
-
+    @observable isAuthUser = false
 
     @computed
     get modelUser(){
@@ -31,14 +31,27 @@ import { Users } from "../../services/index";
         return array
     }
 
+    @computed
+    get getIsAuth(){
+        return this.isAuthUser;
+    }
+
+    async logout(token){
+        const result = await Users.logout(token)
+        return result.data
+    }
+
     
 
-
+    isAuth(status){
+        if(status === 401) this.isAuthUser = false;
+        if(status !== 401) this.isAuthUser = true;
+    }
 
     async loginServices(body){
         
         const result = await Users.login(body)
-
+        
         if(result.status !== 200 && !result.data) this.user = [];
         if(result.status === 200 && result.data) this.user = result.data
         
@@ -48,9 +61,8 @@ import { Users } from "../../services/index";
 
 
     async getAllUsers(){
-        
         const result = await Users.getUsers();
-        
+        console.log('result.state', result)
         if(result.status === 200 && result.data){
             this.allUsers = result.data.users
             
@@ -63,6 +75,7 @@ import { Users } from "../../services/index";
     async forgetPassword(id){
         const result = await Users.forgetPassword(id);
         if(result.status === 200 && result.data){
+            
             console.log('resilt.data', result.data)
            return result.data.result
             

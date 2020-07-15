@@ -5,7 +5,7 @@ $theme: 'sky';
 
 @function  primary_color() {
     @if $theme == 'sky' {
-       @return  #275ed3;
+       @return  #053e7a;
     }
     @if $theme == 'fire' {
         @return #c81912;

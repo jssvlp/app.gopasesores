@@ -1,13 +1,9 @@
 import React, { Component } from 'react'
 import Datatable from '../../components/DataTable/Datatable'
-import Modal from '../../components/Modal/Modal'
-import ClientBody from './clientBody'
+import ClientBody from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
-import Wind from '../Forms/Wizard/Wizard';
-import Step1 from '../Forms/Wizard/Step1'
-import Skeleton from "react-loading-skeleton";
-
+import moment from 'moment';
 @inject('clients')
 @observer
 class clients extends Component {
@@ -34,9 +30,12 @@ class clients extends Component {
                 contact_info:[],
                 company:[]
             },
+            client_id:null,
             create:false,
             update:false,
             seletectedItems:[],
+            dateStart:moment().format('YYYY-MM-DD'),
+            dateEnd: moment().format('YYYY-MM-DD'),
         }
         this.changePage = this.changePage.bind(this);
         this.openModal = this.openModal.bind(this);
@@ -48,6 +47,7 @@ class clients extends Component {
         this.updateClient = this.updateClient.bind(this);
         this.deleteClient = this.deleteClient.bind(this);
         this.selectedItem = this.selectedItem.bind(this);
+        this.filterDate = this.filterDate.bind(this);
     }
 
      componentDidMount(){
@@ -84,7 +84,7 @@ class clients extends Component {
 
         this.setValue("type",type,null)
         clients.changeClient(type)
-
+console.log('clients.getTypeClient', clients.getTypeClient)
         this.setState({
             create: !this.state.create,
             body:{
@@ -103,9 +103,12 @@ class clients extends Component {
 
    
 
-    setValue(name,value,modelName,mask = null){
+   async setValue(name,value,modelName,mask = null){
+        const {clients} = this.props
         let body = this.state.body;
-
+        if(name ==='status' && this.state.client_id){
+           await clients.activeClicent(value==='Cliente'?'activate':'deactivate', this.state.client_id)
+        }
         if(modelName ===null&&body){
             body[name] =value
             this.setState({body:body,errors:this.setErrors(name,value,modelName,mask)})
@@ -113,7 +116,8 @@ class clients extends Component {
         }
         
         let model = body[modelName]
-        console.log('model', modelName)
+        console.log('modelName', modelName)
+        console.log('name', name)
         model[name] = value
         body[modelName] = model
         this.setState({body:body,errors:this.setErrors(name,value,modelName,mask)})
@@ -146,7 +150,6 @@ class clients extends Component {
             
                for (const key in value) {
                    let model = errors[i]
-                   console.log('i', key,value)
                     value&&(model[key] = false)
                }
                continue;
@@ -164,7 +167,6 @@ class clients extends Component {
         const {clients} = this.props
         let body = this.state.body;
         const result = await clients.saveClient(body);
-        console.log('result', result)
         if(result.success){
             this.props.alertMessage('Se ha creado el cliente','Puede verificar en la lista el nuevo cliente registrado','success')
             this.setState({
@@ -179,9 +181,25 @@ class clients extends Component {
     }
 
 
+    async filterDate(date,name){
+        const {clients} = this.props
+        this.setState({
+            [name]:date
+        });
+        let body = {
+            filter_values:[
+                this.state.dateStart,
+                this.state.dateEnd,
+            ]
+        }
+        await clients.filterClient('created_at',10,body);
+
+
+    }
+
+
     async openDetail(id){
         const {clients} = this.props;
-        console.log('id', id)
         this.props.alertLoading("Espere un momento....",true)
         await clients.getClientById(id);
 
@@ -194,7 +212,7 @@ class clients extends Component {
         clients.clientByIdInfo.contact&& delete clients.clientByIdInfo.contact.created_at
         clients.clientByIdInfo.user.password = ""
         this.state.errors['user']['password'] = false
-        console.log('object', clients.clientByIdInfo.contact)
+
         let body ={
             type:type,
             people:clients.clientByIdInfo.people,
@@ -203,12 +221,14 @@ class clients extends Component {
             user: clients.clientByIdInfo.user?clients.clientByIdInfo.user:[],
             comment: clients.clientByIdInfo.comment?clients.clientByIdInfo.comment:"",
             authorize_data_processing:clients.clientByIdInfo.authorize_data_processing ===1?true:false,
+            status:clients.clientByIdInfo.status,
             client_id:id
         }
         this.setState({
             body:body,
             create:true,
-            update:true
+            update:true,
+            client_id:id
         })
         clients.changeClient(type)
         this.verifyErrors();
@@ -226,7 +246,6 @@ class clients extends Component {
         const {clients} = this.props
         let body = this.state.body;
         const result = await clients.updateClient(body)
-        console.log('result', result)
         if(result.success){
             this.props.alertMessage('Se ha actualizado el cliente','Puede verificar en la lista el cliente actualizado','success')
             this.setState({
@@ -240,7 +259,6 @@ class clients extends Component {
 
     selectedItem(id,checkbox){
         let items = this.state.seletectedItems;
-        console.log('checkbox.target.checked', checkbox.target.checked)
         checkbox.target.checked?items.push(id) : items = items.filter(e=>e !==id);
         this.setState({
             seletectedItems:items
@@ -253,7 +271,6 @@ class clients extends Component {
         let allErrorsDelete=[]
         this.props.alertLoading("Eliminando Espere un momento....",true)
         for (const i in items) {
-            console.log('items[i]', items[i])
             let result = await clients.deleteClientById(items[i]);
             !result.success&& allErrorsDelete.push(items[i])
            
@@ -286,7 +303,6 @@ class clients extends Component {
     render() {
         const {clients} = this.props
         
-        console.log('this.state.type', this.state)
         const steps = [
             { 
                 name: clients.getTypeClient ==="people"? clients.fields.people.title:clients.fields.company.title, 
@@ -298,6 +314,7 @@ class clients extends Component {
                             errors={clients.getTypeClient ==="people"? this.state.errors.people:this.state.errors.company}
                             alertMessage={this.props.alertMessage}
                             
+                            view={this.state.update?'update':'create'}
                             method={this.state.update&&this.updateClient}
                             buttonName={"Actualizar"} 
                             /> 
@@ -310,6 +327,7 @@ class clients extends Component {
                             fields={clients.fields.contact_info.fields} 
                             fieldValues={this.state.body} 
                             setValue={this.setValue}
+                            view={this.state.update?'update':'create'}
                             errors={this.state.errors.contact_info}
                             alertMessage={this.props.alertMessage} 
                             method={this.state.update&&this.updateClient}
@@ -324,6 +342,7 @@ class clients extends Component {
                             fieldValues={this.state.body} 
                             setValue={this.setValue}
                             errors={this.state.errors.user}
+                            view={this.state.update?'update':'create'}
                             alertMessage={this.props.alertMessage} 
                             method={this.state.update?this.updateClient:this.saveClient}
                             buttonName={this.state.update?"Actualizar":"Guardar"}
@@ -346,16 +365,15 @@ class clients extends Component {
                     thArray={clients.headers} 
                     tdArray={clients.getDataClients}
                     loading={clients.loading}
+                    view={this.state.update?'update':'create'}
                     selectedItem={this.selectedItem}
                     items={this.state.seletectedItems} 
                     deleteMethod={this.deleteClient}
-                    title={"Clientes"}
                     changePage={this.changePage}
                     create={this.openDialog}
                     openDetail={this.openDetail}
-                    searchFilter={()=>{}}
-                    changeFilterValue={()=>{}}
-                    filterDataSelect={()=>{}}
+                    filterDate={this.filterDate}
+                    filter={true}
                     titleBtn={"Nuevo"}
                     />
                 )}

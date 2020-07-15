@@ -34,7 +34,7 @@ const headers = [
     "Cedula / RNC",
     "Tipo",
     "Correo",
-    "Estado"
+    'Fecha de Registro',
 ];
 
 const fieldsPages = {
@@ -47,6 +47,7 @@ const fieldsPages = {
                 value:'', 
                 type:'text',
                 mask:'',
+                display:['create','update'],
                 model:'people', 
                 col:6
             },
@@ -57,6 +58,7 @@ const fieldsPages = {
                 type:'text',
                 mask:'',
                 model:'people',
+                display:['create','update'],
                 col:6},
             {
                 label: 'Tipo de Documento', 
@@ -70,6 +72,7 @@ const fieldsPages = {
                 type:'select',
                 mask:'',
                 model:'people',
+                display:['create','update'],
                 col:6
             },
             {
@@ -79,6 +82,7 @@ const fieldsPages = {
                 type:'text',
                 mask:'999-9999999-9',
                 model:'people',
+                display:['create','update'],
                 col:6
             },
             {
@@ -87,6 +91,7 @@ const fieldsPages = {
                 value:'', 
                 type:'date',
                 model:'people',
+                display:['create','update'],
                 col:6
             },
             {
@@ -94,6 +99,7 @@ const fieldsPages = {
                 name:'document_expedition_date', 
                 value:'', 
                 type:'date',
+                display:['create','update'],
                 mask:'',
                 model:'people',
                 col:6
@@ -104,6 +110,7 @@ const fieldsPages = {
                 value:'', 
                 type:'text',
                 model:'people',
+                display:['create','update'],
                 col:4
             },
             {
@@ -115,6 +122,7 @@ const fieldsPages = {
                 ], 
                 type:'select',
                 model:'people',
+                display:['create','update'],
                 mask:'',
                 col:4
             },
@@ -122,6 +130,7 @@ const fieldsPages = {
                 label: 'Fecha de Nacimiento', 
                 name:'birth_date', 
                 value:'01/01/1999', 
+                display:['create','update'],
                 type:'date',
                 model:'people',
                 mask:'',
@@ -139,6 +148,7 @@ const fieldsPages = {
                 ], 
                 type:'select',
                 model:'people',
+                display:['create','update'],
                 mask:'',
                 col:4
             },
@@ -148,6 +158,7 @@ const fieldsPages = {
                 value:'', 
                 type:'number',
                 mask:'',
+                display:['create','update'],
                 model:'people',
                 col:4
             },
@@ -160,6 +171,7 @@ const fieldsPages = {
                 ], 
                 type:'select',
                 model:'people',
+                display:['create','update'],
                 mask:'',
                 col:4
             }
@@ -175,6 +187,7 @@ const fieldsPages = {
                 model:'company', 
                 type:'text',
                 mask:'',
+                display:['create','update'],
                 col:6
             },
             {
@@ -183,6 +196,7 @@ const fieldsPages = {
                 value:'',
                 model:'company', 
                 type:'number',
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -192,6 +206,7 @@ const fieldsPages = {
                 value:'',
                 model:'company', 
                 type:'date',
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -201,6 +216,7 @@ const fieldsPages = {
                 value:'',
                 model:'company', 
                 type:'date',
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -210,6 +226,7 @@ const fieldsPages = {
                 value:'',
                 model:'company', 
                 type:'date',
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -220,6 +237,7 @@ const fieldsPages = {
                 model:'company', 
                 type:'text',
                 mask:'',
+                display:['create','update'],
                 col:6
             },
             {
@@ -231,6 +249,7 @@ const fieldsPages = {
                 model:'company', 
                 type:'select',
                 mask:'',
+                display:['create','update'],
                 col:6
             },
         ]
@@ -245,6 +264,7 @@ const fieldsPages = {
                 model:'contact_info', 
                 type:'text',
                 mask:'(999)-999-9999',
+                display:['create','update'],
                 col:6
             },
             {
@@ -254,6 +274,7 @@ const fieldsPages = {
                 type:'text',
                 model:'contact_info', 
                 mask:'',
+                display:['create','update'],
                 col:6
             },
             {
@@ -262,6 +283,7 @@ const fieldsPages = {
                 value:'', 
                 type:'text',
                 model:'contact_info', 
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -271,6 +293,7 @@ const fieldsPages = {
                 value:'', 
                 type:'text',
                 model:'contact_info', 
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -280,6 +303,7 @@ const fieldsPages = {
                 value:'', 
                 type:'text',
                 model:'contact_info', 
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -289,6 +313,7 @@ const fieldsPages = {
                 value:'', 
                 type:'textarea',
                 model:'contact_info', 
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -299,6 +324,7 @@ const fieldsPages = {
                 type:'textarea',
                 model:'contact_info', 
                 mask:'',
+                display:['create','update'],
                 col:6}
         ]
     },
@@ -311,6 +337,7 @@ const fieldsPages = {
                 value:'', 
                 type:'email',
                 model:'user', 
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -320,6 +347,7 @@ const fieldsPages = {
                 value:'', 
                 type:'password',
                 model:'user', 
+                display:['create','update'],
                 mask:'',
                 col:6
             },
@@ -330,14 +358,30 @@ const fieldsPages = {
                 value:'', 
                 type:'textarea',
                 model:null,
+                display:['create','update'],
                 mask:'',
                 col:12
+            },
+            {
+                label: 'Prospecto', 
+                name:'status', 
+                value:[
+                    {label:'Si',value:'Prospecto'},
+                    {label:'No',value:'Cliente'},
+                ], 
+                type:'select',
+                model:null,
+                display:['create','update'],
+                mask:'',
+                col:6
+
             },
             {
                 label: 'Autorizar Procesar la Informacion', 
                 name:'authorize_data_processing', 
                 value:'', 
                 type:'checkbox',
+                display:['create','update'],
                 model:null,
                 mask:'',
                 col:12
