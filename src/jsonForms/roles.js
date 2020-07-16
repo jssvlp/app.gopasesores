@@ -44,6 +44,7 @@ const fieldsPages = {
                 data:[] ,
                 type:'table',
                 display:['update'],
+                btnName:'Agregar permisos',
                 delete:()=>{},
                 create:()=>{},
                 openDetail: ()=>{},

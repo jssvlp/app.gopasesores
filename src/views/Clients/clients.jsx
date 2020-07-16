@@ -313,7 +313,7 @@ console.log('clients.getTypeClient', clients.getTypeClient)
                             setValue={this.setValue}
                             errors={clients.getTypeClient ==="people"? this.state.errors.people:this.state.errors.company}
                             alertMessage={this.props.alertMessage}
-                            
+                            rules={clients.fields.people.rules}
                             view={this.state.update?'update':'create'}
                             method={this.state.update&&this.updateClient}
                             buttonName={"Actualizar"} 
@@ -327,6 +327,7 @@ console.log('clients.getTypeClient', clients.getTypeClient)
                             fields={clients.fields.contact_info.fields} 
                             fieldValues={this.state.body} 
                             setValue={this.setValue}
+                            rules={clients.fields.contact_info.rules}
                             view={this.state.update?'update':'create'}
                             errors={this.state.errors.contact_info}
                             alertMessage={this.props.alertMessage} 
@@ -341,6 +342,7 @@ console.log('clients.getTypeClient', clients.getTypeClient)
                             fields={clients.fields.user.fields} 
                             fieldValues={this.state.body} 
                             setValue={this.setValue}
+                            rules={clients.fields.user.rules}
                             errors={this.state.errors.user}
                             view={this.state.update?'update':'create'}
                             alertMessage={this.props.alertMessage} 

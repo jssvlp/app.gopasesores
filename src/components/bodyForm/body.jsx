@@ -25,7 +25,8 @@ class body extends Component {
         super(props)
         this.state = {
             values:[],
-            seletectedItems:[]
+            seletectedItems:[],
+            fields:[]
         }
         this.selectedItem = this.selectedItem.bind(this);
     }
@@ -33,9 +34,24 @@ class body extends Component {
     componentWillReceiveProps(props){
         let values = props.fieldValues
         this.setState({
-            values:values
+            values:values,
+            fields: props.fields
         })
      }
+
+     componentDidMount(){
+        let values = this.props.fieldValues
+        this.setState({
+            values:values,
+            fields: this.props.fields
+        })
+     
+     }
+
+     initRules(){
+      
+     }
+     
 
      async deleteTable(method){
         let items =this.state.seletectedItems;
@@ -70,6 +86,7 @@ class body extends Component {
     }
 
      value(values,model,name,value){
+         this.initRules(values,name,value)
          if(values[model]){
              return values[model][name]
          }
@@ -99,14 +116,14 @@ class body extends Component {
     
     render() {
 
-        const {fields,onChange,errors,view} = this.props;
+        const {onChange,errors,view} = this.props;
         const {values} = this.state;
         console.log('view', view,)
         return (
             <div>
                 <Row>
-                {fields.length>0&&
-                    fields.map((field,i)=>
+                {this.state.fields.length>0&&
+                    this.state.fields.map((field,i)=>
                     
                         field.type==='text'?(
                             <Col  md={field.col} style={{display:  field.display.indexOf(view)!==-1?'block':'none'}} >
@@ -237,7 +254,7 @@ class body extends Component {
                                 changePage={this.changePage}
                                 create={field.create}
                                 openDetail={field.openDetail}
-                                titleBtn={"Nuevo"}
+                                titleBtn={field.btnName}
                                 />
                                 </FormGroup>
                             </Col>

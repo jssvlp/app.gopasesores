@@ -78,10 +78,13 @@ const fieldsPages = {
                 col:6
             },
             {
-                label: 'Comision', 
+                label: '¿Puede comisionar?', 
                 name:'commissioner', 
-                value:'', 
-                type:'number',
+                value:[
+                    {label:'Si',value:1},
+                    {label:'No',value:0},
+                ], 
+                type:'select',
                 display:['create','update'],
                 model:'employee',
                 col:6
@@ -120,16 +123,6 @@ const fieldsPages = {
                 type:'password',
                 model:'user', 
                 display:['create','update'],
-                mask:'',
-                col:6
-            },
-            {
-                label: 'Rol de usuario', 
-                name:'rol', 
-                value:'', 
-                type:'select',
-                model:'user', 
-                display:['update'],
                 mask:'',
                 col:6
             },

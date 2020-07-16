@@ -40,6 +40,14 @@ const headers = [
 const fieldsPages = {
     people:{
         "title": "Informacion Personal",
+        rules:[
+            {
+                fieldTo:'document_type',
+                value:'Pasaporte',
+                fieldFrom:'document_number',
+                actions:'nomask'
+            }
+        ],
         fields:[
             {
                 label: 'Nombres', 
@@ -179,6 +187,7 @@ const fieldsPages = {
     },
     company:{
         title:"Informacion de Empresa",
+        rules:[],
         fields:[
             {
                 label: 'Nombre de la Empresa', 
@@ -256,6 +265,7 @@ const fieldsPages = {
     },
     contact_info:{
         title:"Informacion de Contacto",
+        rules:[],
         fields:[
             {
                 label: 'Celular', 
@@ -330,6 +340,7 @@ const fieldsPages = {
     },
     user:{
         title:'Informacion de Usuario',
+        rules:[],
         fields:[
             {
                 label: 'Correo', 
