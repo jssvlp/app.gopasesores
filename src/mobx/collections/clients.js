@@ -175,10 +175,10 @@ import {ClientsForm} from '../../jsonForms/index'
 
     async saveClient(body){
         console.log('body', body)
-        let owner_id =  body.people.owner_id;
-        let related_client_id = body.people.related_client_id;
-        delete body.people.related_client_id;
-        delete  body.people.owner_id
+        let owner_id = body.type === 'company'?  body.company.owner_id : body.people.owner_id;
+        let related_client_id = body.type === 'people'? body.people.related_client_id:null;
+        if(body.type === 'company') delete body.company.owner_id  
+        if(body.type === 'people') { delete body.people.owner_id; delete body.people.related_client_id;}  
         let content = {
             referred_by_id:1,
             contact_employee_id:1,
@@ -199,10 +199,10 @@ import {ClientsForm} from '../../jsonForms/index'
 
     async updateClient(body){
         console.log('body', body)
-        let owner_id =  body.people.owner_id;
-        let related_client_id = body.people.related_client_id;
-        delete body.people.related_client_id;
-        delete  body.people.owner_id
+        let owner_id = body.type === 'company'?  body.company.owner_id : body.people.owner_id;
+        let related_client_id = body.type === 'people'? body.people.related_client_id:null;
+        if(body.type === 'company') delete body.company.owner_id  
+        if(body.type === 'people') { delete body.people.owner_id; delete body.people.related_client_id;}    
         let content = {
             referred_by_id:1,
             contact_employee_id:1,

@@ -210,8 +210,9 @@ console.log('clients.getTypeClient', clients.getTypeClient)
         clients.clientByIdInfo.contact&& delete clients.clientByIdInfo.contact.updated_at
         clients.clientByIdInfo.contact&& delete clients.clientByIdInfo.contact.created_at
         clients.clientByIdInfo.user.password = ""
-        clients.clientByIdInfo.people.owner_id =  clients.clientByIdInfo.owner_id;
-        clients.clientByIdInfo.people.related_client_id =  clients.clientByIdInfo.related_client_id;
+        if(clients.clientByIdInfo.people) clients.clientByIdInfo.people.owner_id =  clients.clientByIdInfo.owner_id;
+        if(clients.clientByIdInfo.company) clients.clientByIdInfo.company.owner_id =  clients.clientByIdInfo.owner_id;
+        if(clients.clientByIdInfo.people) clients.clientByIdInfo.people.related_client_id =  clients.clientByIdInfo.related_client_id;
         this.state.errors['user']['password'] = false
         console.log('clients.!@@!@!@', clients.clientByIdInfo.people)
         let body ={

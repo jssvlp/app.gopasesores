@@ -14,6 +14,7 @@ const fieldErrors = {
         "business_name":true,
         "rnc":true,
         "economic_activity_id":true,
+        "owner_id":true
     },
     contact_info:{
         "nationality":true,
@@ -323,6 +324,16 @@ const fieldsPages = {
                 type:'select',
                 mask:'',
                 display:['create','update'],
+                col:6
+            },
+            {
+                label: 'Dueño del cliente', 
+                name:'owner_id', 
+                value:[], 
+                type:'select',
+                model:'company',
+                display:['create','update'],
+                mask:'',
                 col:6
             },
         ]
