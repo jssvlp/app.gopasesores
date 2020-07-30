@@ -36,10 +36,20 @@ import { Users } from "../../services/index";
         return this.isAuthUser;
     }
 
+    
+    async getUsersById(id){
+        const result =  await Users.getUsersById(id);
+        this.user = result.data
+    }
+
+
+
     async logout(token){
         const result = await Users.logout(token)
         return result.data
     }
+
+
 
     
 
@@ -48,6 +58,8 @@ import { Users } from "../../services/index";
         if(status !== 401) this.isAuthUser = true;
     }
 
+
+   
     async loginServices(body){
         
         const result = await Users.login(body)

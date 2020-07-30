@@ -18,6 +18,16 @@ const fieldsPages = {
         "title": "Informacion del rol",
         fields:[
             {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
+            {
                 label: 'Nombre', 
                 name:'name', 
                 value:'', 

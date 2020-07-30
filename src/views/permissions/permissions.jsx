@@ -4,7 +4,7 @@ import BodyContent from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
 import moment from 'moment';
-@inject('permissions')
+@inject('permissions','users')
 @observer
 class permissions extends Component {
     constructor(props){
@@ -259,7 +259,7 @@ class permissions extends Component {
  
   
     render() {
-        const {permissions} = this.props
+        const {permissions,users} = this.props
         
         console.log('this.state.type permission', this.state)
         const steps = [
@@ -296,6 +296,8 @@ class permissions extends Component {
                
                 {!this.state.create&&(
                     <Datatable
+                    permissions={users.infoUser}
+                    location={this.props.location}
                     thArray={permissions.headers} 
                     tdArray={permissions.getDataPermissions}
                     loading={permissions.loading}

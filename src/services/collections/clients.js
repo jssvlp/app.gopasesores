@@ -3,10 +3,15 @@ import api from '../api/create';
 
 
 
-function getClients(page) {
+function getClients(page,limit = 10) {
 
-    return api.get('/clients?page='+page)
+    return api.get('/clients?page='+page+'per_page='+limit)
 
+}
+
+
+function getClientsAll(){
+    return api.get('/clients/list/all')
 }
 
 
@@ -67,5 +72,6 @@ export {
     updateClient,
     filterDateClient,
     activeClient,
+    getClientsAll,
     getActivitiesEconomic
 }

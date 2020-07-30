@@ -4,7 +4,7 @@ import ClientBody from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
 import moment from 'moment';
-@inject('clients')
+@inject('clients','users')
 @observer
 class clients extends Component {
     constructor(props){
@@ -52,14 +52,13 @@ class clients extends Component {
 
      componentDidMount(){
         const {clients} = this.props;
-        clients.statusLoading(true);
          this.reloadTable();
          this.setState({
              errors:clients.fieldErrors
          })
-        clients.statusLoading(false);
 
     }
+
 
     reloadTable(){
         const {clients} = this.props;
@@ -211,8 +210,10 @@ console.log('clients.getTypeClient', clients.getTypeClient)
         clients.clientByIdInfo.contact&& delete clients.clientByIdInfo.contact.updated_at
         clients.clientByIdInfo.contact&& delete clients.clientByIdInfo.contact.created_at
         clients.clientByIdInfo.user.password = ""
+        clients.clientByIdInfo.people.owner_id =  clients.clientByIdInfo.owner_id;
+        clients.clientByIdInfo.people.related_client_id =  clients.clientByIdInfo.related_client_id;
         this.state.errors['user']['password'] = false
-
+        console.log('clients.!@@!@!@', clients.clientByIdInfo.people)
         let body ={
             type:type,
             people:clients.clientByIdInfo.people,
@@ -301,7 +302,7 @@ console.log('clients.getTypeClient', clients.getTypeClient)
  
   
     render() {
-        const {clients} = this.props
+        const {clients,users} = this.props
         
         const steps = [
             { 
@@ -364,6 +365,8 @@ console.log('clients.getTypeClient', clients.getTypeClient)
                
                 {!this.state.create&&(
                     <Datatable
+                    permissions={users.infoUser}
+                    location={this.props.location}
                     thArray={clients.headers} 
                     tdArray={clients.getDataClients}
                     loading={clients.loading}

@@ -3,9 +3,9 @@ import api from '../api/create';
 
 
 
-function getEmployees(page) {
+function getEmployees(page,limit = 10) {
 
-    return api.get('/employees?page='+page)
+    return api.get('/employees?page='+page+'per_page='+limit)
 
 }
 

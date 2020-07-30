@@ -13,6 +13,10 @@ const fieldErrors = {
         "last_name":true,
         "position_id":true,
         "type":true,
+        "commissioner": true,
+        "phone":true,
+        "document_id":true,
+        "address":true
     },
     user:{
         "email":true,
@@ -32,7 +36,43 @@ const headers = [
 const fieldsPages = {
     employee:{
         "title": "Informacion Personal",
+        "rules": [
+            {
+                fieldFrom: 'commissioner',
+                valueFrom: 1,
+                fieldTo: 'default_commission_percentage',
+                rule:'show',
+            },
+            {
+                fieldFrom: 'commissioner',
+                valueFrom: 1,
+                fieldTo: 'default_commission_percentage',
+                rule:'require'
+            },
+            {
+                fieldFrom: 'commissioner',
+                valueFrom: 0,
+                fieldTo: 'default_commission_percentage',
+                rule:'hidden'
+            },
+            {
+                fieldFrom: 'commissioner',
+                valueFrom: 0,
+                fieldTo: 'default_commission_percentage',
+                rule:'notrequire'
+            },
+        ],
         fields:[
+            {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
             {
                 label: 'Nombres', 
                 name:'first_name', 
@@ -53,6 +93,37 @@ const fieldsPages = {
                 display:['create','update'],
                 col:6
             },
+
+            {
+                label: 'Telefono', 
+                name:'phone',
+                value:'', 
+                type:'text',
+                mask:'999-999-9999',
+                model:'employee',
+                display:['create','update'],
+                col:6
+            },
+            {
+                label: 'Cedula', 
+                name:'document_id',
+                value:'', 
+                type:'text',
+                mask:'999-9999999-9',
+                model:'employee',
+                display:['create','update'],
+                col:6
+            },
+            {
+                label: 'Direccion', 
+                name:'address',
+                value:'', 
+                type:'textarea',
+                mask:'',
+                model:'employee',
+                display:['create','update'],
+                col:12
+            },
             {
                 label: 'Posicion', 
                 name:'position_id', 
@@ -67,9 +138,9 @@ const fieldsPages = {
                 label: 'Tipo', 
                 name:'type', 
                 value: [
-                    {label: 'Socio',value:'partner'},
-                    {label: 'Administrativo',value:'administrative'},
-                    {label: 'Referidor',value:'referrer'},
+                    {label: 'Socio',value:'Socio'},
+                    {label: 'Administrativo',value:'Administrativo'},
+                    {label: 'Referidor',value:'Referidor'},
                 ], 
                 type:'select',
                 mask:'',
@@ -87,6 +158,7 @@ const fieldsPages = {
                 type:'select',
                 display:['create','update'],
                 model:'employee',
+                disabled:false,
                 col:6
             },
             {
@@ -94,6 +166,8 @@ const fieldsPages = {
                 name:'default_commission_percentage', 
                 value:'', 
                 type:'number',
+                hidden: true,
+                disabled:false,
                 mask:'',
                 display:['create','update'],
                 model:'employee',
@@ -106,6 +180,16 @@ const fieldsPages = {
     user:{
         title:'Informacion de Usuario',
         fields:[
+            {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
             {
                 label: 'Correo', 
                 name:'email', 

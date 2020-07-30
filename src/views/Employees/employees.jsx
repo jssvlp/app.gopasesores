@@ -4,7 +4,7 @@ import BodyContent from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
 import moment from 'moment';
-@inject('employees')
+@inject('employees','users')
 @observer
 class Employees extends Component {
     constructor(props){
@@ -105,7 +105,7 @@ class Employees extends Component {
         
 
         if(mask) !value.endsWith('_')? errors[name] = false : errors[name] = true
-        if(!mask) value? errors[name] = false: errors[name] = true;
+        if(!mask) value === 0? errors[name] = false: value? errors[name] = false: errors[name] = true;
 
         model?errorsArray[model] = errors : errorsArray = errors 
         //console.log('errors', errorsArray)
@@ -267,15 +267,15 @@ class Employees extends Component {
  
   
     render() {
-        const {employees} = this.props
+        const {employees,users} = this.props
         
-        console.log('this.state.type employee', employees.fields.user)
         const steps = [
             { 
                 name:employees.fields.employee.title, 
                 errors: this.state.errors.employee,
                 component: <BodyContent 
                             fields={employees.fields.employee.fields} 
+                            rules={employees.fields.employee.rules}
                             fieldValues={this.state.body} 
                             setValue={this.setValue}
                             errors={this.state.errors.employee}
@@ -308,12 +308,14 @@ class Employees extends Component {
                  steps={steps} 
                  closeWizard={this.closeWizard} 
                  subtitle={ ""}
-                 title={this.state.update?'DETALLE DEL EMPLEADO': 'CREANDO UN NUEVO  EMPELADO'} 
+                 title={this.state.update?'DETALLE DEL EMPLEADO': 'CREANDO UN NUEVO  EMPLEADO'} 
                  />
                  )}
                
                 {!this.state.create&&(
                     <Datatable
+                    permissions={users.infoUser}
+                    location={this.props.location}
                     thArray={employees.headers} 
                     tdArray={employees.getDataEmployees}
                     loading={employees.loading}

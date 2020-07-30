@@ -101,6 +101,7 @@ import {PermissionsForm} from '../../jsonForms/index'
         }else{
             this.Permissions = []
         }
+        this.load = false;
     }
     
     
@@ -121,11 +122,13 @@ import {PermissionsForm} from '../../jsonForms/index'
             
             result.data.data = json
             this.Permissions =  result.data
+           
             console.log('this.Permissions', result.data)
 
         }else{
             this.Permissions = []
         }
+        this.load = false;
     
     }
 

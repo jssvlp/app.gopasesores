@@ -26,7 +26,7 @@ function updateUser(id,body) {
 
 function getUsersById(id) {
 
-    return api.get('/users/'+id)
+    return api.get('/auth/users/'+id)
 
 }
 

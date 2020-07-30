@@ -36,7 +36,6 @@ import Protect from './protect';
 // style for notifications
 import { style } from "variables/Variables.jsx";
 
-
 var ps;
 
 class Dashboard extends Component {
@@ -63,12 +62,14 @@ class Dashboard extends Component {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel);
     }
+    
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
   }
+  
   componentDidUpdate(e) {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
@@ -216,6 +217,10 @@ class Dashboard extends Component {
     });
    !option&&this.hideAlert()
   }
+
+ 
+
+  
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {

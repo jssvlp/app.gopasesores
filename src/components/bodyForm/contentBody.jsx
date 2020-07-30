@@ -51,7 +51,17 @@ class createBody extends Component {
             <div>
                <form>
                    <Grid fluid style={{minHeight:200}}>
-                      <Body fields={this.props.fields || []}  alertLoading={this.props.alertLoading} alertMessage={this.props.alertMessage} view={this.props.view} errors={this.props.errors} onChange={this.props.setValue||{}} fieldValues={this.state.values}/>
+                      <Body 
+                      fields={this.props.fields || []} 
+                      permissions={this.props.permissions}
+                      rules={this.props.rules} 
+                      location={this.props.location}
+                      alertLoading={this.props.alertLoading} 
+                      alertMessage={this.props.alertMessage} 
+                      view={this.props.view} 
+                      errors={this.props.errors} 
+                      onChange={this.props.setValue||{}} 
+                      fieldValues={this.state.values}/>
                       
                    </Grid>
                    {this.props.method&&(

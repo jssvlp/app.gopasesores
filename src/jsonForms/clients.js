@@ -8,6 +8,7 @@ const fieldErrors = {
         "gender":true,
         "birth_date":true,
         "marital_status":true,
+        "owner_id":true
     },
     company:{
         "business_name":true,
@@ -19,6 +20,7 @@ const fieldErrors = {
         "province_of_birth":true,
         "address_line1":true,
         "cell_phone_number":true,
+        "city":true
     },
     user:{
         "email":true,
@@ -40,15 +42,46 @@ const headers = [
 const fieldsPages = {
     people:{
         "title": "Informacion Personal",
-        rules:[
+        "rules": [
             {
-                fieldTo:'document_type',
-                value:'Pasaporte',
-                fieldFrom:'document_number',
-                actions:'nomask'
-            }
+                fieldFrom: 'document_type',
+                valueFrom: 'Pasaporte',
+                fieldTo: 'document_number',
+                rule:'nomask'
+            },
+            {
+                fieldFrom: 'document_type',
+                valueFrom: 'Cedula',
+                fieldTo: 'document_number',
+                rule:'mask',
+                mask:'999-9999999-9'
+            },
+            {
+                fieldFrom: 'document_type',
+                valueFrom: 'RNC',
+                fieldTo: 'document_number',
+                rule:'mask',
+                mask:'9999999'
+            },
+            {
+                fieldFrom: 'document_type',
+                valueFrom: 'Cedula de Extranjería',
+                fieldTo: 'document_number',
+                rule:'nomask',
+                mask:''
+            },
         ],
         fields:[
+            {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
             {
                 label: 'Nombres', 
                 name:'first_name', 
@@ -94,7 +127,7 @@ const fieldsPages = {
                 col:6
             },
             {
-                label: 'Fecha a Expirar', 
+                label: 'Fecha de expiración del documento', 
                 name:'document_expire_date', 
                 value:'', 
                 type:'date',
@@ -182,13 +215,44 @@ const fieldsPages = {
                 display:['create','update'],
                 mask:'',
                 col:4
+            },
+            {
+                label: 'Dueño del cliente', 
+                name:'owner_id', 
+                value:[], 
+                type:'select',
+                model:'people',
+                display:['create','update'],
+                mask:'',
+                col:6
+            },
+            {
+                label: 'Relacionado', 
+                name:'related_client_id', 
+                value:[], 
+                type:'select',
+                model:'people',
+                display:['create','update'],
+                mask:'',
+                col:6
             }
+
         ]
     },
     company:{
         title:"Informacion de Empresa",
         rules:[],
         fields:[
+            {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
             {
                 label: 'Nombre de la Empresa', 
                 name:'business_name', 
@@ -268,6 +332,16 @@ const fieldsPages = {
         rules:[],
         fields:[
             {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
+            {
                 label: 'Celular', 
                 name:'cell_phone_number', 
                 value:'',
@@ -325,7 +399,7 @@ const fieldsPages = {
                 model:'contact_info', 
                 display:['create','update'],
                 mask:'',
-                col:6
+                col:12
             },
             {
                 label: '2da Direccion', 
@@ -335,13 +409,24 @@ const fieldsPages = {
                 model:'contact_info', 
                 mask:'',
                 display:['create','update'],
-                col:6}
+                col:12
+            }
         ]
     },
     user:{
         title:'Informacion de Usuario',
         rules:[],
         fields:[
+            {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
+                col:12
+            },
             {
                 label: 'Correo', 
                 name:'email', 

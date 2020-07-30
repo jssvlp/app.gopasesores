@@ -14,6 +14,7 @@ import Switch from "react-bootstrap-switch";
     @observable EmployeeById = []
     @observable allUsers = []
     @observable isActive = false
+    @observable init = false
     @observable typeEmployee = "people"
 
 
@@ -69,6 +70,7 @@ import Switch from "react-bootstrap-switch";
     }
 
     async initValues(){
+        if(this.init) return
         const fields = this.fields.employee.fields;
         const positions = await this.getPositions();
 
@@ -77,6 +79,7 @@ import Switch from "react-bootstrap-switch";
                 fields[i].value = positions;
             }
         }
+        this.init = true
 
     }
 
@@ -114,11 +117,13 @@ import Switch from "react-bootstrap-switch";
             
             result.data.data = json
             this.Employees =  result.data
+            
             console.log('this.Employees', result.data)
 
         }else{
             this.Employees = []
         }
+        this.load = false;
     }
     
     async activeClicent(isActive,id){
@@ -145,11 +150,13 @@ import Switch from "react-bootstrap-switch";
             
             result.data.data = json
             this.Employees =  result.data
+           
             console.log('this.Employees', result.data)
 
         }else{
             this.Employees = []
         }
+        this.load = false;
     
     }
 

@@ -5,7 +5,7 @@ import api from '../api/create';
 
 function getPermissions(page) {
 
-    return api.get('/permissions?page='+page)
+    return api.get('/permissions?page='+page+'&per_page=1000')
 
 }
 

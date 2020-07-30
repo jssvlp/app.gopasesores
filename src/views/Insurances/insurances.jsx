@@ -4,68 +4,67 @@ import BodyContent from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
 import Modal from '../../components/Modal/Modal';
-import ModalPermissions from './ModalPermissions'
+import ModalBranches from './modalBranches'
 import moment from 'moment';
-@inject('roles','users')
+@inject('insurances','users')
 @observer
-class Roles extends Component {
+class Insurances extends Component {
     constructor(props){
         super(props)
         this.state = {
             modal:false,
             body:{
-                roles:{
-                    role_code:"",
+                insurances:{
+                    insurancee_code:"",
                 },
             },
             errors:{
-                roles:[],
+                insurances:[],
             },
-            role_id:null,
+            insurance_id:null,
+            branch_id:null,
             create:false,
             update:false,
-            id_permissions:null,
+            modalBranches: false,
             seletectedItems:[],
-            modalPermission:false,
             dateStart:moment().format('YYYY-MM-DD'),
             dateEnd: moment().format('YYYY-MM-DD'),
         }
         this.changePage = this.changePage.bind(this);
         this.openModal = this.openModal.bind(this);
         this.setValue = this.setValue.bind(this);
-        this.saveRole = this.saveRole.bind(this);
+        this.saveInsurance = this.saveInsurance.bind(this);
         this.openDetail = this.openDetail.bind(this);
         this.closeWizard = this.closeWizard.bind(this);
-        this.updaterole = this.updaterole.bind(this);
-        this.deleterole = this.deleterole.bind(this);
+        this.updateInsurance = this.updateInsurance.bind(this);
+        this.deleteInsurance = this.deleteInsurance.bind(this);
         this.selectedItem = this.selectedItem.bind(this);
         this.filterDate = this.filterDate.bind(this);
-        this.openModalPermissions = this.openModalPermissions.bind(this);
-        this.addPermissions = this.addPermissions.bind(this);
-        this.deletePermissons = this.deletePermissons.bind(this);
-        this.setIdPermissons = this.setIdPermissons.bind(this);
+        this.deleteBranch = this.deleteBranch.bind(this);
+        this.setidBranch = this.setidBranch.bind(this);
+        this.openModalBranches = this.openModalBranches.bind(this);
     }
 
      componentDidMount(){
-        const {roles} = this.props;
-        roles.statusLoading(true);
+        const {insurances} = this.props;
+        insurances.statusLoading(true);
          this.reloadTable();
          this.setState({
-             errors:roles.fieldErrors
+             errors:insurances.fieldErrors
          })
-         console.log('roles.fieldErrors', roles.fieldErrors)
-        roles.statusLoading(false);
+         console.log('insurances.fieldErrors', insurances.fieldErrors)
+        insurances.statusLoading(false);
 
     }
 
     reloadTable(){
-        const {roles} = this.props;
-         roles.getAllRoles();
+        const {insurances} = this.props;
+         insurances.getAllInsurances();
     }
 
     changePage(page){
-        const {roles} = this.props
-        roles.getAllRoles(page);
+        const {insurances} = this.props
+        insurances.getAllInsurances(page);
     }
 
 
@@ -74,20 +73,28 @@ class Roles extends Component {
             create: !this.state.create,
             update:false,
             body:{
-                roles:[],
+                insurances:[],
                 update:false,
             },
         })
         
     }
 
+
+    openModalBranches(){
+        console.log('this.state', this.state)
+        this.setState({
+            modalBranches: !this.state.modalBranches
+        })
+    }
+
    
 
    async setValue(name,value,modelName,mask = null){
-        const {roles} = this.props
+        const {insurances} = this.props
         let body = this.state.body;
-        if(name ==='status' && this.state.role_id){
-           await roles.activeClicent(value==='rolee'?'activate':'deactivate', this.state.role_id)
+        if(name ==='status' && this.state.insurance_id){
+           await insurances.activeClicent(value==='insuranceee'?'activate':'deactivate', this.state.insurance_id)
         }
         if(modelName ===null&&body){
             body[name] =value
@@ -140,13 +147,13 @@ class Roles extends Component {
         }
     }
 
-    async saveRole(){
-        const {roles} = this.props
+    async saveInsurance(){
+        const {insurances} = this.props
         let body = this.state.body;
-        const result = await roles.saveRole(body);
+        const result = await insurances.saveInsurance(body);
         console.log('result', result)
         if(result.success){
-            this.props.alertMessage('Se ha creado el Rol','Puede verificar en la lista el nuevo Rol registrado','success')
+            this.props.alertMessage('Se ha creado la nueva aseguradora','Puede verificar en la lista la asgurada registrada','success')
             this.setState({
                 create: false
             })
@@ -160,7 +167,7 @@ class Roles extends Component {
 
 
     async filterDate(date,name){
-        const {roles} = this.props
+        const {insurances} = this.props
         this.setState({
             [name]:date
         });
@@ -170,109 +177,60 @@ class Roles extends Component {
                 this.state.dateEnd,
             ]
         }
-        await roles.filterrole('created_at',1,body);
+        await insurances.filterinsurancee('created_at',1,body);
 
 
     }
 
 
     configurationsTable(data){
-        const {roles} = this.props
-        let fields = roles.fields.roles.fields
+        const {insurances} = this.props
+        let fields = insurances.fields.insurances.fields
        
         for (const i in fields) {
-           if(fields[i].name === 'permissions'){
-                fields[i].delete = this.deletePermissons;
-               fields[i].create = this.openModalPermissions;
+            if(fields[i].name === 'branches'){
+                fields[i].delete = null;
+               fields[i].create = null;
            }
         }
         return data.map((item,i)=>{
             return [item.id,item.name,item.path]
         })
     }
-
-    openModalPermissions(){
+    setidBranch(id){
         this.setState({
-            modalPermission: !this.state.modalPermission,
-            body:{
-                permissions:[],
-            },
-        })
-        
-    }
-
-    setIdPermissons(id){
-        this.setState({
-            id_permissions:id
+            branch_id:id
         })
     }
 
-   
 
-    async addPermissions(){
-        const {roles} = this.props
-        const result = await roles.addPermissions(this.state.role_id,this.state.id_permissions)
-        console.log('result', result)
-        if(result.success){
-            this.props.alertMessage('Se agrego el permiso','Puede verificar en la lista el nuevo permiso registrado','success')
-            this.setState({
-                modalPermission: !this.state.modalPermission,
-            })
-            await this.reloadPermissionsTable(roles,this.state.role_id)
-        }
-        if(!result.success) this.props.alertMessage(result.message,'Favor verificar los datos','error')
+    deleteBranch(){
 
     }
 
-    async deletePermissons(id_permissions){
-        const {roles} = this.props
-        const result = await roles.deletePermissions(this.state.role_id,id_permissions)
-        await this.reloadPermissionsTable(roles,this.state.role_id)
-        return result
-    }
+ 
 
-
-    async reloadPermissionsTable(roles,id){
-        await roles.getRoleById(id);
-        console.log('Rolesss', roles.roleByIdInfo)
-        delete roles.roleByIdInfo.rol.updated_at
-        delete roles.roleByIdInfo.rol.created_at
-        roles.roleByIdInfo.rol.permissions = this.configurationsTable(roles.roleByIdInfo.rol.permissions)
-        console.log('roles.field.foie',  roles.fields.roles.fields)
-        let body ={
-            roles:roles.roleByIdInfo.rol,
-            role_id:id
-        }
-        this.setState({
-            body:body,
-            update:true,
-            role_id:id
-        })
-        this.verifyErrors();
-      //  this.props.alertLoading("Espere un momento....",false)
-
-    }
-
+    
 
     async openDetail(id){
-        const {roles} = this.props;
+        const {insurances} = this.props;
         console.log('id', id)
         this.props.alertLoading("Espere un momento....",true)
-        await roles.getRoleById(id);
-        console.log('Rolesss', roles.roleByIdInfo)
-        delete roles.roleByIdInfo.rol.updated_at
-        delete roles.roleByIdInfo.rol.created_at
-        roles.roleByIdInfo.rol.permissions = this.configurationsTable(roles.roleByIdInfo.rol.permissions)
-        console.log('roles.field.foie',  roles.fields.roles.fields)
+        await insurances.getInsuranceById(id);
+        console.log('insurancesss', insurances.InsuranceByIdInfo)
+        delete insurances.InsuranceByIdInfo.insurance.updated_at
+        delete insurances.InsuranceByIdInfo.insurance.created_at
+        insurances.InsuranceByIdInfo.insurance.branches = this.configurationsTable(insurances.InsuranceByIdInfo.insurance.branches)
+        console.log('insurances.field.foie',  insurances.InsuranceByIdInfo.insurance)
         let body ={
-            roles:roles.roleByIdInfo.rol,
-            role_id:id
+            insurances:insurances.InsuranceByIdInfo.insurance,
+            insurance_id:id
         }
         this.setState({
             body:body,
             create:true,
             update:true,
-            role_id:id
+            insurance_id:id
         })
         this.verifyErrors();
         this.props.alertLoading("Espere un momento....",false)
@@ -285,13 +243,13 @@ class Roles extends Component {
     }
 
 
-    async updaterole(){
-        const {roles} = this.props
+    async updateInsurance(){
+        const {insurances} = this.props
         let body = this.state.body;
-        const result = await roles.updateRole(body)
+        const result = await insurances.updateInsurance(body)
         console.log('result', result)
         if(result.success){
-            this.props.alertMessage('Se ha actualizado el Rol','Puede verificar en la lista el Rol actualizado','success')
+            this.props.alertMessage('Se ha actualizado el insurance','Puede verificar en la lista el insurance actualizado','success')
             this.setState({
                 create: false
             })
@@ -310,22 +268,22 @@ class Roles extends Component {
         })
     }
 
-    async deleterole(){
-        const {roles} = this.props;
+    async deleteInsurance(){
+        const {insurances} = this.props;
         let items =this.state.seletectedItems;
         let allErrorsDelete=[]
         this.props.alertLoading("Eliminando Espere un momento....",true)
         for (const i in items) {
             console.log('items[i]', items[i])
-            let result = await roles.deleteRoleById(items[i]);
+            let result = await insurances.deleteInsuranceById(items[i]);
             !result.success&& allErrorsDelete.push(items[i])
            
         }
         this.props.alertLoading("Eliminando Espere un momento....",false)
         if(allErrorsDelete.length>0){
             this.props.alertMessage(
-                'Ups!, algunos Rols no se eliminaron',
-                'los siguientes Rols no se borraron: ' +allErrorsDelete.toString(),
+                'Ups!, algunos insurances no se eliminaron',
+                'los siguientes insurances no se borraron: ' +allErrorsDelete.toString(),
                 'error'
                 )
         }
@@ -347,25 +305,25 @@ class Roles extends Component {
  
   
     render() {
-        const {roles,users} = this.props
+        const {insurances,users} = this.props
         
-        console.log('this.state.type role', this.state)
+        console.log('this.state.type insurancee', this.state)
         const steps = [
             { 
-                name:roles.fields.roles.title, 
-                errors: this.state.errors.roles,
+                name:insurances.fields.insurances.title, 
+                errors: this.state.errors.insurances,
                 component: <BodyContent 
-                            fields={roles.fields.roles.fields} 
+                            fields={insurances.fields.insurances.fields} 
                             fieldValues={this.state.body} 
                             setValue={this.setValue}
-                            errors={this.state.errors.roles}
+                            errors={this.state.errors.insurances}
                             alertMessage={this.props.alertMessage}
                             alertLoading={this.props.alertLoading}
                             showSteps={false}
+                            view={this.state.update?'update':'create'}
                             permissions={users.infoUser}
                             location={this.props.location}
-                            view={this.state.update?'update':'create'}
-                            method={this.state.update?this.updaterole:this.saveRole}
+                            method={this.state.update?this.updateInsurance:this.saveInsurance}
                             buttonName={this.state.update?"Actualizar":"Guardar"}
                             /> 
             },
@@ -381,7 +339,7 @@ class Roles extends Component {
                  stepsNavigation={false}
                  closeWizard={this.closeWizard} 
                  subtitle={ ""}
-                 title={this.state.update?'DETALLE DEL ROL': 'CREANDO UN NUEVO  ROL'} 
+                 title={this.state.update?'DETALLE DE LA ASEGURADORA': 'CREANDO UNA NUEVA ASEGURADORA'} 
                  />
                  )}
                
@@ -389,29 +347,30 @@ class Roles extends Component {
                     <Datatable
                     permissions={users.infoUser}
                     location={this.props.location}
-                    thArray={roles.headers} 
-                    tdArray={roles.getDataRoles}
-                    loading={roles.loading}
+                    thArray={insurances.headers} 
+                    tdArray={insurances.getDataInsurances}
+                    loading={insurances.loading}
                     selectedItem={this.selectedItem}
                     items={this.state.seletectedItems} 
-                    deleteMethod={this.deleterole}
+                    deleteMethod={this.deleteInsurance}
                     changePage={this.changePage}
                     create={this.openModal}
                     openDetail={this.openDetail}
                     titleBtn={"Nuevo"}
                     />
                 )}
+
                 <Modal 
                 body={
-                    <ModalPermissions
-                    onChange={this.setIdPermissons} 
+                    <ModalBranches
+                    onChange={this.setidBranch} 
                     />
                 }
                 title="Asignar un nuevo permiso"
                 alertMessage={this.props.alertMessage}  
-                modalShow={this.state.modalPermission} 
-                modalCreate={this.openModalPermissions}
-                saveMethod={this.state.id_permissions&&this.addPermissions} 
+                modalShow={this.state.modalBranches} 
+                modalCreate={this.openModalBranches}
+                saveMethod={this.state.branch_id&&this.addPermissions} 
                 /> 
 
                 
@@ -420,4 +379,4 @@ class Roles extends Component {
     }
 }
 
-export default Roles
+export default Insurances

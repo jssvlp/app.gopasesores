@@ -35,8 +35,10 @@ class Pages extends Component {
     super(props);
     this.state = {
       _notificationSystem: null,
+      alert:null,
     }
     this.successDelete = this.successDelete.bind(this);
+    this.alertLoading = this.alertLoading.bind(this);
   }
   componentWillMount() {
     this.setState({ _notificationSystem: this.refs.notificationSystem });
@@ -132,6 +134,7 @@ class Pages extends Component {
             render={routeProps => (
               <prop.component
                 {...routeProps}
+                alertLoading={this.alertLoading}
                 success={this.successDelete}
               />
             )}
@@ -143,6 +146,21 @@ class Pages extends Component {
       }
     });
   };
+  alertLoading(title,option) {
+    this.setState({
+      alert: (
+        <SweetAlert
+          style={{ display: "block", marginTop: "-100px" }}
+          title={title}
+          showConfirm={false}
+        >
+         <center><i className="fa fa-spin fa-circle-o-notch" style={{fontSize:20}}/></center>
+        </SweetAlert>
+        
+      )
+    });
+   !option&&this.hideAlert()
+  }
   render() {
     return (
       <div className="">

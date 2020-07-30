@@ -96,11 +96,13 @@ import Switch from "react-bootstrap-switch";
             
             result.data.data = json
             this.Roles =  result.data
+            
             console.log('this.Roles', result.data)
 
         }else{
             this.Roles = []
         }
+        this.load = false;
     }
     
     
@@ -123,11 +125,13 @@ import Switch from "react-bootstrap-switch";
             
             result.data.data = json
             this.Roles =  result.data
+            
             console.log('this.Roles', result.data)
 
         }else{
             this.Roles = []
         }
+        this.load = false;
     
     }
 

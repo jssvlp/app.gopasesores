@@ -7,8 +7,12 @@ import Select from "react-select";
 import Checkbox from "components/CustomCheckbox/CustomCheckbox.jsx";
 import Skeleton from "react-loading-skeleton";
 import Datetime from "react-datetime";
-  import moment from 'moment';
-export default class Datatable extends Component {
+import moment from 'moment';
+import { inject,observer} from "mobx-react";
+import { Redirect } from 'react-router'
+@inject('users')
+@observer
+ class Datatable extends Component {
 
 
   constructor(props){
@@ -19,13 +23,15 @@ export default class Datatable extends Component {
       fistPage: 1,
       lastPage: 1,
       itemsPage:[],
-      filter: false
+      filter: false,
+      permissions:[]
     }
   }
 
 
-  UNSAFE_componentWillReceiveProps(nextprops){
+ async  UNSAFE_componentWillReceiveProps(nextprops){
     let pages = nextprops.tdArray&&nextprops.tdArray.last_page
+    let result =  nextprops.permissions&&this.setPermissions(nextprops.permissions)
     let arraypages=[];
     for (let i = 1; i <= pages; i++) {
       arraypages.push(i) 
@@ -35,9 +41,33 @@ export default class Datatable extends Component {
       pages: arraypages,
       fistPage: 1,
       lastPage: nextprops.tdArray&&nextprops.tdArray.last_page,
+      permissions: result
     })
-    console.log('this.state', nextprops.tdArray)
+
   }
+
+  componentDidMount(){
+    let result =  this.props.permissions&&this.setPermissions(this.props.permissions)
+    this.setState({
+      permissions: result
+    })
+  }
+
+
+
+  setPermissions(permisions){
+    let p = permisions.permissions
+    let result = [];
+
+    for (const i in p) {
+      if('/admin'+p[i].path === this.props.location.pathname){
+          result = p[i].actions
+      }
+    }
+    return result
+  }
+
+ 
 
   
 
@@ -81,14 +111,13 @@ export default class Datatable extends Component {
           );
     }
     render() {
-      console.log('this.props.tdArray', this.props.tdArray)
         return (
             <Grid fluid>
             <Row>
             
                 <Col md={12}>
                 
-                {this.props.create&&(
+                {this.state.permissions.includes('create')&&this.props.create&&(
                     <div>
                     {this.props.loading&&(<Skeleton  height={30} width={70}/>)}
                     {!this.props.loading&&(<Button bsStyle="primary" fill wd onClick={()=>this.props.create()}>{this.props.titleBtn}</Button>)}
@@ -107,7 +136,7 @@ export default class Datatable extends Component {
                     <div >
                       <div style={{ justifyContent: 'space-between ', display: 'flex',  flexSelf:'felx-end'}}>
                         <div>
-                        {this.props.deleteMethod&& this.props.items.length>0&&(
+                        {this.state.permissions.includes('delete')&&this.props.deleteMethod&& this.props.items.length>0&&(
                           <OverlayTrigger placement="top" overlay={ <Tooltip id="remove">Eliminar Registro</Tooltip>}>
                             <Button simple bsStyle="danger" onClick={()=>this.props.deleteMethod()} bsSize="xl">
                               <i className="fa fa-trash" style={{fontSize: 20}} />
@@ -175,15 +204,15 @@ export default class Datatable extends Component {
                               return (
                               <tr key={key} style={{cursor:'pointer'}}>
                               <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key+prop[0]+prop[1]}/></td>
-                              <td onClick={()=>this.props.openDetail&&this.props.openDetail(prop[0])} >{key+1}</td>
+                              <td onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} >{key+1}</td>
                                   {prop.map((item, i) => {
                                     
                                     if( item && item.toString().substring(0, 4)==="http"){
-                                      return <td  onClick={()=>this.props.openDetail&&this.props.openDetail(prop[0])} key={i}><img src={item} alt="logo" className="img-fluid" width="40"/></td>
+                                      return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}><img src={item} alt="logo" className="img-fluid" width="40"/></td>
                                     }
                                     if(i===0) return;
                                     if(prop.length-1===i) return  <td key={i}>{item}</td>;
-                                    return <td  onClick={()=>this.props.openDetail&&this.props.openDetail(prop[0])} key={i}>{item}</td>
+                                    return <td  onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
                                   
                                   })}
                               </tr>
@@ -214,3 +243,5 @@ export default class Datatable extends Component {
         )
     }
 }
+
+export default Datatable;

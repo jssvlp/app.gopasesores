@@ -15,12 +15,11 @@
 
 */
 import Dashboard from "views/Dashboard.jsx";
-import Buttons from "views/Components/Buttons.jsx";
-import GridSystem from "views/Components/GridSystem.jsx";
 import Login from 'views/Login/login'
 import Client from 'views/Clients/clients'
 import Employees from 'views/Employees/employees'
 import Security from 'views/security/security'
+import InsurancesTab from 'views/insurencesTab/insurencesTab';
 
 // import Panels from "views/Components/Panels.jsx";
   // import SweetAlert from "views/Components/SweetAlertPage.jsx";
@@ -45,9 +44,16 @@ var routes = [
   {
     path: "/employees",
     layout: "/admin",
-    name: "Empleados",
+    name: "empleados/comisionistas ",
     icon: "pe-7s-users",
     component: Employees
+  },
+  {
+    path: "/insurances",
+    layout: "/admin",
+    name: "Aseguradoras",
+    icon: "pe-7s-portfolio",
+    component: InsurancesTab
   },
   {
     path: "/security",
