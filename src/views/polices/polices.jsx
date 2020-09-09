@@ -505,7 +505,7 @@ class Polices extends Component {
                       Estado de cobros: <b>{item.payment_status}</b>
                     </label>
                     <label style={{ fontWeight: "normal" }}>
-                      Descripcion: <b>{item.description_insured_property}</b>
+                      Descripción: <b>{item.description_insured_property}</b>
                     </label>
                     <label style={{ fontWeight: "normal" }}>
                       Tiene sinistro:{" "}
