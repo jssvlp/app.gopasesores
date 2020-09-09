@@ -9,6 +9,7 @@ import * as Branches from "./collections/branches";
 import * as Policies from "./collections/policies";
 import * as Lists from "./collections/list";
 import * as Docs from "./collections/docs";
+import * as Statistics from "./collections/statistics";
 
 export {
   Users,
@@ -21,4 +22,5 @@ export {
   Policies,
   Lists,
   Docs,
+  Statistics,
 };

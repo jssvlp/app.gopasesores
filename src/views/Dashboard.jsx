@@ -23,7 +23,7 @@ import Skeleton from "react-loading-skeleton";
 import Card from "components/Card/Card.jsx";
 import StatsCard from "components/Card/StatsCard.jsx";
 import Tasks from "components/Tasks/Tasks.jsx";
-
+import { inject, observer } from "mobx-react";
 import {
   dataPie,
   dataSales,
@@ -32,11 +32,45 @@ import {
   dataBar,
   optionsBar,
   responsiveBar,
-  table_data
+  table_data,
 } from "variables/Variables.jsx";
 
-
+@inject("statistics")
+@observer
 class Dashboard extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataPieClient: {
+        labels: ["0%", "0%"],
+        series: [0, 0],
+      },
+    };
+  }
+
+  async componentDidMount() {
+    const { statistics } = this.props;
+    const result = await statistics.getStatistics();
+    this.clientByType();
+    console.log("resul Dash", statistics.getDataStatistics, this.state);
+  }
+
+  clientByType() {
+    const { statistics } = this.props;
+    let client = statistics.getDataStatistics.client
+      ? statistics.getDataStatistics.clients.by_type
+      : null;
+
+    if (client) {
+      let dataPieClient = {
+        label: [client.company + "%", client.people + "%"],
+        series: [client.company, client.people],
+      };
+      this.setState({
+        dataPieClient: dataPieClient,
+      });
+    }
+  }
   createTableData() {
     var tableRows = [];
     for (var i = 0; i < table_data.length; i++) {
@@ -56,134 +90,194 @@ class Dashboard extends Component {
     return tableRows;
   }
   render() {
+    const { statistics } = this.props;
     return (
       <div className="main-content">
         <Grid fluid>
           <Row>
             <Col lg={3} sm={6}>
               <StatsCard
-                bigIcon={<i className="pe-7s-server text-warning" />}
-                statsText="Capacity"
-                statsValue="105GB"
-                statsIcon={<i className="fa fa-refresh" />}
-                statsIconText="Updated now"
+                bigIcon={<i className="pe-7s-user text-warning" />}
+                statsText="Clientes"
+                statsValue={
+                  statistics.getDataStatistics.statistics &&
+                  statistics.getDataStatistics.statistics.clients.total
+                }
+                statsIcon={<i className="fa fa-info" />}
+                statsIconText="total de clientes"
               />
-              
             </Col>
             <Col lg={3} sm={6}>
               <StatsCard
                 bigIcon={<i className="pe-7s-wallet text-success" />}
-                statsText="Revenue"
-                statsValue="$1,345"
-                statsIcon={<i className="fa fa-calendar-o" />}
-                statsIconText="Last day"
+                statsText="Polizas"
+                statsValue={
+                  statistics.getDataStatistics.statistics &&
+                  statistics.getDataStatistics.statistics.policies.total
+                }
+                statsIcon={<i className="fa fa-info" />}
+                statsIconText="total polizas registradas"
               />
             </Col>
             <Col lg={3} sm={6}>
               <StatsCard
-                bigIcon={<i className="pe-7s-graph1 text-danger" />}
-                statsText="Errors"
-                statsValue="23"
-                statsIcon={<i className="fa fa-clock-o" />}
-                statsIconText="In the last hour"
+                bigIcon={<i className="pe-7s-portfolio text-danger" />}
+                statsText="Sinistros"
+                statsValue={
+                  statistics.getDataStatistics.statistics &&
+                  statistics.getDataStatistics.statistics.policies
+                    .with_opened_sinister
+                }
+                statsIcon={<i className="fa fa-info" />}
+                statsIconText="Sinistros Abiertos"
               />
             </Col>
             <Col lg={3} sm={6}>
               <StatsCard
-                bigIcon={<i className="fa fa-twitter text-info" />}
-                statsText="Followers"
-                statsValue="+45"
-                statsIcon={<i className="fa fa-refresh" />}
-                statsIconText="Updated now"
+                bigIcon={<i className="pe-7s-users text-info" />}
+                statsText="Comisionistas"
+                statsValue={
+                  statistics.getDataStatistics.statistics &&
+                  statistics.getDataStatistics.statistics.commissioners
+                }
+                statsIcon={<i className="fa fa-info" />}
+                statsIconText="Total de colaboradores"
               />
             </Col>
           </Row>
           <Row>
             <Col md={4}>
               <Card
-                title="Email Statistics"
-                category="Last Campaign Performance"
-                content={<ChartistGraph data={dataPie} type="Pie" /> ||<Skeleton circle={true} height={300} width={300} />}
+                title="Clientes registrados"
+                category="clientes tipo persona y tipo empresa"
+                content={
+                  (statistics.getDataStatistics.statistics &&
+                    statistics.getDataStatistics.statistics.clients && (
+                      <ChartistGraph
+                        data={{
+                          labels: [
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.company + "%",
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.people + "%",
+                          ],
+                          series: [
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.company,
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.people,
+                          ],
+                        }}
+                        type="Pie"
+                      />
+                    )) || <Skeleton circle={true} height={300} width={300} />
+                }
                 legend={
                   <div>
-                    <i className="fa fa-circle text-info" /> Open
-                    <i className="fa fa-circle text-danger" /> Bounce
-                    <i className="fa fa-circle text-warning" /> Unsubscribe
+                    <i className="fa fa-circle text-info" /> Tipo persona
+                    <i className="fa fa-circle text-danger" /> Tipo empresa
                   </div>
                 }
                 stats={
                   <div>
-                    <i className="fa fa-clock-o" /> Campaign sent 2 days ago
+                    <i className="fa fa-info" /> todas los clientes registrados
+                    desde el inicio
                   </div>
                 }
               />
             </Col>
             <Col md={8}>
               <Card
-                title="Users Behavior"
-                category="24 Hours performance"
+                title="Clientes registrados por mes"
+                category="todos los clientes registrados desde el inicio"
                 content={
-                  <ChartistGraph
-                    data={dataSales}
-                    type="Line"
-                    options={optionsSales}
-                    responsiveOptions={responsiveSales}
-                  /> ||<Skeleton  height={300} width={750} />
+                  (statistics.getDataStatistics.statistics &&
+                    statistics.getDataStatistics.statistics.clients && (
+                      <ChartistGraph
+                        data={{
+                          labels: Object.values(
+                            statistics.getDataStatistics.statistics.clients
+                              .new_by_month_in_this_year.labels
+                          ),
+                          series: Object.values(
+                            statistics.getDataStatistics.statistics.clients
+                              .new_by_month_in_this_year.series
+                          ),
+                        }}
+                        type="Line"
+                        options={optionsSales}
+                        responsiveOptions={responsiveSales}
+                      />
+                    )) || <Skeleton height={300} width={750} />
                 }
                 legend={
                   <div>
-                    <i className="fa fa-circle text-info" /> Open
-                    <i className="fa fa-circle text-danger" /> Click
-                    <i className="fa fa-circle text-warning" /> Click Second
-                    Time
+                    <i className="fa fa-circle text-info" /> Usuarios
                   </div>
                 }
                 stats={
                   <div>
-                    <i className="fa fa-history" /> Updated 3 minutes ago
+                    <i className="fa fa-history" /> Actualizado hoy
                   </div>
                 }
               />
             </Col>
           </Row>
           <Row>
-            <Col md={6}>
+            <Col md={8}>
               <Card
-                title="2014 Sales"
-                category="All products including Taxes"
+                title="Cumpleaños"
+                category="Lista de cumpleaños de clientes"
                 content={
-                  <ChartistGraph
-                    data={dataBar}
-                    type="Bar"
-                    options={optionsBar}
-                    responsiveOptions={responsiveBar}
-                  />||<Skeleton  height={300} width={450}/>
-                }
-                legend={
-                  <div>
-                    <i className="fa fa-circle text-info" /> Tesla Model S
-                    <i className="fa fa-circle text-danger" /> BMW 5 Series
-                  </div>
+                  (
+                    <table className="table">
+                      <Tasks />
+                    </table>
+                  ) || <Skeleton height={300} width={330} />
                 }
                 stats={
                   <div>
-                    <i className="fa fa-check" /> Data information certified
+                    <i className="fa fa-history" /> Actualizado hace una hora
                   </div>
                 }
               />
             </Col>
-            <Col md={6}>
+            <Col md={4}>
               <Card
-                title="Tasks"
-                category="Backend development"
+                title="Clientes registrados"
+                category="clientes tipo persona y tipo empresa"
                 content={
-                  <table className="table">
-                    <Tasks />
-                  </table>||<Skeleton  height={300} width={330}/>
+                  (statistics.getDataStatistics.statistics &&
+                    statistics.getDataStatistics.statistics.clients && (
+                      <ChartistGraph
+                        data={{
+                          labels: [
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.company + "%",
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.people + "%",
+                          ],
+                          series: [
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.company,
+                            statistics.getDataStatistics.statistics.clients
+                              .by_type.people,
+                          ],
+                        }}
+                        type="Pie"
+                      />
+                    )) || <Skeleton circle={true} height={300} width={300} />
+                }
+                legend={
+                  <div>
+                    <i className="fa fa-circle text-info" /> Tipo persona
+                    <i className="fa fa-circle text-danger" /> Tipo empresa
+                  </div>
                 }
                 stats={
                   <div>
-                    <i className="fa fa-history" /> Updated 3 minutes ago
+                    <i className="fa fa-info" /> todas los clientes registrados
+                    desde el inicio
                   </div>
                 }
               />

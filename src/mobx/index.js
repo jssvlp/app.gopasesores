@@ -8,6 +8,7 @@ import Branches from "./collections/branches";
 import Polices from "./collections/Policies";
 import List from "./collections/lists";
 import Docs from "./collections/docs";
+import Statistics from "./collections/statistics";
 export default {
   users: new Users(),
   clients: new ClientController(),
@@ -19,4 +20,5 @@ export default {
   polices: new Polices(),
   lists: new List(),
   docs: new Docs(),
+  statistics: new Statistics(),
 };
