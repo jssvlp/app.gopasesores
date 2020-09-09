@@ -20,10 +20,10 @@ const headers = ["Nombre", "Fecha"];
 
 const fieldsPages = {
   polices: {
-    title: "Informacion de la poliza",
+    title: "Información de la póliza",
     fields: [
       {
-        label: "Informacion principal de la poliza",
+        label: "Información principal de la póliza",
         name: "header",
         value: "",
         type: "header",
@@ -34,7 +34,7 @@ const fieldsPages = {
       },
 
       {
-        label: "Numero de Poliza",
+        label: "Número de Póliza",
         name: "policy_number",
         value: "",
         type: "number",
@@ -59,7 +59,7 @@ const fieldsPages = {
       },
 
       {
-        label: "Fecha de Inicio",
+        label: "Fecha de expedición",
         name: "validity_start_date",
         value: "",
         type: "date",
@@ -69,7 +69,7 @@ const fieldsPages = {
         col: 4,
       },
       {
-        label: "Fecha de Fin",
+        label: "Fecha de vencimiento",
         name: "validity_end_date",
         value: "",
         type: "date",
@@ -104,19 +104,38 @@ const fieldsPages = {
         display: ["create", "update"],
         col: 4,
       },
-
       {
-        label: "Es Renovable?",
-        name: "renewable",
+        label: "Descripción rápida de la propiedad/bien  asegurada",
+        name: "description_insured_property",
         value: "",
-        type: "checkbox",
+        type: "textarea",
         mask: "",
         model: "polices",
         display: ["create", "update"],
         col: 12,
       },
       {
-        label: "Informacion prima y comisiones",
+        label: "Día de pago",
+        name: "day_of_payment",
+        value: "",
+        type: "number",
+        mask: "",
+        model: "polices",
+        display: ["create", "update"],
+        col: 6,
+      },
+      {
+        label: "¿Es Renovable?",
+        name: "renewable",
+        value: "",
+        type: "checkbox",
+        mask: "",
+        model: "polices",
+        display: ["create", "update"],
+        col: 6,
+      },
+      {
+        label: "Información prima y comisiones",
         name: "header",
         value: "",
         type: "header",
@@ -126,7 +145,7 @@ const fieldsPages = {
         col: 12,
       },
       {
-        label: "Monto de la Poliza",
+        label: "Monto de la Póliza",
         name: "insured_amount",
         value: "",
         type: "number",
@@ -169,7 +188,7 @@ const fieldsPages = {
         col: 4,
       },
       {
-        label: "% de Comision del dueño",
+        label: "% de Comisión dueño del cliente",
         name: "commission_percentage_client_owner",
         value: "",
         type: "number",
@@ -179,7 +198,7 @@ const fieldsPages = {
         col: 4,
       },
       {
-        label: "% de Comision",
+        label: "% de comisión compañía",
         name: "commission_percentage",
         value: "",
         type: "number",
@@ -203,17 +222,7 @@ const fieldsPages = {
       },
 
       {
-        label: "Dias de pago",
-        name: "day_of_payment",
-        value: "",
-        type: "number",
-        mask: "",
-        model: "polices",
-        display: ["create", "update"],
-        col: 4,
-      },
-      {
-        label: "Informacion del beneficiario",
+        label: "Información del beneficiario adicional",
         name: "header",
         value: "",
         type: "header",
@@ -224,17 +233,7 @@ const fieldsPages = {
       },
 
       {
-        label: "Descripcion de la asegurado?",
-        name: "description_insured_property",
-        value: "",
-        type: "textarea",
-        mask: "",
-        model: "polices",
-        display: ["create", "update"],
-        col: 12,
-      },
-      {
-        label: "Nombre del Beneficiario",
+        label: "Nombre del beneficiario adicional",
         name: "additional_beneficiary_name",
         value: "",
         type: "text",
@@ -244,7 +243,7 @@ const fieldsPages = {
         col: 6,
       },
       {
-        label: "Documento del Beneficiario",
+        label: "No. Documento del Beneficiario adicional",
         name: "additional_beneficiary_document",
         value: "",
         type: "text",
@@ -264,7 +263,7 @@ const fieldsPages = {
         col: 12,
       },
       {
-        label: "Comentario Publico",
+        label: "Comentario Público",
         name: "public_comment",
         value: "",
         type: "textarea",
@@ -301,7 +300,7 @@ const fieldsPages = {
     rules: [],
     fields: [
       {
-        label: "Subir todos los Adjuntos de la poliza",
+        label: "Subir todos los Adjuntos de la póliza",
         name: "documents",
         value: "",
         type: "file",
