@@ -1,9 +1,7 @@
 import { observable, computed } from "mobx";
-import React, { Component } from "react";
+import { Component } from "react";
 import { Employees } from "../../services/index";
 import {EmployeesForm} from '../../jsonForms/index'
-import Switch from "react-bootstrap-switch";
-
     class EmployeeController  extends Component  {
 
     @observable load = true
@@ -61,7 +59,7 @@ import Switch from "react-bootstrap-switch";
 
     async  getPositions() {
         const result = await Employees.getPosition();
-        let positions = result.data.positions
+        let positions = result.data? result.data.positions:[]
         let array = []
         for (const i in positions) {
             array.push({label: positions[i].description,value:positions[i].id})
@@ -88,6 +86,12 @@ import Switch from "react-bootstrap-switch";
         if(result.data.success && result.status ===200) this.EmployeeById = result.data
         if(!result.data.success || result.status !==200) this.EmployeeById = []
         console.log('result', result);
+    }
+
+
+    async getEmployeeByUser(id){
+        const result = await Employees.getEmployeesByUser(id)
+        return result.data
     }
 
     async deleteEmployeeById(id){

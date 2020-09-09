@@ -15,59 +15,62 @@
 
 */
 import Dashboard from "views/Dashboard.jsx";
-import Login from 'views/Login/login'
-import Client from 'views/Clients/clients'
-import Employees from 'views/Employees/employees'
-import Security from 'views/security/security'
-import InsurancesTab from 'views/insurencesTab/insurencesTab';
+import Login from "views/Login/login";
+import Client from "views/Clients/clients";
+import Employees from "views/Employees/employees";
+import Security from "views/security/security";
+import InsurancesTab from "views/insurencesTab/insurencesTab";
+import Polices from "views/polices/polices";
 
-// import Panels from "views/Components/Panels.jsx";
-  // import SweetAlert from "views/Components/SweetAlertPage.jsx";
-  // import Notifications from "views/Components/Notifications.jsx";
-  // import Icons from "views/Components/Icons.jsx";
-  // import Typography from "views/Components/Typography.jsx";
 var routes = [
   {
     path: "/dashboard",
     layout: "/admin",
     name: "Dashboard",
     icon: "pe-7s-graph",
-    component: Dashboard
+    component: Dashboard,
   },
   {
     path: "/clients",
     layout: "/admin",
     name: "Clientes",
     icon: "pe-7s-user",
-    component: Client
+    component: Client,
   },
   {
     path: "/employees",
     layout: "/admin",
     name: "empleados/comisionistas ",
     icon: "pe-7s-users",
-    component: Employees
+    component: Employees,
   },
   {
     path: "/insurances",
     layout: "/admin",
     name: "Aseguradoras",
     icon: "pe-7s-portfolio",
-    component: InsurancesTab
+    component: InsurancesTab,
+  },
+
+  {
+    path: "/polices",
+    layout: "/admin",
+    name: "Polizas",
+    icon: "pe-7s-shield",
+    component: Polices,
   },
   {
     path: "/security",
     layout: "/admin",
     name: "Seguridad",
     icon: "pe-7s-unlock",
-    component: Security
+    component: Security,
   },
-  
+
   {
     path: "/login-page",
     layout: "/auth",
-    component: Login
+    component: Login,
   },
-
 ];
 export default routes;

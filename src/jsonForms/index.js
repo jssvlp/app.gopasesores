@@ -1,17 +1,17 @@
-import * as ClientsForm from './clients'
-import * as EmployeesForm from './employees'
-import * as RolesForm from './roles'
-import * as PermissionsForm from './permissions'
-import * as InsurancesForm from './insurances';
-import * as  BranchesForm from './branches';
-
-
+import * as ClientsForm from "./clients";
+import * as EmployeesForm from "./employees";
+import * as RolesForm from "./roles";
+import * as PermissionsForm from "./permissions";
+import * as InsurancesForm from "./insurances";
+import * as BranchesForm from "./branches";
+import * as PolicesForm from "./polices";
 
 export {
-    ClientsForm,
-    EmployeesForm,
-    RolesForm,
-    PermissionsForm,
-    InsurancesForm,
-    BranchesForm
-}
+  ClientsForm,
+  EmployeesForm,
+  RolesForm,
+  PermissionsForm,
+  InsurancesForm,
+  BranchesForm,
+  PolicesForm,
+};

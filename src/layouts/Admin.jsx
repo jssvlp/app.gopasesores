@@ -14,14 +14,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React, { Component,StrictMode } from "react";
 import { Switch, Route } from "react-router-dom";
 // this is used to create scrollbars on windows devices like the ones from apple devices
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
 import NotificationSystem from "react-notification-system";
-
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
@@ -254,6 +253,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="wrapper">
+      <StrictMode>
        {this.state.alert}
       <Provider  {...stores}>
         <NotificationSystem ref="notificationSystem" style={style} />
@@ -300,6 +300,7 @@ class Dashboard extends Component {
           /> */}
         </div>
         </Provider>
+        </StrictMode>
       </div>
     );
   }

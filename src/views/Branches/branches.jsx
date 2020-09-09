@@ -3,8 +3,9 @@ import Datatable from '../../components/DataTable/Datatable'
 import BodyContent from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
-import Modal from '../../components/Modal/Modal';
 import moment from 'moment';
+import Modal from '../../components/Modal/Modal';
+import ModalBranches from './modalBranches'
 @inject('branches','users')
 @observer
 class branches extends Component {
@@ -21,6 +22,8 @@ class branches extends Component {
                 branches:[],
             },
             branches_id:null,
+            modalBranches:false,
+            branch_id:null,
             create:false,
             update:false,
             seletectedItems:[],
@@ -35,8 +38,13 @@ class branches extends Component {
         this.closeWizard = this.closeWizard.bind(this);
         this.updateBranch = this.updateBranch.bind(this);
         this.deleteBranches = this.deleteBranches.bind(this);
+        this.setidBranch = this.setidBranch.bind(this);
         this.selectedItem = this.selectedItem.bind(this);
+        this.openModalBranches = this.openModalBranches.bind(this);
+        this.addComissions = this.addComissions.bind(this);
         this.filterDate = this.filterDate.bind(this);
+        this.deleteInsurance = this.deleteInsurance.bind(this);
+        this.openDetailComissions = this.openDetailComissions.bind(this);
     }
 
      componentDidMount(){
@@ -174,25 +182,103 @@ class branches extends Component {
         let fields = branches.fields.branches.fields
        
         for (const i in fields) {
-           
+            if(fields[i].name === 'commissions'){
+                fields[i].delete = this.deleteInsurance;
+               fields[i].create = this.openModalBranches;
+               fields[i].openDetail = this.openDetailComissions;
+           }
         }
         return data.map((item,i)=>{
-            return [item.id,item.name,item.path]
+            return [item.id,item.insurance,item.commission_percentage]
         })
     }
 
+
+    async openDetailComissions(id){
+        const {branches} = this.props
+        const result = await branches.getComissionsToBranch(id);
+        if(result.success){
+            this.setState({
+                modalBranches: !this.state.modalBranches,
+                "isc_percent": result.commission.isc_percent,
+                "commission_percentage": result.commission.commission_percentage,
+                "insurance_id":result.commission.insurance_id,
+                "multiple_beneficiaries" : result.commission.multiple_beneficiaries,
+                "branch_id" : this.state.branches_id,
+                commisions_id: result.commission.id,
+                updateComissions:true
+            })
+        }
+        console.log('result branch', result,id)
+    }
+
+
+
+    deleteInsurance(id){
+        const {branches} = this.props;
+        const result = branches.deleteInsuranceToBranch(id);
+        this.openDetail(this.state.branches_id,true);
+        return result;
+    }
+
+    async updateComissionsToBranch(body){
+        const {branches} =this.props;
+        const result = await branches.updateComissionsToBranch(this.state.commisions_id,body)
+        if(result.success){
+            this.props.alertMessage('Se ha actualizo el registro','Puede verificar en la lista el registrado','success')
+            this.setState({
+                modalBranches: false,
+                updateComissions:false
+            })
+            this.openDetail(this.state.branches_id,true);
+        }
+        if(!result.success) this.props.alertMessage(result.message,'Favor verificar los datos','error')
+        console.log('body update', body)
+    }
+
+
+    async addComissions(){
+        const {branches} = this.props
+        let body = {
+            "isc_percent": this.state.isc_percent,
+            "commission_percentage": this.state.commission_percentage,
+            "multiple_beneficiaries" : this.state.multiple_beneficiaries,
+            "branch_id" : this.state.branches_id
+        }
+        let bodyUpdate = {
+            "isc_percent": this.state.isc_percent,
+            "commission_percentage": this.state.commission_percentage,
+            "multiple_beneficiaries" : this.state.multiple_beneficiaries,
+        }
+        if(this.state.updateComissions) return this.updateComissionsToBranch(bodyUpdate)
+
+        console.log('body', body)
+        const result = await branches.saveToInsurance(this.state.insurance_id,body)
+        if(result.data.success){
+            this.props.alertMessage('Se ha creado el registro','Puede verificar en la lista el registrado','success')
+            this.setState({
+                modalBranches: false
+            })
+            this.openDetail(this.state.branches_id,true);
+        }
+        if(!result.data.success) this.props.alertMessage(result.data.message,'Favor verificar los datos','error')
+        console.log('body', result)
+
+    }
  
 
     
 
-    async openDetail(id){
+    async openDetail(id,reload = false){
         const {branches} = this.props;
         console.log('id', id)
-        this.props.alertLoading("Espere un momento....",true)
+       !reload&& this.props.alertLoading("Espere un momento....",true)
         await branches.getBranchById(id);
-        console.log('branchesss', branches.BranchByIdInfo)
+        
         delete branches.BranchByIdInfo.branch.updated_at
         delete branches.BranchByIdInfo.branch.created_at
+        branches.BranchByIdInfo.branch.commissions = this.configurationsTable(branches.BranchByIdInfo.branch.commissions)
+        console.log('branchesss', branches.BranchByIdInfo)
         console.log('branches.field.foie',  branches.fields.branches.fields)
         let body ={
             branches:branches.BranchByIdInfo.branch,
@@ -205,7 +291,7 @@ class branches extends Component {
             branches_id:id
         })
         this.verifyErrors();
-        this.props.alertLoading("Espere un momento....",false)
+        !reload&&this.props.alertLoading("Espere un momento....",false)
     }
 
     closeWizard(){
@@ -274,6 +360,19 @@ class branches extends Component {
 
     }
 
+    setidBranch(name,value){
+        this.setState({
+            [name]:value
+        })
+    }
+
+    openModalBranches(){
+        console.log('this.state', this.state)
+        this.setState({
+            modalBranches: !this.state.modalBranches
+        })
+    }
+
  
   
     render() {
@@ -331,6 +430,21 @@ class branches extends Component {
                     titleBtn={"Nuevo"}
                     />
                 )}
+
+
+                <Modal 
+                body={
+                    <ModalBranches
+                    onChange={this.setidBranch} 
+                    fields={this.state}
+                    />
+                }
+                title="Asignar una nueva comision por aseguradora"
+                alertMessage={this.props.alertMessage}  
+                modalShow={this.state.modalBranches} 
+                modalCreate={this.openModalBranches}
+                saveMethod={this.state.insurance_id&&this.addComissions} 
+                /> 
 
                 
             </div>

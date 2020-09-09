@@ -1,6 +1,5 @@
-import React, { Component, Children } from 'react'
+import  { Component } from 'react'
 import { inject,observer} from "mobx-react";
-import { Redirect } from 'react-router'
 @inject('users')
 @observer
 class Protect extends Component {
@@ -18,7 +17,6 @@ class Protect extends Component {
         const {users} = this.props
         if(!users.infoUser.permissions) return;
         
-        console.log('result protect!!!!!!!!!!!!!!!!!!!',users.infoUser ,this.props)
         let path =users.infoUser.permissions.map((item,i)=>{
             return item.path
         })

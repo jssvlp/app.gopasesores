@@ -1,12 +1,5 @@
 
 
-
-
-
-import { Employees } from "../services/index";
-
-
-
 const fieldErrors = {
     employee:{
         "first_name":true,
@@ -208,6 +201,26 @@ const fieldsPages = {
                 model:'user', 
                 display:['create','update'],
                 mask:'',
+                col:6
+            },
+            {
+                label: 'Foto de Perfil', 
+                name:'picture', 
+                value:'', 
+                type:'image',
+                model:'user', 
+                display:['create','update'],
+                mask:'',
+                col:12
+            },
+            {
+                label: '', 
+                name:'espace', 
+                value:'',
+                type:'br',
+                mask:'',
+                model:'insurances',
+                display:['create','update'],
                 col:6
             },
            

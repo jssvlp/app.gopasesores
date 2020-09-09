@@ -1,5 +1,5 @@
 import { observable, computed } from "mobx";
-import React, { Component } from "react";
+import { Component } from "react";
 import { Permissions } from "../../services/index";
 import {PermissionsForm} from '../../jsonForms/index'
 

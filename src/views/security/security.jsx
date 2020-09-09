@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import {
-    Grid,
     Row,
     Col,
-    PanelGroup,
-    Panel,
     Nav,
     NavItem,
     Tab

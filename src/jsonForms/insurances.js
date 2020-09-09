@@ -97,33 +97,6 @@ const fieldsPages = {
                 col:12
             },
             {
-                label: 'Ramos', 
-                name:'title', 
-                value:'',
-                type:'title',
-                mask:'',
-                model:'insurances',
-                display:['update'],
-                col:12
-            },
-            
-            {
-                label: 'Ramos de la aseguradora', 
-                name:'branches', 
-                value:'',
-                headers:['Nombre'] ,
-                data:[] ,
-                type:'table',
-                display:['update'],
-                btnName:'Agregar nueva Ramo',
-                delete:()=>{},
-                create:()=>{},
-                openDetail: ()=>{},
-                mask:'',
-                model:'insurances', 
-                col:12
-            },
-            {
                 label: '', 
                 name:'espace', 
                 value:'',

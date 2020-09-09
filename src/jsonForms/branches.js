@@ -2,18 +2,13 @@
 const fieldErrors = {
     branches:{
         "name":true,
-        "commission_percentage":true,
-        "itbis":true,
-        "insurance_id":true,
         "main_branch_id":true
     },
 };
 
 
 const headers = [
-    "Nombre",  
-    "Comision",
-    "Aseguradora",
+    "Nombre",
     "Ramo principal",
     "Fecha"
 ];
@@ -42,38 +37,6 @@ const fieldsPages = {
                 model:'branches', 
                 col:6
             },
-            {
-                label: 'Porcentaje de comision', 
-                name:'commission_percentage', 
-                value:'',
-                type:'number',
-                mask:'',
-                model:'branches',
-                display:['create','update'],
-                col:6
-            },
-          
-            {
-                label: 'Itbis', 
-                name:'itbis', 
-                value:'',
-                type:'number',
-                mask:'',
-                model:'branches',
-                display:['create','update'],
-                col:6
-            },
-
-            {
-                label: 'Aseguradora', 
-                name:'insurance_id', 
-                value:[],
-                type:'select',
-                mask:'',
-                model:'branches',
-                display:['create','update'],
-                col:6
-            },
 
             {
                 label: 'Ramo principal', 
@@ -83,6 +46,23 @@ const fieldsPages = {
                 mask:'',
                 model:'branches',
                 display:['create','update'],
+                col:6
+            },
+            
+            {
+                label: 'Comisiones de aseguradoras', 
+                name:'commissions', 
+                value:'',
+                headers:['Nombre','Comision'] ,
+                data:[] ,
+                type:'table',
+                display:['update'],
+                btnName:'Agregar comision',
+                delete:()=>{},
+                create:()=>{},
+                openDetail: ()=>{},
+                mask:'',
+                model:'branches', 
                 col:12
             },
             {

@@ -1,9 +1,7 @@
 import { observable, computed } from "mobx";
-import React, { Component } from "react";
+import { Component } from "react";
 import { Roles } from "../../services/index";
 import {RolesForm} from '../../jsonForms/index'
-import Switch from "react-bootstrap-switch";
-
     class RoleController  extends Component  {
 
     @observable load = true

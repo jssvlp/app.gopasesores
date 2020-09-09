@@ -5,16 +5,10 @@ import * as React from 'react';
 // import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import {   inject} from "mobx-react";
 import Logo from '../../assets/img/logo-gop.png'
-import { bounceIn } from 'react-animations';
-import Radium, {StyleRoot} from 'radium';
+import  {StyleRoot} from 'radium';
 import SweetAlert from "react-bootstrap-sweetalert";
 
-const styles = {
-  bounceIn: {
-    animation: 'x 2s',
-    animationName: Radium.keyframes(bounceIn, 'bounceIn')
-  }
-}
+
 @inject('users')
   class Login extends React.Component {
 

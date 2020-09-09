@@ -40,14 +40,22 @@ class Employees extends Component {
         this.filterDate = this.filterDate.bind(this);
     }
 
-     componentDidMount(){
+     async componentDidMount(){
         const {employees} = this.props;
+
+        if(this.props.location.state && this.props.location.state.editProfile ){
+            const result = await employees.getEmployeeByUser(this.props.location.state.userId)
+            console.log('result editprofile', result)
+            result.success&& this.openDetail(result.employee.id)
+            
+        }
         employees.statusLoading(true);
          this.reloadTable();
          this.setState({
              errors:employees.fieldErrors
          })
         employees.statusLoading(false);
+        console.log('this.props', this.props)
 
     }
 

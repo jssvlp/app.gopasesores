@@ -1,15 +1,13 @@
 import React, { Component } from 'react'
-import { Table, Grid, Row, Col,Tooltip,OverlayTrigger,Button as Button2, Pagination,FormControl,FormGroup } from "react-bootstrap";
+import { Table, Grid, Row, Col,Tooltip,OverlayTrigger, Pagination } from "react-bootstrap";
 
 import Button from "components/CustomButton/CustomButton.jsx";
 import Card from "components/Card/Card.jsx";
-import Select from "react-select";
 import Checkbox from "components/CustomCheckbox/CustomCheckbox.jsx";
 import Skeleton from "react-loading-skeleton";
 import Datetime from "react-datetime";
 import moment from 'moment';
 import { inject,observer} from "mobx-react";
-import { Redirect } from 'react-router'
 @inject('users')
 @observer
  class Datatable extends Component {
@@ -203,14 +201,13 @@ import { Redirect } from 'react-router'
                           {this.props.tdArray.data&&this.props.tdArray.data.map((prop, key) => {
                               return (
                               <tr key={key} style={{cursor:'pointer'}}>
-                              <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key+prop[0]+prop[1]}/></td>
-                              <td onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} >{key+1}</td>
+                              <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key+prop[0]+prop[1]+(this.props.view?this.props.view:'none')}/></td>
+                              {/* <td onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} >{key+1}</td> */}
                                   {prop.map((item, i) => {
                                     
                                     if( item && item.toString().substring(0, 4)==="http"){
                                       return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}><img src={item} alt="logo" className="img-fluid" width="40"/></td>
                                     }
-                                    if(i===0) return;
                                     if(prop.length-1===i) return  <td key={i}>{item}</td>;
                                     return <td  onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
                                   

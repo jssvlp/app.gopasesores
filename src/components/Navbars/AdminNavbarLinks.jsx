@@ -18,7 +18,6 @@ import React, { Component } from "react";
 import {
   Navbar,
   Nav,
-  NavItem,
   NavDropdown,
   MenuItem,
   FormGroup,
@@ -26,7 +25,6 @@ import {
   InputGroup
 } from "react-bootstrap";
 import { inject,observer} from "mobx-react";
-import { logout } from "services/collections/users";
 import logo from "assets/img/logo-gop.png";
 @inject('users')
 @observer

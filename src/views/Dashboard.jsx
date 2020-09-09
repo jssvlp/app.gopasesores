@@ -20,7 +20,6 @@ import { Grid, Col, Row } from "react-bootstrap";
 import ChartistGraph from "react-chartist";
 // react components used to create a SVG / Vector map
 import Skeleton from "react-loading-skeleton";
-import { VectorMap } from "react-jvectormap";
 import Card from "components/Card/Card.jsx";
 import StatsCard from "components/Card/StatsCard.jsx";
 import Tasks from "components/Tasks/Tasks.jsx";
@@ -36,19 +35,6 @@ import {
   table_data
 } from "variables/Variables.jsx";
 
-var mapData = {
-  AU: 760,
-  BR: 550,
-  CA: 120,
-  DE: 1300,
-  FR: 540,
-  GB: 690,
-  GE: 200,
-  IN: 200,
-  RO: 600,
-  RU: 300,
-  US: 2920
-};
 
 class Dashboard extends Component {
   createTableData() {

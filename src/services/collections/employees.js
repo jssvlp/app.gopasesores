@@ -22,6 +22,12 @@ function getEmployeesById(id) {
 
 }
 
+function getEmployeesByUser(id) {
+
+    return api.get('/employees/user/'+id)
+
+}
+
 
 function saveEmployee(body) {
 
@@ -57,5 +63,6 @@ export {
     deleteEmployee,
     updateEmployee,
     filterDateEmployee,
-    getPosition
+    getPosition,
+    getEmployeesByUser
 }

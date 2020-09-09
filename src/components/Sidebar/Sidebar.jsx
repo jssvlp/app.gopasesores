@@ -23,7 +23,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.jsx";
-
+import {Storage} from '../../services/firebase/index'
 // image for avatar in Sidebar
 import avatar from "assets/img/default-user-image.png";
 // logo for sidebar
@@ -43,6 +43,8 @@ class Sidebar extends Component {
       ...this.getCollapseStates(routes),
       openAvatar: false,
       permissions:[],
+      uplodaImage:true,
+      picture:null,
       isWindows: navigator.platform.indexOf("Win") > -1 ? true : false,
       width: window.innerWidth
     };
@@ -150,7 +152,7 @@ class Sidebar extends Component {
   componentDidUpdate() {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
-        ps.update();
+        ps&&ps.update();
       }, 350);
     }
   }
@@ -159,12 +161,14 @@ class Sidebar extends Component {
         const result = await users.getUsersById(localStorage.getItem('user-id-gop'));
         let permissions = [];
         console.log('users.infoUser', users.infoUser)
-        if(users.infoUser.permissions){
+        if(users.infoUser && users.infoUser.permissions){
+         let picture = await this.getImageProfile(users.infoUser.picture)
           permissions = users.infoUser.permissions.map((item,i)=>{
             return item.path
           })
           this.setState({
-            permissions:permissions
+            permissions:permissions,
+            picture:picture
           })
         }
     this.updateDimensions();
@@ -185,6 +189,17 @@ class Sidebar extends Component {
       ps&&ps.destroy();
     }
   }
+
+  redirectToEdit(){
+    const {users} = this.props
+    this.props.history.push({
+      pathname:'/admin/employees',
+      state:{
+        editProfile: true,
+        userId: users.infoUser&&users.infoUser.id
+      }
+    })
+  }
   isRouterProtect(){
     let result = routes.map((prop,i)=>{
       return this.state.permissions.includes(prop.path)?prop:null;
@@ -193,6 +208,24 @@ class Sidebar extends Component {
       return el != null;
     });
     return this.createLinks(router)
+    
+  }
+
+
+  async getImageProfile(data){
+    if(data && this.state.uplodaImage){
+      let result =  await Storage.getProfileImage(data)
+      if(!result.success){
+        this.setState({
+          uplodaImage: false
+        })
+        return null
+      }
+      return result.data
+    }
+    if(!data){
+      return null
+    }
     
   }
   render() {
@@ -232,7 +265,7 @@ class Sidebar extends Component {
         <div className="sidebar-wrapper" ref="sidebarWrapper">
           <div className="user">
             <div className="photo">
-              <img src={ users.infoUser.picture || avatar} alt="Avatar" />
+              <img src={ this.state.picture|| avatar} alt="Avatar" />
             </div>
             <div className="info">
               <a
@@ -254,21 +287,15 @@ class Sidebar extends Component {
               <Collapse in={this.state.openAvatar}>
                 <ul className="nav">
                   <li>
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                      <span className="sidebar-mini">MP</span>
-                      <span className="sidebar-normal">My Profile</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
+                    <a href="#pablo" onClick={(e)=>{e.preventDefault();this.redirectToEdit()}}>
                       <span className="sidebar-mini">EP</span>
-                      <span className="sidebar-normal">Edit Profile</span>
+                      <span className="sidebar-normal">Editar Perfil</span>
                     </a>
                   </li>
                   <li>
                     <a href="#pablo" onClick={e => e.preventDefault()}>
-                      <span className="sidebar-mini">S</span>
-                      <span className="sidebar-normal">Settings</span>
+                      <span className="sidebar-mini">C</span>
+                      <span className="sidebar-normal">Configuracion</span>
                     </a>
                   </li>
                 </ul>

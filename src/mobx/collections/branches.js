@@ -1,6 +1,7 @@
 import { observable, computed } from "mobx";
 import { Branches } from "../../services/index";
 import {BranchesForm} from '../../jsonForms/index'
+import branches from "views/Branches/branches";
 
     class BranchController   {
 
@@ -93,6 +94,30 @@ import {BranchesForm} from '../../jsonForms/index'
         return result.data
     }
 
+    async saveToInsurance(id,body){
+        const result = await Branches.saveToInsurance(id,body)
+        return result
+    }
+
+
+    async deleteInsuranceToBranch(id){
+        const result =  await Branches.deleteInsuranceToBranch(id);
+        return result.data
+    }
+
+    async getComissionsToBranch(id){
+        const result = await Branches.getComissionsToBranch(id);
+        return result.data
+    }
+
+    async updateComissionsToBranch(id,body){
+        const result = await Branches.updateComissionsToBranch(id,body);
+        return result.data
+    }
+
+
+    
+
 
     async getAllBranches(page){
         this.initValues();
@@ -104,12 +129,11 @@ import {BranchesForm} from '../../jsonForms/index'
             
             console.log('result.data.data', result.data.data)
             for (const i in data) {
+                console.log('data[i]', data[i].name)
                 json.push([
                     data[i].id, 
                     data[i].name,
-                    data[i].commission_percentage,
-                    data[i].insurance.name, 
-                    data[i].main_branch.name,
+                    data[i].main_branch_id,
                     data[i].created_at.split('T')[0],
                 ])
             }

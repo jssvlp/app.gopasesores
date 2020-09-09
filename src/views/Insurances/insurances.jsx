@@ -4,7 +4,7 @@ import BodyContent from '../../components/bodyForm/contentBody'
 import { inject,observer} from "mobx-react";
 import Wizzard from '../../components/stepsWizzard/StepsWizzard'
 import Modal from '../../components/Modal/Modal';
-import ModalBranches from './modalBranches'
+//import ModalBranches from '../Branches/modalBranches'
 import moment from 'moment';
 @inject('insurances','users')
 @observer
@@ -220,7 +220,6 @@ class Insurances extends Component {
         console.log('insurancesss', insurances.InsuranceByIdInfo)
         delete insurances.InsuranceByIdInfo.insurance.updated_at
         delete insurances.InsuranceByIdInfo.insurance.created_at
-        insurances.InsuranceByIdInfo.insurance.branches = this.configurationsTable(insurances.InsuranceByIdInfo.insurance.branches)
         console.log('insurances.field.foie',  insurances.InsuranceByIdInfo.insurance)
         let body ={
             insurances:insurances.InsuranceByIdInfo.insurance,
@@ -360,18 +359,7 @@ class Insurances extends Component {
                     />
                 )}
 
-                <Modal 
-                body={
-                    <ModalBranches
-                    onChange={this.setidBranch} 
-                    />
-                }
-                title="Asignar un nuevo permiso"
-                alertMessage={this.props.alertMessage}  
-                modalShow={this.state.modalBranches} 
-                modalCreate={this.openModalBranches}
-                saveMethod={this.state.branch_id&&this.addPermissions} 
-                /> 
+                
 
                 
             </div>

@@ -20,7 +20,6 @@ import StepZilla from "react-stepzilla";
 import { Grid, Row, Col } from "react-bootstrap";
 import Button from "components/CustomButton/CustomButton.jsx";
 import Card from "components/Card/Card.jsx";
-import StepWizard from 'react-step-wizard';
 
 
 class StepsWizzard extends Component {

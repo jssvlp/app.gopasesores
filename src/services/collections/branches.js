@@ -1,8 +1,6 @@
 import api from '../api/create';
 
 
-
-
 function getBranches(page) {
 
     return api.get('/branches?page='+page)
@@ -18,6 +16,11 @@ function getMainBranches() {
 function getInsurancesBranches(page) {
 
     return api.get('/insurances/list/all')
+
+}
+function getComissionsToBranch(id) {
+
+    return api.get('/branches/commission/'+id)
 
 }
 
@@ -36,6 +39,12 @@ function saveBranch(body) {
 
 }
 
+function saveToInsurance(id,body) {
+
+    return api.post(`/branches/${id}/commission`,body)
+
+}
+
 
 function deleteBranch(id) {
 
@@ -43,9 +52,21 @@ function deleteBranch(id) {
 
 }
 
+function deleteInsuranceToBranch(id) {
+
+    return api.delete('/branches/commission/'+id)
+
+}
+
 function updateBranch(id,body) {
 
     return api.put('/branches/'+id,body)
+
+}
+
+function updateComissionsToBranch(id,body) {
+
+    return api.put('/branches/commission/'+id,body)
 
 }
 
@@ -66,5 +87,9 @@ export {
     updateBranch,
     filterDateBranch,
     getMainBranches,
-    getInsurancesBranches
+    getInsurancesBranches,
+    saveToInsurance,
+    deleteInsuranceToBranch,
+    getComissionsToBranch,
+    updateComissionsToBranch
 }
