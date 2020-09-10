@@ -40,20 +40,12 @@ export class Tasks extends Component {
               key={i}
               style={{
                 border: item.is_today ? "" : "",
-                backgroundColor: item.is_today ? "#fb404b" : "white",
+                backgroundColor: item.is_today ? "#053e7a" : "white",
                 color: item.is_today ? "white" : "black",
                 borderRadius: 40,
               }}
             >
-              <td>
-                {item.is_today && (
-                  <i
-                    className="pe-7s-gift"
-                    style={{ fontSize: 20, color: "white" }}
-                  />
-                )}{" "}
-                {item.first_name + " " + item.last_name}
-              </td>
+              <td>{item.first_name + " " + item.last_name}</td>
               <td>
                 {item.is_today
                   ? "Hoy!"
@@ -64,7 +56,7 @@ export class Tasks extends Component {
               {item.is_today && (
                 <td className="td-actions text-right">
                   <i
-                    className="pe-7s-gift"
+                    className="fa fa-birthday-cake"
                     style={{ fontSize: 20, color: "white" }}
                   />
                 </td>

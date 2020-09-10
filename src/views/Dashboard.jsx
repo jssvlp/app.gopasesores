@@ -332,7 +332,7 @@ class Dashboard extends Component {
             <Col md={6}>
               <Card
                 title="Clientes registrados por mes"
-                category="todos los clientes registrados desde el inicio"
+                category="Todos lo clientes registrados en el presente año"
                 content={
                   (statistics.getDataStatistics.statistics &&
                     statistics.getDataStatistics.statistics.clients && (
