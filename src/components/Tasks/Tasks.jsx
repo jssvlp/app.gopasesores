@@ -29,31 +29,68 @@ export class Tasks extends Component {
     });
   };
   render() {
-    const edit = <Tooltip id="edit_tooltip">Edit Task</Tooltip>;
-    const remove = <Tooltip id="remove_tooltip">Remove</Tooltip>;
-    const tasks_title = [
-      "Erickson Flores",
-      "Jossias Velazquez",
-      "Mario Rodriguez",
-      "Manuel Sulio",
-    ];
+    console.log("this.props", this.props);
     var tasks = [];
-    var number;
-    for (var i = 0; i < tasks_title.length; i++) {
-      number = "checkbox" + i;
-      tasks.push(
-        <tr key={i}>
-          <td>{tasks_title[i]}</td>
-          <td className="td-actions text-right">
-            <OverlayTrigger placement="top" overlay={edit}>
-              <Button bsStyle="info" simple type="button" bsSize="xs">
-                <i className="fa fa-user" />
-              </Button>
-            </OverlayTrigger>
-          </td>
-        </tr>
-      );
-    }
+
+    return (
+      <tbody>
+        {this.props.data &&
+          this.props.data.map((item, i) => (
+            <tr
+              key={i}
+              style={{
+                border: item.is_today ? "" : "",
+                backgroundColor: item.is_today ? "#fb404b" : "white",
+                color: item.is_today ? "white" : "black",
+                borderRadius: 40,
+              }}
+            >
+              <td>
+                {item.is_today && (
+                  <i
+                    className="pe-7s-gift"
+                    style={{ fontSize: 20, color: "white" }}
+                  />
+                )}{" "}
+                {item.first_name + " " + item.last_name}
+              </td>
+              <td>
+                {item.is_today
+                  ? "Hoy!"
+                  : item.is_tomorrow
+                  ? "Mañana"
+                  : item.birth_date}
+              </td>
+              {item.is_today && (
+                <td className="td-actions text-right">
+                  <i
+                    className="pe-7s-gift"
+                    style={{ fontSize: 20, color: "white" }}
+                  />
+                </td>
+              )}
+
+              {item.is_tomorrow && (
+                <td className="td-actions text-right">
+                  <i
+                    className="pe-7s-clock text-info"
+                    style={{ fontSize: 20 }}
+                  />
+                </td>
+              )}
+              {!item.is_tomorrow && !item.is_today && (
+                <td className="td-actions text-right">
+                  <i
+                    className="pe-7s-bell text-warning"
+                    style={{ fontSize: 20 }}
+                  />
+                </td>
+              )}
+            </tr>
+          ))}
+      </tbody>
+    );
+
     return <tbody>{tasks}</tbody>;
   }
 }

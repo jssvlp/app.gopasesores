@@ -615,8 +615,42 @@ const iconsArray = [
 //
 // Data for Pie Chart
 var dataPie = {
-  labels: ["40%", "20%", "40%"],
-  series: [40, 20, 40],
+  labels: ["Aseguadora 1", "Aseguadora 2", "Aseguradora 3"],
+  percentages: ["25%", "25%", "50%"],
+  series: [
+    {
+      name: [1, 2, 3, 4, 5],
+      type: "pie",
+      radius: ["50%", "70%"],
+      avoidLabelOverlap: false,
+      label: {
+        normal: {
+          show: false,
+          position: "center",
+        },
+        emphasis: {
+          show: true,
+          textStyle: {
+            fontSize: "30",
+            fontWeight: "bold",
+          },
+        },
+      },
+      labelLine: {
+        normal: {
+          show: false,
+        },
+      },
+      data: [
+        { value: 335, name: "1" },
+        { value: 310, name: "2" },
+        { value: 234, name: "3" },
+        { value: 135, name: "4" },
+        { value: 154, name: "5" },
+      ],
+    },
+  ],
+  color: ["red", "blue", "#FFFFF"],
 };
 
 // Data for Line Chart
@@ -639,11 +673,14 @@ var dataSales = {
 };
 var optionsSales = {
   low: 0,
-  high: 100,
+  high: 80,
   showArea: false,
   height: "245px",
   axisX: {
     showGrid: false,
+  },
+  axisY: {
+    showGrid: true,
   },
   lineSmooth: true,
   showLine: true,

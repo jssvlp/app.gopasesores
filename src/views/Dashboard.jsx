@@ -104,32 +104,32 @@ class Dashboard extends Component {
                   statistics.getDataStatistics.statistics.clients.total
                 }
                 statsIcon={<i className="fa fa-info" />}
-                statsIconText="total de clientes"
+                statsIconText="Total de clientes"
               />
             </Col>
             <Col lg={3} sm={6}>
               <StatsCard
                 bigIcon={<i className="pe-7s-wallet text-success" />}
-                statsText="Polizas"
+                statsText="Pólizas"
                 statsValue={
                   statistics.getDataStatistics.statistics &&
                   statistics.getDataStatistics.statistics.policies.total
                 }
                 statsIcon={<i className="fa fa-info" />}
-                statsIconText="total polizas registradas"
+                statsIconText="Total pólizas registradas"
               />
             </Col>
             <Col lg={3} sm={6}>
               <StatsCard
-                bigIcon={<i className="pe-7s-portfolio text-danger" />}
-                statsText="Sinistros"
+                bigIcon={<i className="pe-7s-car text-danger" />}
+                statsText="Siniestros"
                 statsValue={
                   statistics.getDataStatistics.statistics &&
                   statistics.getDataStatistics.statistics.policies
                     .with_opened_sinister
                 }
                 statsIcon={<i className="fa fa-info" />}
-                statsIconText="Sinistros Abiertos"
+                statsIconText="Siniestros Abiertos"
               />
             </Col>
             <Col lg={3} sm={6}>
@@ -149,24 +149,20 @@ class Dashboard extends Component {
             <Col md={4}>
               <Card
                 title="Clientes registrados"
-                category="clientes tipo persona y tipo empresa"
+                category="Clientes tipo persona y tipo empresa"
                 content={
                   (statistics.getDataStatistics.statistics &&
                     statistics.getDataStatistics.statistics.clients && (
                       <ChartistGraph
                         data={{
-                          labels: [
+                          labels: Object.values(
                             statistics.getDataStatistics.statistics.clients
-                              .by_type.company + "%",
+                              .by_type.percentages
+                          ),
+                          series: Object.values(
                             statistics.getDataStatistics.statistics.clients
-                              .by_type.people + "%",
-                          ],
-                          series: [
-                            statistics.getDataStatistics.statistics.clients
-                              .by_type.company,
-                            statistics.getDataStatistics.statistics.clients
-                              .by_type.people,
-                          ],
+                              .by_type.series
+                          ),
                         }}
                         type="Pie"
                       />
@@ -174,19 +170,166 @@ class Dashboard extends Component {
                 }
                 legend={
                   <div>
-                    <i className="fa fa-circle text-info" /> Tipo persona
-                    <i className="fa fa-circle text-danger" /> Tipo empresa
+                    {statistics.getDataStatistics.statistics &&
+                      statistics.getDataStatistics.statistics.clients &&
+                      statistics.getDataStatistics.statistics.clients.by_type.labels.map(
+                        (item, i) => (
+                          <div>
+                            <i
+                              className={
+                                "fa fa-circle " +
+                                (i === 0
+                                  ? "text-info"
+                                  : i === 1
+                                  ? "text-danger"
+                                  : "text-warning")
+                              }
+                            ></i>
+                            {item}
+                          </div>
+                        )
+                      )}
                   </div>
                 }
                 stats={
                   <div>
-                    <i className="fa fa-info" /> todas los clientes registrados
+                    <i className="fa fa-info" /> Todos los clientes registrados
                     desde el inicio
                   </div>
                 }
               />
             </Col>
-            <Col md={8}>
+            <Col md={4}>
+              <Card
+                title="Aseguradoras"
+                category="Aseguradoras por pólizas"
+                content={
+                  (statistics.getDataStatistics.statistics &&
+                    statistics.getDataStatistics.statistics.policies && (
+                      <ChartistGraph
+                        data={{
+                          labels: Object.values(
+                            statistics.getDataStatistics.statistics.policies
+                              .by_insurances.percentages
+                          ),
+                          series: Object.values(
+                            statistics.getDataStatistics.statistics.policies
+                              .by_insurances.series
+                          ),
+                        }}
+                        type="Pie"
+                      />
+                    )) || <Skeleton circle={true} height={300} width={300} />
+                }
+                legend={
+                  <div>
+                    {statistics.getDataStatistics.statistics &&
+                      statistics.getDataStatistics.statistics.policies &&
+                      statistics.getDataStatistics.statistics.policies.by_insurances.labels.map(
+                        (item, i) => (
+                          <div>
+                            <i
+                              className={
+                                "fa fa-circle " +
+                                (i === 0
+                                  ? "text-info"
+                                  : i === 1
+                                  ? "text-danger"
+                                  : "text-warning")
+                              }
+                            ></i>
+                            {item}
+                          </div>
+                        )
+                      )}
+                  </div>
+                }
+                stats={
+                  <div>
+                    <i className="fa fa-info" /> Todos los clientes registrados
+                    desde el inicio
+                  </div>
+                }
+              />
+            </Col>
+            <Col md={4}>
+              <Card
+                title="Ramos"
+                category="Ramos por pólizas"
+                content={
+                  (statistics.getDataStatistics.statistics &&
+                    statistics.getDataStatistics.statistics.policies && (
+                      <ChartistGraph
+                        data={{
+                          labels: Object.values(
+                            statistics.getDataStatistics.statistics.policies
+                              .by_branches.percentages
+                          ),
+                          series: Object.values(
+                            statistics.getDataStatistics.statistics.policies
+                              .by_branches.series
+                          ),
+                        }}
+                        type="Pie"
+                      />
+                    )) || <Skeleton circle={true} height={300} width={300} />
+                }
+                legend={
+                  <div>
+                    {statistics.getDataStatistics.statistics &&
+                      statistics.getDataStatistics.statistics.policies &&
+                      statistics.getDataStatistics.statistics.policies.by_branches.labels.map(
+                        (item, i) => (
+                          <div>
+                            <i
+                              className={
+                                "fa fa-circle " +
+                                (i === 0
+                                  ? "text-info"
+                                  : i === 1
+                                  ? "text-danger"
+                                  : "text-warning")
+                              }
+                            ></i>
+                            {item}
+                          </div>
+                        )
+                      )}
+                  </div>
+                }
+                stats={
+                  <div>
+                    <i className="fa fa-info" /> Todos los clientes registrados
+                    desde el inicio
+                  </div>
+                }
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <Card
+                title="Cumpleaños"
+                category="Cumpleaños de los clientes de este mes"
+                content={
+                  <table className="table">
+                    <Tasks
+                      data={
+                        statistics.getDataStatistics.statistics &&
+                        statistics.getDataStatistics.statistics.birthdays &&
+                        statistics.getDataStatistics.statistics.birthdays
+                      }
+                    />
+                  </table>
+                }
+                stats={
+                  <div>
+                    <i className="fa fa-history" /> Actualizado hoy
+                  </div>
+                }
+              />
+            </Col>
+            <Col md={6}>
               <Card
                 title="Clientes registrados por mes"
                 category="todos los clientes registrados desde el inicio"
@@ -205,7 +348,33 @@ class Dashboard extends Component {
                           ),
                         }}
                         type="Line"
-                        options={optionsSales}
+                        options={{
+                          low: 0,
+                          high:
+                            statistics.getDataStatistics.statistics &&
+                            statistics.getDataStatistics.statistics.clients &&
+                            Math.max(
+                              Object.values(
+                                statistics.getDataStatistics.statistics.clients
+                                  .new_by_month_in_this_year.series
+                              )
+                            ),
+                          showArea: false,
+                          height: "245px",
+                          axisX: {
+                            showGrid: false,
+                          },
+                          axisY: {
+                            showGrid: true,
+                          },
+                          lineSmooth: true,
+                          showLine: true,
+                          showPoint: true,
+                          fullWidth: true,
+                          chartPadding: {
+                            right: 50,
+                          },
+                        }}
                         responsiveOptions={responsiveSales}
                       />
                     )) || <Skeleton height={300} width={750} />
@@ -218,66 +387,6 @@ class Dashboard extends Component {
                 stats={
                   <div>
                     <i className="fa fa-history" /> Actualizado hoy
-                  </div>
-                }
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col md={8}>
-              <Card
-                title="Cumpleaños"
-                category="Lista de cumpleaños de clientes"
-                content={
-                  (
-                    <table className="table">
-                      <Tasks />
-                    </table>
-                  ) || <Skeleton height={300} width={330} />
-                }
-                stats={
-                  <div>
-                    <i className="fa fa-history" /> Actualizado hace una hora
-                  </div>
-                }
-              />
-            </Col>
-            <Col md={4}>
-              <Card
-                title="Clientes registrados"
-                category="clientes tipo persona y tipo empresa"
-                content={
-                  (statistics.getDataStatistics.statistics &&
-                    statistics.getDataStatistics.statistics.clients && (
-                      <ChartistGraph
-                        data={{
-                          labels: [
-                            statistics.getDataStatistics.statistics.clients
-                              .by_type.company + "%",
-                            statistics.getDataStatistics.statistics.clients
-                              .by_type.people + "%",
-                          ],
-                          series: [
-                            statistics.getDataStatistics.statistics.clients
-                              .by_type.company,
-                            statistics.getDataStatistics.statistics.clients
-                              .by_type.people,
-                          ],
-                        }}
-                        type="Pie"
-                      />
-                    )) || <Skeleton circle={true} height={300} width={300} />
-                }
-                legend={
-                  <div>
-                    <i className="fa fa-circle text-info" /> Tipo persona
-                    <i className="fa fa-circle text-danger" /> Tipo empresa
-                  </div>
-                }
-                stats={
-                  <div>
-                    <i className="fa fa-info" /> todas los clientes registrados
-                    desde el inicio
                   </div>
                 }
               />

@@ -66,7 +66,7 @@ class PolicyController {
     const insurances = await Insurances.getInsurancesAll();
     const status = await Lists.getLists("policyStatus");
     const currency = await Lists.getLists("currencies");
-    console.log("branch.data.data", status);
+    console.log("branch.data.data", branch);
 
     for (const x in fieldsAll) {
       let fields = fieldsAll[x].fields;
@@ -77,6 +77,7 @@ class PolicyController {
             return {
               label: item.name,
               value: item.id,
+              has_detail: item.has_detail,
             };
           });
         }

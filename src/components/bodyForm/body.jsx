@@ -51,6 +51,7 @@ class body extends Component {
       branchSelect: false,
       modal: false,
       modalBranch: false,
+      has_detail: 0,
     };
     this.selectedItem = this.selectedItem.bind(this);
     this.openModal = this.openModal.bind(this);
@@ -348,11 +349,12 @@ class body extends Component {
           return {
             label: item.name,
             value: item.id,
+            has_detail: item.has_detail,
           };
         }),
       });
     }
-    console.log("result", result);
+    console.log("result", result, this.state);
   }
 
   loadBranchSelect(field, values) {
@@ -361,7 +363,10 @@ class body extends Component {
         e.value === this.value(values, field.model, field.name, field.value)
     );
     if (value && !this.state.branchSelect)
-      this.setState({ branchSelect: value.value });
+      this.setState({
+        branchSelect: value.value,
+        has_detail: value.has_detail,
+      });
     return value;
   }
 
@@ -882,7 +887,10 @@ class body extends Component {
                         onChange={(e) => [
                           onChange(field.name, e.value, field.model),
                           this.initRules(field.name, e.value),
-                          this.setState({ branchSelect: e.value }),
+                          this.setState({
+                            branchSelect: e.value,
+                            has_detail: e.has_detail,
+                          }),
                         ]}
                         options={
                           this.state.branchesFilter.length > 0
@@ -895,15 +903,16 @@ class body extends Component {
                       <InputGroup.Addon
                         style={{ border: "0px", paddingTop: 24 }}
                       >
-                        {this.state.branchSelect && (
-                          <Button
-                            fill
-                            bsStyle="primary"
-                            onClick={this.openModalBranch}
-                          >
-                            <i className="fa fa-plus"></i>
-                          </Button>
-                        )}
+                        {this.state.branchSelect &&
+                          this.state.has_detail === 1 && (
+                            <Button
+                              fill
+                              bsStyle="primary"
+                              onClick={this.openModalBranch}
+                            >
+                              <i className="fa fa-plus"></i>
+                            </Button>
+                          )}
                       </InputGroup.Addon>
                     </InputGroup>
                   </FormGroup>
