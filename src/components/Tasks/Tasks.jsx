@@ -21,6 +21,31 @@ import Checkbox from "components/CustomCheckbox/CustomCheckbox.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 
 export class Tasks extends Component {
+  months = [
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE",
+  ];
+
+  formatDate = ($date) => {
+    let current_date = new Date($date);
+    let formated_date =
+      current_date.getDay() + " de " + this.months[current_date.getMonth()];
+
+    formated_date = formated_date.toLowerCase();
+
+    return formated_date;
+  };
+
   handleCheckbox = (event) => {
     const target = event.target;
     console.log(event.target);
@@ -48,10 +73,10 @@ export class Tasks extends Component {
               <td>{item.first_name + " " + item.last_name}</td>
               <td>
                 {item.is_today
-                  ? "Hoy!"
+                  ? "¡Hoy es su cumpleaños!"
                   : item.is_tomorrow
                   ? "Mañana"
-                  : item.birth_date}
+                  : this.formatDate(item.birth_date)}
               </td>
               {item.is_today && (
                 <td className="td-actions text-right">
