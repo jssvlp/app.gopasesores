@@ -149,7 +149,7 @@ class Dashboard extends Component {
             <Col md={4}>
               <Card
                 title="Clientes registrados"
-                category="Clientes tipo persona y tipo empresa"
+                category="según el tipo"
                 content={
                   (statistics.getDataStatistics.statistics &&
                     statistics.getDataStatistics.statistics.clients && (
@@ -193,16 +193,15 @@ class Dashboard extends Component {
                 }
                 stats={
                   <div>
-                    <i className="fa fa-info" /> Todos los clientes registrados
-                    desde el inicio
+                    <i className="fa fa-info" /> Todos los clientes registrados.
                   </div>
                 }
               />
             </Col>
             <Col md={4}>
               <Card
-                title="Aseguradoras"
-                category="Aseguradoras por pólizas"
+                title="Pólizas"
+                category="por aseguradoras"
                 content={
                   (statistics.getDataStatistics.statistics &&
                     statistics.getDataStatistics.statistics.policies && (
@@ -246,16 +245,16 @@ class Dashboard extends Component {
                 }
                 stats={
                   <div>
-                    <i className="fa fa-info" /> Todos los clientes registrados
-                    desde el inicio
+                    <i className="fa fa-info" /> Las 5 aseguradoras con más
+                    pólizas.
                   </div>
                 }
               />
             </Col>
             <Col md={4}>
               <Card
-                title="Ramos"
-                category="Ramos por pólizas"
+                title="Pólizas"
+                category="por ramos"
                 content={
                   (statistics.getDataStatistics.statistics &&
                     statistics.getDataStatistics.statistics.policies && (
@@ -299,8 +298,7 @@ class Dashboard extends Component {
                 }
                 stats={
                   <div>
-                    <i className="fa fa-info" /> Todos los clientes registrados
-                    desde el inicio
+                    <i className="fa fa-info" /> Los 5 ramos con más pólizas
                   </div>
                 }
               />
@@ -310,7 +308,7 @@ class Dashboard extends Component {
             <Col md={6}>
               <Card
                 title="Cumpleaños"
-                category="Cumpleaños de los clientes de este mes"
+                category="de los clientes en el presente  mes"
                 content={
                   <table className="table">
                     <Tasks
@@ -331,8 +329,8 @@ class Dashboard extends Component {
             </Col>
             <Col md={6}>
               <Card
-                title="Clientes registrados por mes"
-                category="Todos lo clientes registrados en el presente año"
+                title="Cantidad de clientes registrados por mes"
+                category="en el presente año"
                 content={
                   (statistics.getDataStatistics.statistics &&
                     statistics.getDataStatistics.statistics.clients && (
@@ -381,7 +379,8 @@ class Dashboard extends Component {
                 }
                 legend={
                   <div>
-                    <i className="fa fa-circle text-info" /> Usuarios
+                    <i className="fa fa-circle text-info" /> Cantidad de
+                    clientes
                   </div>
                 }
                 stats={
