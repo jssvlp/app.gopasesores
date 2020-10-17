@@ -21,6 +21,7 @@ import Employees from "views/Employees/employees";
 import Security from "views/security/security";
 import InsurancesTab from "views/insurencesTab/insurencesTab";
 import Polices from "views/polices/polices";
+import Sinisters from 'views/Sinisters/sinisters'
 
 var routes = [
   {
@@ -58,6 +59,13 @@ var routes = [
     name: "Polizas",
     icon: "pe-7s-shield",
     component: Polices,
+  },
+  {
+    path: "/sinisters",
+    layout: "/admin",
+    name: "Siniestros",
+    icon: "pe-7s-car",
+    component: Sinisters,
   },
   {
     path: "/security",

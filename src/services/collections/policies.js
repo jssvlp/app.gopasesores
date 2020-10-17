@@ -1,7 +1,7 @@
 import api from "../api/create";
 
-function getPolicies(page) {
-  return api.get("/policies?page=" + page);
+function getPolicies(page, client) {
+  return api.get("/policies?page=" + page+"&client="+client);
 }
 
 function getPoliciesById(id) {

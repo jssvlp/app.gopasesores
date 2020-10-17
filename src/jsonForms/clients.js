@@ -37,6 +37,7 @@ const headers = [
   "Tipo",
   "Correo",
   "Fecha de Registro",
+  "Accion"
 ];
 
 const fieldsPages = {

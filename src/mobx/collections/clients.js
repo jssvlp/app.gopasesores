@@ -1,9 +1,9 @@
 import { observable, computed } from "mobx";
-import { Component } from "react";
+import { Component,React } from "react";
 import { Clients, Employees } from "../../services/index";
 import { ClientsForm } from "../../jsonForms/index";
 
-class ClientController extends Component {
+class ClientController{
   @observable load = true;
   @observable fieldErrors = ClientsForm.fieldErrors;
   @observable headers = ClientsForm.headers;
@@ -117,6 +117,7 @@ class ClientController extends Component {
   async getAllClients(page) {
     await this.initValues();
     const result = await Clients.getClients(page || 1);
+    console.log('result.data', result.data)
     if (result.status === 200 && result.data) {
       let data = result.data.data;
       let json = [];
@@ -130,6 +131,8 @@ class ClientController extends Component {
           data[i].type === "people" ? "Persona" : "Empresa",
           data[i].email,
           data[i].created_at,
+          data[i].has_policies === 1?"b%Ver Polizas%"+ data[i].id:""
+
         ]);
       }
 
@@ -162,13 +165,14 @@ class ClientController extends Component {
           data[i].type === "people" ? "Persona" : "Empresa",
           data[i].email,
           data[i].created_at,
+          
         ]);
       }
 
       result.data.data = json;
       this.clients = result.data;
 
-      console.log("this.clients filter data %%%%%%%", result.data);
+      console.log("this.clients filter data %%%%%%%", json);
     } else {
       this.clients = [];
     }

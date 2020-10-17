@@ -137,9 +137,9 @@ class PolicyController {
     if (result.data && result.status === 200) this.listPolicies = result.data;
   }
 
-  async getAllPolicies(page) {
+  async getAllPolicies(page,idClient) {
     this.initValues();
-    const result = await Policies.getPolicies(page || 1);
+    const result = await Policies.getPolicies(page || 1,idClient);
     console.log("result", result);
     if (result.status === 200 && result.data) {
       let data = result.data;

@@ -9,6 +9,8 @@ import Polices from "./collections/Policies";
 import List from "./collections/lists";
 import Docs from "./collections/docs";
 import Statistics from "./collections/statistics";
+import Sinisters from "./collections/sinisters";
+
 export default {
   users: new Users(),
   clients: new ClientController(),
@@ -21,4 +23,5 @@ export default {
   lists: new List(),
   docs: new Docs(),
   statistics: new Statistics(),
+  sinisters: new Sinisters()
 };

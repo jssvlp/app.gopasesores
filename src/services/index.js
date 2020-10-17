@@ -10,6 +10,7 @@ import * as Policies from "./collections/policies";
 import * as Lists from "./collections/list";
 import * as Docs from "./collections/docs";
 import * as Statistics from "./collections/statistics";
+import * as Sinisters from "./collections/sinisters";
 
 export {
   Users,
@@ -23,4 +24,5 @@ export {
   Lists,
   Docs,
   Statistics,
+  Sinisters
 };

@@ -50,7 +50,9 @@ class Polices extends Component {
   componentDidMount() {
     const { polices } = this.props;
     polices.statusLoading(true);
-    this.reloadTable();
+    console.log('this.props.history.location', this.props.history.location)
+    let idClient =  this.props.history.location.state? this.props.history.location.state.idClient? this.props.history.location.state.idClient:null : null
+    this.reloadTable(idClient);
     this.setState({
       errors: polices.fieldErrors,
     });
@@ -58,9 +60,9 @@ class Polices extends Component {
     polices.statusLoading(false);
   }
 
-  reloadTable() {
+  reloadTable(idClient) {
     const { polices } = this.props;
-    polices.getAllPolicies();
+    polices.getAllPolicies(null,idClient);
   }
 
   changePage(page) {
@@ -154,7 +156,7 @@ class Polices extends Component {
       this.setState({
         create: false,
       });
-      this.reloadTable();
+      this.reloadTable(null);
     }
     if (!result.success)
       this.props.alertMessage(
@@ -311,7 +313,7 @@ class Polices extends Component {
       this.setState({
         create: false,
       });
-      this.reloadTable();
+      this.reloadTable(null);
     }
     if (!result.success)
       this.props.alertMessage(
@@ -358,7 +360,7 @@ class Polices extends Component {
         "success"
       );
     }
-    this.reloadTable();
+    this.reloadTable(null);
     this.setState({
       seletectedItems: [],
     });
@@ -389,10 +391,20 @@ class Polices extends Component {
         "success"
       );
     }
-    this.reloadTable();
+    this.reloadTable(null);
     this.setState({
       seletectedItems: [],
     });
+  }
+
+
+  createPolicy(id){
+    this.props.history.push({
+      pathname:"/admin/sinisters",
+      state:{
+        idPolicy:id
+      }
+    })
   }
 
   render() {
@@ -509,8 +521,32 @@ class Polices extends Component {
                     </label>
                     <label style={{ fontWeight: "normal" }}>
                       Tiene sinistro:{" "}
-                      <b>{item.has_sinister === 0 ? "No" : "Si"}</b>
-                    </label>
+                      <b>{item.has_sinister === 0 ? "No" : "Si" }</b>
+                    </label><br/>
+                    {item.has_sinister === 0 &&(
+                      <Button
+                        onClick={() => this.createPolicy(item.id)}
+                        bsStyle="warning"
+                        bsSize="md"
+                        fill
+                        
+                      >
+                        Reportar Sinistro <i className="fa fa-plus"></i>
+                      </Button>
+                    )}
+
+                    {item.has_sinister === 1 &&(
+                      <Button
+                        onClick={() => this.props.history.push("sinisters")}
+                        bsStyle="success"
+                        bsSize="md"
+                        
+                        
+                      >
+                        Ver Sinistro <i className="fa fa-eye"></i>
+                      </Button>
+                    )}
+                   
                   </div>
                   <div
                     style={{
@@ -535,6 +571,8 @@ class Polices extends Component {
                     </label>
                     <br />
                     <div style={{ display: "flex", flexDirection: "row" }}>
+                   
+                      &nbsp;&nbsp;
                       <Button
                         onClick={() => this.openDetail(item.id)}
                         bsStyle="info"

@@ -208,6 +208,10 @@ import { inject,observer} from "mobx-react";
                                     if( item && item.toString().substring(0, 4)==="http"){
                                       return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}><img src={item} alt="logo" className="img-fluid" width="40"/></td>
                                     }
+                                    if( item && item.toString().substring(0, 2)==="b%"){
+                                      return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.buttonAction&&this.props.buttonAction(item.toString().split("%")[2]):{}} key={i}>
+                                      <Button bsStyle="primary" sx onClick={()=>this.props.buttonAction(item.toString().split("%")[2])}>{item.toString().split("%")[1]}</Button></td>
+                                    }
                                     if(prop.length-1===i) return  <td key={i}>{item}</td>;
                                     return <td  onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
                                   

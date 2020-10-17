@@ -51,6 +51,7 @@ class clients extends Component {
     this.deleteClient = this.deleteClient.bind(this);
     this.selectedItem = this.selectedItem.bind(this);
     this.filterDate = this.filterDate.bind(this);
+    this.showPolices = this.showPolices.bind(this);
   }
 
   componentDidMount() {
@@ -330,9 +331,18 @@ class clients extends Component {
     });
   }
 
+  showPolices(id){
+    this.props.history.push({
+      pathname: "/admin/polices",
+      state:{
+        idClient: id
+      }
+    })
+}
+
   render() {
     const { clients, users } = this.props;
-
+    console.log('this.props', this.props)
     const steps = [
       {
         name:
@@ -448,6 +458,7 @@ class clients extends Component {
             thArray={clients.headers}
             tdArray={clients.getDataClients}
             loading={clients.loading}
+            buttonAction={this.showPolices}
             view={this.state.update ? "update" : "create"}
             selectedItem={this.selectedItem}
             items={this.state.seletectedItems}
