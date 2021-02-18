@@ -208,6 +208,7 @@ class body extends Component {
   }
 
   findValueSelect(values, selected) {
+    console.log('sdfdfsdfdf')
     return values.find((e) => e.value === selected);
   }
 
