@@ -202,7 +202,7 @@ class Sidebar extends Component {
   }
   isRouterProtect(){
     let result = routes.map((prop,i)=>{
-      return this.state.permissions.includes(prop.path)?prop:null;
+      return this.state.permissions.includes(prop.path)?prop.show?prop:null:null;
     })
     let router = result.filter( (el) => {
       return el != null;

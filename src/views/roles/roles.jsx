@@ -249,6 +249,7 @@ class Roles extends Component {
             role_id:id
         })
         this.verifyErrors();
+        window.location.reload();
       //  this.props.alertLoading("Espere un momento....",false)
 
     }

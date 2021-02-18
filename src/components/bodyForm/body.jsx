@@ -19,6 +19,7 @@ import Modal from "../../components/Modal/Modal";
 import FileBody from "./fileBody";
 import Button from "components/CustomButton/CustomButton.jsx";
 import MotorBody from "./formBranches/motor";
+import Riesgo from './formBranches/riesgo';
 
 import Select from "react-select";
 import branches from "views/Branches/branches";
@@ -107,7 +108,7 @@ class body extends Component {
     console.log("rules", rules, name, value);
 
     for (const x in rules) {
-      if (rules[x].fieldFrom === name && rules[x].valueFrom === value) {
+      if ((rules[x].fieldFrom === name && rules[x].valueFrom === value) || (rules[x].fieldFrom === name && rules[x].valueFrom === "value_field")) {
         for (const i in field) {
           if (field[i].name === rules[x].fieldTo) {
             if (rules[x].rule === "show") {
@@ -143,6 +144,20 @@ class body extends Component {
             if (rules[x].rule === "mask") {
               field[i].mask = rules[x].mask;
               values[field[i].model][field[i].name] = "";
+            }
+
+            if (rules[x].rule === "sum") {
+              let first =  values[field[i].model] ? values[field[i].model][rules[x].fieldFrom] : 0;
+              let second =  values[field[i].model] ? values[field[i].model][field[i].name] : 0;
+              let result = parseInt(first) + parseInt(second)
+              values[field[i].model] && (values[field[i].model][rules[x].fieldResult] = result);
+            }
+
+            if (rules[x].rule === "div") {
+              let first =  values[field[i].model] ? values[field[i].model][rules[x].fieldFrom] : 0;
+              let second =  values[field[i].model] ? values[field[i].model][field[i].name] : 0;
+              let result = parseInt(second) / parseInt(first)
+              values[field[i].model] && (values[field[i].model][rules[x].fieldResult] = result.toFixed(2));
             }
           }
         }
@@ -373,7 +388,7 @@ class body extends Component {
   render() {
     const { onChange, errors, view } = this.props;
     const { values } = this.state;
-    console.log("view", this.state.fields);
+    console.log("view", this.state);
     return (
       <div>
         <Row>
@@ -409,12 +424,15 @@ class body extends Component {
                         field.value
                       )}
                       onChange={(e) =>
-                        onChange(
-                          field.name,
-                          e.target.value,
-                          field.model,
-                          field.mask
-                        )
+                        [
+                          onChange(
+                              field.name,
+                              e.target.value,
+                              field.model,
+                              field.mask
+                          ),
+                          this.initRules(field.name, e.target.value)
+                        ]
                       }
                       type={field.type}
                       disabled={field.disabled}
@@ -578,7 +596,11 @@ class body extends Component {
                         field.value
                       )}
                       onChange={(e) =>
-                        onChange(field.name, e.target.value, field.model)
+
+                            [
+                              onChange(field.name, e.target.value, field.model),
+                                this.initRules(field.name, e.target.value)
+                            ]
                       }
                       type={field.type}
                       disabled={field.disabled}
@@ -918,9 +940,20 @@ class body extends Component {
                   </FormGroup>
                   <Modal
                     body={
+                      this.state.branchSelect===5?
                       <MotorBody
                         onChange={this.props.onChange}
                         fieldsValues={values}
+                        brandSelect={this.state.branchSelect}
+                        model={field.model}
+                        name={"branch_detail"}
+                        modalClose={this.openModalBranch}
+                      />
+                      :
+                      <Riesgo
+                        onChange={this.props.onChange}
+                        fieldsValues={values}
+                        brandSelect={this.state.branchSelect}
                         model={field.model}
                         name={"branch_detail"}
                         modalClose={this.openModalBranch}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Grid, Row, Col,Tooltip,OverlayTrigger, Pagination } from "react-bootstrap";
+import { Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination } from "react-bootstrap";
 
 import Button from "components/CustomButton/CustomButton.jsx";
 import Card from "components/Card/Card.jsx";
@@ -204,7 +204,12 @@ import { inject,observer} from "mobx-react";
                               <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key+prop[0]+prop[1]+(this.props.view?this.props.view:'none')}/></td>
                               {/* <td onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} >{key+1}</td> */}
                                   {prop.map((item, i) => {
-                                    
+
+
+                                      if( item && item.toString().substring(0, 2)==="c%"){
+                                          return <td style={{color: item && item.toString().substring(0, 2)==="c%"? item.split("%")[1]:"black"}}  onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item.toString().substring(0, 2)==="c%"? item.split("%")[2]:item}</td>
+
+                                      }
                                     if( item && item.toString().substring(0, 4)==="http"){
                                       return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}><img src={item} alt="logo" className="img-fluid" width="40"/></td>
                                     }
@@ -213,12 +218,16 @@ import { inject,observer} from "mobx-react";
                                       <Button bsStyle="primary" sx onClick={()=>this.props.buttonAction(item.toString().split("%")[2])}>{item.toString().split("%")[1]}</Button></td>
                                     }
                                     if(prop.length-1===i) return  <td key={i}>{item}</td>;
-                                    return <td  onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
+
+                                    return <td   onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
                                   
                                   })}
                               </tr>
                               );
                           })}
+                          {!this.props.tdArray.data &&(
+                              <tr><td colSpan={10} style={{fontSize: 20}}><center>No hay registros...</center></td></tr>
+                          )}
                           </tbody>
                           
                       </Table>

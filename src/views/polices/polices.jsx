@@ -2,8 +2,12 @@ import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import Button from "components/CustomButton/CustomButton.jsx";
 import BodyContent from "../../components/bodyForm/contentBody";
+
 import Wizzard from "../../components/stepsWizzard/StepsWizzard";
+import { Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination } from "react-bootstrap";
+
 import moment from "moment";
+import Skeleton from "react-loading-skeleton";
 @inject("polices", "users")
 @observer
 class Polices extends Component {
@@ -11,6 +15,11 @@ class Polices extends Component {
     super(props);
     this.state = {
       modal: false,
+      pages:[],
+      pageSelect: 1,
+      fistPage: 1,
+      lastPage: 1,
+      itemsPage:[],
       body: {
         polices: {
           police_code: "",
@@ -48,17 +57,32 @@ class Polices extends Component {
   }
 
   componentDidMount() {
-    const { polices } = this.props;
+    const { polices, users } = this.props;
+    let permission = users.infoUser.permissions;
     polices.statusLoading(true);
-    console.log('this.props.history.location', this.props.history.location)
+
+
+
+    let AllPermission =  permission && permission.filter((el)=>{
+      return el.path === "/payments"
+    })
+    console.log('this.props.history.location', AllPermission, permission)
     let idClient =  this.props.history.location.state? this.props.history.location.state.idClient? this.props.history.location.state.idClient:null : null
     this.reloadTable(idClient);
+
+
     this.setState({
+      idClient: idClient,
       errors: polices.fieldErrors,
+      permissionPayment: AllPermission,
     });
     console.log("polices.fieldErrors", polices.fieldErrors);
     polices.statusLoading(false);
   }
+
+
+
+
 
   reloadTable(idClient) {
     const { polices } = this.props;
@@ -67,7 +91,7 @@ class Polices extends Component {
 
   changePage(page) {
     const { polices } = this.props;
-    polices.getAllpolices(page);
+    polices.getAllPolicies(page,null);
   }
 
   openModal() {
@@ -397,6 +421,14 @@ class Polices extends Component {
     });
   }
 
+  selectpage(p){
+    this.setState({
+      pageSelect:p
+    })
+    this.changePage(p)
+    this.scrollTop();
+  }
+
 
   createPolicy(id){
     this.props.history.push({
@@ -407,9 +439,14 @@ class Polices extends Component {
     })
   }
 
+  scrollTop(){
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   render() {
     const { polices, users } = this.props;
-    console.log("polices.getDataPolicies", polices.getDataPolicies);
+   // console.log("polices.getDataPolicies",  users.infoUser.permissions);
+
     const steps = [
       {
         name: polices.fields.polices.title,
@@ -453,154 +490,207 @@ class Polices extends Component {
       },
     ];
     console.log("this.state", this.state);
-    return (
-      <div
-        className="main-content"
-        style={{ padding: !this.state.create ? 60 : 0 }}
-      >
-        {this.state.create && (
-          <Wizzard
-            steps={steps}
-            closeWizard={this.closeWizard}
-            subtitle={""}
-            title={
-              this.state.update
-                ? "DETALLE DE LA POLIZA"
-                : "CREANDO UNA NUEVA POLIZA"
-            }
-          />
-        )}
-        {!this.state.create && (
-          <Button bsStyle="primary" className="zoom" onClick={this.openModal}>
-            Nueva Poliza
-          </Button>
-        )}
-        <br />
-        <br />
-        <div className="row ">
-          {!this.state.create &&
-            polices.getDataPolicies.data &&
-            polices.getDataPolicies.data.map((item, i) => (
-              <div
-                className="col-md-12 card zoom"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  borderBottom: "solid",
-                  borderBottomColor: "#c9c9c9",
-                  borderBottomWidth: 0.4,
-                  borderTop: 0,
-                }}
-              >
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <h3 style={{ color: "#053E7A" }}>
-                    No. Poliza:{item.policy_number} | {item.insurance_name} |{" "}
-                    {item.branch}
-                  </h3>
-                </div>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <label style={{ fontWeight: "normal" }}>
-                      Cliente:{" "}
-                      <b>
-                        {item.client_document_id} - {item.client_name}
-                      </b>
-                    </label>
-                    <label style={{ fontWeight: "normal" }}>
-                      Vendedor: <b>{item.client_owner}</b>
-                    </label>
-                    <label style={{ fontWeight: "normal" }}>
-                      Estado de cobros: <b>{item.payment_status}</b>
-                    </label>
-                    <label style={{ fontWeight: "normal" }}>
-                      Descripción: <b>{item.description_insured_property}</b>
-                    </label>
-                    <label style={{ fontWeight: "normal" }}>
-                      Tiene sinistro:{" "}
-                      <b>{item.has_sinister === 0 ? "No" : "Si" }</b>
-                    </label><br/>
-                    {item.has_sinister === 0 &&(
-                      <Button
-                        onClick={() => this.createPolicy(item.id)}
-                        bsStyle="warning"
-                        bsSize="md"
-                        fill
-                        
-                      >
-                        Reportar Sinistro <i className="fa fa-plus"></i>
-                      </Button>
-                    )}
 
-                    {item.has_sinister === 1 &&(
-                      <Button
-                        onClick={() => this.props.history.push("sinisters")}
-                        bsStyle="success"
-                        bsSize="md"
-                        
-                        
-                      >
-                        Ver Sinistro <i className="fa fa-eye"></i>
-                      </Button>
-                    )}
-                   
-                  </div>
+    if(polices.loading){
+      return(
+          <div
+              className="main-content"
+              style={{ padding: !this.state.create ? 60 : 0 }}
+          >
+            <div className={"card"} style={{padding: 20}}>
+              <Skeleton  height={250} width={'100%'}/>
+            </div>
+            <br/>
+            <div className={"card"} style={{padding: 20}}>
+              <Skeleton  height={250} width={'100%'}/>
+            </div>
+            <br/>
+            <div className={"card"} style={{padding: 20}}>
+              <Skeleton  height={250} width={'100%'}/>
+            </div>
+          </div>
+
+
+      )
+    }else{
+      return (
+          <div
+              className="main-content"
+              style={{ padding: !this.state.create ? 60 : 0 }}
+          >
+            {this.state.create && (
+                <Wizzard
+                    steps={steps}
+                    closeWizard={this.closeWizard}
+                    subtitle={""}
+                    title={
+                      this.state.update
+                          ? "DETALLE DE LA POLIZA"
+                          : "CREANDO UNA NUEVA POLIZA"
+                    }
+                />
+            )}
+            {!this.state.create && (
+                <Button bsStyle="primary" className="zoom" onClick={this.openModal}>
+                  Nueva Poliza
+                </Button>
+            )}
+            <br />
+            <br />
+            <div className="row ">
+              {!this.state.create &&
+              polices.getDataPolicies.data &&
+              polices.getDataPolicies.data.map((item, i) => (
                   <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "flex-end",
-                      alignItems: "flex-end",
-                    }}
-                  >
-                    <label>{item.validity_end_date}</label>
-                    <label>{item.validity_start_date}</label>
-                    <label>Vigente</label>
-                    <label
+                      className="col-md-12 card zoom"
                       style={{
-                        backgroundColor: "#23ccef",
-                        color: "white",
-                        borderRadius: 2,
-                        padding: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        borderBottom: "solid",
+                        borderBottomColor: "#c9c9c9",
+                        borderBottomWidth: 0.4,
+                        borderTop: 0,
                       }}
+                  >
+                    <div
+                        style={{ display: "flex", justifyContent: "space-between" }}
                     >
-                      Nuevo
-                    </label>
-                    <br />
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                   
-                      &nbsp;&nbsp;
-                      <Button
-                        onClick={() => this.openDetail(item.id)}
-                        bsStyle="info"
-                        bsSize="md"
-                        fill
-                        wd
-                      >
-                        Editar <i className="fa fa-edit"></i>
-                      </Button>
-                      &nbsp;&nbsp;
-                      <Button
-                        bsStyle="danger"
-                        bsSize="md"
-                        fill
-                        wd
-                        onClick={(e) => this.deletePolicyById(item.id)}
-                      >
-                        Eliminar <i className="fa fa-trash"></i>
-                      </Button>
+                      <h3 style={{ color: "#053E7A" }}>
+                        No. Poliza:{item.policy_number} | {item.insurance_name} |{" "}
+                        {item.branch}
+                      </h3>
                     </div>
+                    <div
+                        style={{ display: "flex", justifyContent: "space-between" }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <label style={{ fontWeight: "normal" }}>
+                          Cliente:{" "}
+                          <b>
+                            {item.client_document_id} - {item.client_name}
+                          </b>
+                        </label>
+                        <label style={{ fontWeight: "normal" }}>
+                          Vendedor: <b>{item.client_owner}</b>
+                        </label>
+                        <label style={{ fontWeight: "normal" }}>
+                          Estado de cobros: <b>{item.payment_status}</b>
+                        </label>
+                        <label style={{ fontWeight: "normal" }}>
+                          Descripción: <b>{item.description_insured_property}</b>
+                        </label>
+                        <label style={{ fontWeight: "normal" }}>
+                          Tiene sinistro:{" "}
+                          <b>{item.has_sinister === 0 ? "No" : "Si" }</b>
+                        </label><br/>
+                        {item.has_sinister === 0 &&(
+                            <Button
+                                onClick={() => this.createPolicy(item.id)}
+                                bsStyle="warning"
+                                bsSize="md"
+                                fill
+
+                            >
+                              Reportar Sinistro <i className="fa fa-plus"></i>
+                            </Button>
+                        )}
+
+                        {item.has_sinister === 1 &&(
+                            <Button
+                                onClick={() => this.props.history.push("sinisters")}
+                                bsStyle="success"
+                                bsSize="md"
+
+
+                            >
+                              Ver Sinistro <i className="fa fa-eye"></i>
+                            </Button>
+                        )}
+
+                      </div>
+                      <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-end",
+                            alignItems: "flex-end",
+                          }}
+                      >
+                        <label>{item.validity_end_date}</label>
+                        <label>{item.validity_start_date}</label>
+                        <label>Vigente</label>
+                        <label
+                            style={{
+                              backgroundColor: "#23ccef",
+                              color: "white",
+                              borderRadius: 2,
+                              padding: 2,
+                            }}
+                        >
+                          Nuevo
+                        </label>
+                        <br />
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          &nbsp;&nbsp;
+                          {this.state.permissionPayment && this.state.permissionPayment.length>0&&(
+                              <Button
+                                  onClick={() => [localStorage.setItem("idPolicy", item.id),localStorage.setItem("prime", item.prime),  this.props.history.push({
+                                    pathname:"/admin/payments",
+                                    state:{
+                                      idPolicy:item.id
+                                    }
+                                  })]
+                                  }
+                                  bsStyle="default"
+                                  bsSize="md"
+                                  fill
+                                  wd
+                              >
+                                Pagos <i className="fa fa-dollar"></i>
+                              </Button>
+                          )}
+
+                          &nbsp;&nbsp;
+                          <Button
+                              onClick={() => this.openDetail(item.id)}
+                              bsStyle="info"
+                              bsSize="md"
+                              fill
+                              wd
+                          >
+                            Editar <i className="fa fa-edit"></i>
+                          </Button>
+                          &nbsp;&nbsp;
+                          <Button
+                              bsStyle="danger"
+                              bsSize="md"
+                              fill
+                              wd
+                              onClick={(e) => this.deletePolicyById(item.id)}
+                          >
+                            Eliminar <i className="fa fa-trash"></i>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    <hr />
                   </div>
-                </div>
-                <hr />
-              </div>
-            ))}
-        </div>
-      </div>
-    );
+              ))}
+            </div>
+            {polices.getDataPolicies&&polices.getDataPolicies.last_page>0&&(
+                <Pagination className="pagination-blue" style={{paddingLeft: 10}}>
+                  <Pagination.First  onClick={()=> polices.changePage(polices.getFisrtPage)} />
+                  {polices.getAllPages.length>0&&
+                  polices.getAllPages.map((p,i)=>(
+                      <Pagination.Item active={polices.getPageSelect=== p} onClick={()=>  polices.changePage(p)}>{p}</Pagination.Item>
+                  ))}
+                  <Pagination.Last  onClick={()=> polices.changePage(polices.getLastPage)}/>
+                </Pagination>
+            )}
+          </div>
+      );
+    }
+
   }
 }
 export default Polices;

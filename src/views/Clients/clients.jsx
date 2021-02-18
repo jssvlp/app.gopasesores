@@ -342,7 +342,7 @@ class clients extends Component {
 
   render() {
     const { clients, users } = this.props;
-    console.log('this.props', this.props)
+    console.log('this.props', users.infoUser.permissions)
     const steps = [
       {
         name:

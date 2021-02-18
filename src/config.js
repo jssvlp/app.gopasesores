@@ -7,7 +7,7 @@ function env(env) {
         case 'local':
             return 'http://localhost:4200/api'
         case 'development':
-            return 'https://api-gop.ddns.net/api'
+            return 'https://apigop.ddns.net/api'
         default:
             return ''
     }

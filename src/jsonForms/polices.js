@@ -168,7 +168,7 @@ const fieldsPages = {
         col: 4,
       },
       {
-        label: "prime",
+        label: "prima",
         name: "prime",
         value: "",
         type: "number",

@@ -18,6 +18,10 @@ class PolicyController {
   @observable PolicyById = [];
   @observable allUsers = [];
   @observable isActive = false;
+  @observable pages = [];
+  @observable fistPage = 1;
+  @observable lastPage =1;
+  @observable pageSelect = 1;
   @observable typePolicy = "people";
 
   @computed
@@ -36,6 +40,21 @@ class PolicyController {
   }
 
   @computed
+  get getFisrtPage() {
+    return this.fistPage;
+  }
+
+  @computed
+  get getLastPage() {
+    return this.lastPage;
+  }
+
+  @computed
+  get getAllPages() {
+    return this.pages;
+  }
+
+  @computed
   get loading() {
     return this.load;
   }
@@ -49,10 +68,17 @@ class PolicyController {
   get getListPolicies() {
     return this.listPolicies;
   }
+  @computed
+  get getPageSelect(){
+    return this.pageSelect;
+  }
 
   statusLoading(status) {
     this.load = status;
   }
+
+
+
 
   changePolicy(type) {
     this.typePolicy = type;
@@ -137,13 +163,30 @@ class PolicyController {
     if (result.data && result.status === 200) this.listPolicies = result.data;
   }
 
+  async changePage(page, idClient = null) {
+    this.pageSelect = page;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    await this.getAllPolicies(page, idClient)
+
+  }
+
   async getAllPolicies(page,idClient) {
+    this.load = true
     this.initValues();
     const result = await Policies.getPolicies(page || 1,idClient);
     console.log("result", result);
     if (result.status === 200 && result.data) {
       let data = result.data;
       this.Policies = data;
+      this.fistPage = result.data.current_page;
+      this.lastPage = result.data.last_page;
+
+      let arraypages=[];
+      for (let i = 1; i <= this.lastPage; i++) {
+        arraypages.push(i)
+
+      }
+      this.pages = arraypages;
       console.log("this.Policies", result.data);
     } else {
       this.Policies = [];

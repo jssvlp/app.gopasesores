@@ -22,6 +22,7 @@ import Security from "views/security/security";
 import InsurancesTab from "views/insurencesTab/insurencesTab";
 import Polices from "views/polices/polices";
 import Sinisters from 'views/Sinisters/sinisters'
+import Payments from 'views/Payments/payment';
 
 var routes = [
   {
@@ -30,6 +31,7 @@ var routes = [
     name: "Dashboard",
     icon: "pe-7s-graph",
     component: Dashboard,
+    show:true
   },
   {
     path: "/clients",
@@ -37,6 +39,7 @@ var routes = [
     name: "Clientes",
     icon: "pe-7s-user",
     component: Client,
+    show:true
   },
   {
     path: "/employees",
@@ -44,6 +47,7 @@ var routes = [
     name: "empleados/comisionistas ",
     icon: "pe-7s-users",
     component: Employees,
+    show:true
   },
   {
     path: "/insurances",
@@ -51,6 +55,7 @@ var routes = [
     name: "Aseguradoras",
     icon: "pe-7s-portfolio",
     component: InsurancesTab,
+    show:true
   },
 
   {
@@ -59,6 +64,7 @@ var routes = [
     name: "Polizas",
     icon: "pe-7s-shield",
     component: Polices,
+    show:true
   },
   {
     path: "/sinisters",
@@ -66,6 +72,7 @@ var routes = [
     name: "Siniestros",
     icon: "pe-7s-car",
     component: Sinisters,
+    show:true
   },
   {
     path: "/security",
@@ -73,12 +80,21 @@ var routes = [
     name: "Seguridad",
     icon: "pe-7s-unlock",
     component: Security,
+    show:true
+  },
+  {
+    path: "/payments",
+    layout: "/admin",
+    component: Payments,
+    name: "pagos",
+    show:false
   },
 
   {
     path: "/login-page",
     layout: "/auth",
     component: Login,
+    show:false
   },
 ];
 export default routes;
