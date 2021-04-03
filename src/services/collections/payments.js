@@ -13,11 +13,26 @@ function getPaymentsAll() {
 }
 
 
+function getPaymentPending(filter,page) {
+  return api.get("/payments?filter="+filter+'&page='+page);
+}
+
+
 function getPaymentsBypolicy(id) {
     return api.get("/payments?policy="+id);
   }
 
-  
+  function payToOffice(body) {
+    return api.post("/payments/office/pay",body)
+
+  }
+
+function payToIsurece(body) {
+  return api.post("/payments/insurance/pay",body)
+
+}
+
+
 function savePayment(body) {
   return api.post("/payments/", body);
 }
@@ -43,5 +58,8 @@ export {
   updatePayment,
   filterDatePayment,
   getPaymentsAll,
-  getPaymentsBypolicy
+  getPaymentsBypolicy,
+  getPaymentPending,
+  payToOffice,
+  payToIsurece
 };

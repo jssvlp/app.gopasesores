@@ -23,6 +23,7 @@ import InsurancesTab from "views/insurencesTab/insurencesTab";
 import Polices from "views/polices/polices";
 import Sinisters from 'views/Sinisters/sinisters'
 import Payments from 'views/Payments/payment';
+import PaymentsTab from 'views/Payments/tabPayment';
 
 var routes = [
   {
@@ -75,6 +76,21 @@ var routes = [
     show:true
   },
   {
+    path: "/payments",
+    layout: "/admin",
+    component: Payments,
+    name: "pagos",
+    show:false
+  },
+  {
+    path: "/payclient",
+    layout: "/admin",
+    component: PaymentsTab,
+    icon: "pe-7s-wallet",
+    name: "cobros",
+    show:true
+  },
+  {
     path: "/security",
     layout: "/admin",
     name: "Seguridad",
@@ -82,13 +98,7 @@ var routes = [
     component: Security,
     show:true
   },
-  {
-    path: "/payments",
-    layout: "/admin",
-    component: Payments,
-    name: "pagos",
-    show:false
-  },
+
 
   {
     path: "/login-page",

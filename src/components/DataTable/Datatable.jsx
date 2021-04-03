@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination } from "react-bootstrap";
+import {Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination, NavDropdown, MenuItem,Nav} from "react-bootstrap";
 
 import Button from "components/CustomButton/CustomButton.jsx";
 import Card from "components/Card/Card.jsx";
@@ -32,8 +32,8 @@ import { inject,observer} from "mobx-react";
     let result =  nextprops.permissions&&this.setPermissions(nextprops.permissions)
     let arraypages=[];
     for (let i = 1; i <= pages; i++) {
-      arraypages.push(i) 
-      
+      arraypages.push(i)
+
     }
     this.setState({
       pages: arraypages,
@@ -65,9 +65,9 @@ import { inject,observer} from "mobx-react";
     return result
   }
 
- 
 
-  
+
+
 
 
   selectpage(p){
@@ -76,7 +76,34 @@ import { inject,observer} from "mobx-react";
     })
     this.props.changePage(p)
   }
-    
+
+  drop(result) {
+      let data = result.split('%')
+      let name = data[1];
+      let id = data[3];
+      let paid = data[4];
+      let options = data[2].split(',')
+      return(
+          <Nav pullRight>
+              <NavDropdown
+                  eventKey={3}
+                  title={
+                      <div>
+                          <Button bsStyle="primary" sx >{name}</Button>
+
+                      </div>
+                  }
+                  noCaret
+                  id="basic-nav-dropdown-2"
+              >
+                  {options.map((data,i)=>
+                      <MenuItem eventKey={i} onClick={()=>this.props.dropMethod(id,paid)}>{data}</MenuItem>
+                  )}
+              </NavDropdown>
+          </Nav>
+      )
+  }
+
 
      actions = (id) =>{
         const view = <Tooltip id="view">Ver Detalle</Tooltip>;
@@ -112,9 +139,9 @@ import { inject,observer} from "mobx-react";
         return (
             <Grid fluid>
             <Row>
-            
+
                 <Col md={12}>
-                
+
                 {this.state.permissions.includes('create')&&this.props.create&&(
                     <div>
                     {this.props.loading&&(<Skeleton  height={30} width={70}/>)}
@@ -129,7 +156,7 @@ import { inject,observer} from "mobx-react";
                     content={
                     <div style={{padding: 2}}>
 
-                    
+
 
                     <div >
                       <div style={{ justifyContent: 'space-between ', display: 'flex',  flexSelf:'felx-end'}}>
@@ -142,17 +169,17 @@ import { inject,observer} from "mobx-react";
                           </OverlayTrigger>
                         )}
                         </div>
-                       
+
                         {this.props.filter&&(
                           <div  style={{ justifyContent: 'space-around', display: 'flex', paddingRight:20}}>
                           <Button bsStyle="dark"  style={{height:35}} onClick={()=>this.setState({filter:!this.state.filter})}><i className="fa fa-filter"  />{"Filtros"}</Button>
                             &ensp;
                             {this.props.loading&&(<Skeleton  height={30} width={180}/>)}
                             {!this.props.loading&&( <input  className="form-control" align="left" style={{width:300, height:35}} onChange={(e)=> this.props.searchFilter(e)}   placeholder="Buscar..." name="serchCompanies"  type="serch" />)}
-                   
+
                         </div>
                         )}
-                        
+
                       </div>
                     </div>
                     <div style={{ justifyContent: 'flex-start', display: 'flex', paddingLeft:20}}>
@@ -161,31 +188,31 @@ import { inject,observer} from "mobx-react";
                         <div style={{ justifyContent: 'space-around', display: 'flex',}}>
                           <div>
                             <label>Desde</label>
-                            <Datetime 
-                            timeFormat={false} 
-                            name={"dateStart"} 
-                            inputProps={{ placeholder: 'Desde' }} 
-                            onChange={(e)=> this.props.filterDate(moment(e).format('YYYY-MM-DD'),'dateStart')} 
-                            defaultValue={new Date()}  
+                            <Datetime
+                            timeFormat={false}
+                            name={"dateStart"}
+                            inputProps={{ placeholder: 'Desde' }}
+                            onChange={(e)=> this.props.filterDate(moment(e).format('YYYY-MM-DD'),'dateStart')}
+                            defaultValue={new Date()}
                             />
                           </div>
                           &ensp;
                           &ensp;
                           <div>
                             <label>Hasta</label>
-                            <Datetime 
-                            timeFormat={false} 
-                            name={"dateEnd"} 
-                            inputProps={{ placeholder: 'Hasta'}} 
-                            onChange={(e)=>  this.props.filterDate(moment(e).format('YYYY-MM-DD'),'dateEnd')} 
-                            defaultValue={new Date()}  
+                            <Datetime
+                            timeFormat={false}
+                            name={"dateEnd"}
+                            inputProps={{ placeholder: 'Hasta'}}
+                            onChange={(e)=>  this.props.filterDate(moment(e).format('YYYY-MM-DD'),'dateEnd')}
+                            defaultValue={new Date()}
                             />
                           </div>
-                          
+
                         </div>
                       )}
                     </div>
-                    {this.props.loading&&( <Table striped hover responsive><Skeleton  height={300} width={'100%'}/></Table>)}     
+                    {this.props.loading&&( <Table striped hover responsive><Skeleton  height={300} width={'100%'}/></Table>)}
                    {!this.props.loading&&(
                       <Table striped hover responsive>
                           <thead>
@@ -217,10 +244,15 @@ import { inject,observer} from "mobx-react";
                                       return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.buttonAction&&this.props.buttonAction(item.toString().split("%")[2]):{}} key={i}>
                                       <Button bsStyle="primary" sx onClick={()=>this.props.buttonAction(item.toString().split("%")[2])}>{item.toString().split("%")[1]}</Button></td>
                                     }
+                                      if( item && item.toString().substring(0, 5)==="drop%"){
+                                          return <td  onClick={()=> this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.buttonAction&&this.props.buttonAction(item.toString().split("%")[2]):{}} key={i}>
+                                              {this.drop(item)}
+                                          </td>
+                                      }
                                     if(prop.length-1===i) return  <td key={i}>{item}</td>;
 
                                     return <td   onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
-                                  
+
                                   })}
                               </tr>
                               );
@@ -229,7 +261,7 @@ import { inject,observer} from "mobx-react";
                               <tr><td colSpan={10} style={{fontSize: 20}}><center>No hay registros...</center></td></tr>
                           )}
                           </tbody>
-                          
+
                       </Table>
                    )}
                    {this.props.loading&&(<Table striped hover responsive><Skeleton  height={30} width={'20%'}/></Table>)}
@@ -248,7 +280,7 @@ import { inject,observer} from "mobx-react";
                 />
                 </Col>
             </Row>
-            
+
         </Grid>
         )
     }

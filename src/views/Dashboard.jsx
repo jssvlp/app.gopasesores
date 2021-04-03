@@ -37,7 +37,7 @@ import {
 
 @inject("statistics")
 @observer
-class Dashboard extends Component {
+class  Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {

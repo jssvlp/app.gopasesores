@@ -7,6 +7,8 @@ import * as BranchesForm from "./branches";
 import * as PolicesForm from "./polices";
 import * as SinistersForm from "./sinisters";
 import * as PaymentsForm from './payments';
+import * as PaymentsClientForm from "./paymentClient";
+
 
 export {
   ClientsForm,
@@ -17,5 +19,6 @@ export {
   BranchesForm,
   PolicesForm,
   SinistersForm,
-  PaymentsForm
+  PaymentsForm,
+  PaymentsClientForm
 };

@@ -1,12 +1,14 @@
 import { observable, computed } from "mobx";
 import { Payments, Branches, Clients, Insurances } from "../../services/index";
-import { PaymentsForm } from "../../jsonForms/index";
+import { PaymentsForm,PaymentsClientForm } from "../../jsonForms/index";
 
 class PaymentController {
   @observable load = true;
   @observable AllListPayment = [];
+  @observable AllListPaymentInsurence = [];
   @observable fieldErrors = PaymentsForm.fieldErrors;
   @observable headers = PaymentsForm.headers;
+  @observable headersClient = PaymentsClientForm.headers;
   @observable fields = PaymentsForm.fieldsPages;
   @observable Payments = [];
   @observable PaymentById = [];
@@ -43,6 +45,10 @@ class PaymentController {
   @computed
   get getAllListPayment() {
     return this.AllListPayment;
+  }
+  @computed
+  get getAllListPaymentInsurence() {
+    return this.AllListPaymentInsurence;
   }
   @computed
   get isExistPayments() {
@@ -110,7 +116,7 @@ class PaymentController {
     if (result.data.success && result.status === 200)
       this.Payments = result.data;
     if (!result.data.success || result.status !== 200) this.PaymentById = [];
-   
+
   }
 
   async deletePaymentById(id) {
@@ -141,13 +147,83 @@ class PaymentController {
         ]);
       }
 
-    
+
       this.existPayments = (json.length>0)
       result.data = json;
       this.AllListPayment = result.data;
 
     }
   }
+
+
+  async getPaymentsPendingInsurences(filter,page = 1) {
+    this.AllListPaymentInsurence = []
+    const result = await Payments.getPaymentPending(filter, page)
+    if (result.data && result.status === 200) {
+      let data = result.data.payments.data;
+      console.log('data@@@@@@@@@@@ insurence :>> ', result.data);
+      let jsonInsurence = [];
+      let today = new Date();
+      for (const i in data) {
+        let date = new Date(data[i].limit_payment_date);
+        console.log('data@@@@@@@@@@@ insurence :>> ', data[i]);
+        jsonInsurence.push([
+          data[i].policy.policy_number,
+          data[i].payment_number,
+          data[i].policy.client.clientName,
+          //data[i].policy.branch.insurances[0].name,
+          data[i].policy.branch.name,
+          data[i].value_to_paid.toFixed(2) +' $RD',
+          data[i].value_to_paid.toFixed(2)+' $RD',
+          (data[i].value_to_paid + data[i].commissioned_mount).toFixed(2)+' $RD',
+          data[i].expiredDays,
+          data[i].limit_payment_date,
+          "drop%Accion%Recaudar a Oficina%"+ data[i].id+"%"+data[i].value_to_paid.toFixed(2)
+
+        ]);
+      }
+
+
+      this.existPayments = (jsonInsurence.length > 0)
+      result.data.payments.data = jsonInsurence;
+      this.AllListPaymentInsurence = result.data.payments;
+    }
+  }
+
+  async getPaymentsPedingClient(filter,page = 1) {
+    this.AllListPayment = []
+    const result = await Payments.getPaymentPending(filter,page)
+    if (result.data && result.status === 200) {
+      let data = result.data.payments.data;
+      console.log('data@@@@@@@@@@@ :>> ', result.data);
+      let json = [];
+      let today = new Date();
+      for (const i in data) {
+        let date = new Date(data[i].limit_payment_date);
+        json.push([
+          data[i].policy.payment_number,
+          data[i].payment_number,
+          data[i].policy.client.clientName,
+         // data[i].policy.branch.insurances[0].name,
+          data[i].policy.branch.name,
+          data[i].value_to_paid.toFixed(2) +' $RD',
+          data[i].value_to_paid.toFixed(2)+' $RD',
+          (data[i].value_to_paid + data[i].commissioned_mount).toFixed(2)+' $RD',
+          data[i].expiredDays,
+          data[i].limit_payment_date,
+          "drop%Accion%Recaudar a Aseguradora%"+ data[i].id+"%"+data[i].value_to_paid.toFixed(2)
+
+        ]);
+      }
+
+
+      this.existPayments = (json.length>0)
+      result.data.payments.data = json;
+      this.AllListPayment = result.data.payments;
+
+    }
+  }
+
 
   async getAllPayments(page) {
     //this.initValues();
@@ -197,6 +273,18 @@ class PaymentController {
     console.log("content", content);
     const result = await Payments.savePayment(content);
     return result.data;
+  }
+
+  async payToOffice(body){
+    let content = Object.assign({},body);
+    const result = await Payments.payToOffice(content);
+    return result.data
+  }
+
+  async payToIsurece(body){
+    let content = Object.assign({},body);
+    const result = await Payments.payToIsurece(content);
+    return result.data
   }
 
   async updatePayment(body) {
