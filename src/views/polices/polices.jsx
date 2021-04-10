@@ -8,7 +8,7 @@ import { Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination } from "reac
 
 import moment from "moment";
 import Skeleton from "react-loading-skeleton";
-@inject("polices", "users")
+@inject("polices", "users","clients")
 @observer
 class Polices extends Component {
   constructor(props) {
@@ -20,6 +20,7 @@ class Polices extends Component {
       fistPage: 1,
       lastPage: 1,
       itemsPage:[],
+      reloadCommision:true,
       body: {
         polices: {
           police_code: "",
@@ -80,8 +81,44 @@ class Polices extends Component {
     polices.statusLoading(false);
   }
 
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    const { polices,clients } = this.props;
+    let body = this.state.body.polices
+    let reload = this.state.reloadCommision
+    if((body && body.branch_id && body.insurances && reload)
+        || this.state.changeBranch !== body.branch_id
+        || this.state.changeInsurence !== body.insurances ){
+      let comissionCompany = await polices.getCommissionCompany(body.insurances,body.branch_id);
+      if(comissionCompany.success){
+        body.commission_percentage = comissionCompany.commision.commission_percentage;
+        body.isc = comissionCompany.commision.isc_percent
+        this.setState({
+          body:{polices:body},
+          reloadCommision:false,
+          changeBranch: body.branch_id,
+          changeInsurence: body.insurances
+        })
+      }
+
+      return false
+    }
 
 
+    if(body.client_id && this.state.changeClient !== body.client_id){
+      await clients.getClientById(body.client_id);
+      let comiisonCLient = clients.clientByIdInfo.owner.pivot.commission_percentage
+      console.log('owner',clients.clientByIdInfo.owner)
+      body.commission_percentage_client_owner = comiisonCLient
+      this.setState({
+        body:{polices:body},
+        changeClient: body.client_id
+      })
+      console.log(comiisonCLient)
+      return false
+    }
+    console.log('state',this.state.body)
+
+  }
 
 
   reloadTable(idClient) {
@@ -302,6 +339,8 @@ class Polices extends Component {
     polices.PolicyByIdInfo.branch_detail &&
       delete polices.PolicyByIdInfo.branch_detail.created_at;
     console.log("polices.field.foie", polices.fields.polices.fields);
+    let neta = (polices.PolicyByIdInfo.isc/100) * polices.PolicyByIdInfo.prime
+    polices.PolicyByIdInfo.neta = neta;
     let body = {
       polices: polices.PolicyByIdInfo,
       police_id: id,
@@ -456,6 +495,7 @@ class Polices extends Component {
             fields={polices.fields.polices.fields}
             fieldValues={this.state.body}
             setValue={this.setValue}
+            rules={polices.fields.polices.rules}
             errors={this.state.errors.polices}
             alertMessage={this.props.alertMessage}
             alertLoading={this.props.alertLoading}

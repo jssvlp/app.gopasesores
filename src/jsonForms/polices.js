@@ -10,7 +10,6 @@ const fieldErrors = {
     currency: true,
     client_id: true,
     prime: true,
-    isc: true,
     day_of_payment: true,
   },
   documents: {},
@@ -21,6 +20,15 @@ const headers = ["Nombre", "Fecha"];
 const fieldsPages = {
   polices: {
     title: "Información de la póliza",
+    rules: [
+      {
+        fieldFrom: "prime",
+        valueFrom: "value_field",
+        fieldTo: "isc",
+        fieldResult: "neta",
+        rule: "porcentage",
+      },
+    ],
     fields: [
       {
         label: "Información principal de la póliza",
@@ -37,7 +45,7 @@ const fieldsPages = {
         label: "Número de Póliza",
         name: "policy_number",
         value: "",
-        type: "number",
+        type: "text",
         mask: "",
         model: "polices",
         display: ["create", "update"],
@@ -145,7 +153,20 @@ const fieldsPages = {
         col: 12,
       },
       {
-        label: "Monto de la Póliza",
+        label: "Cliente",
+        name: "client_id",
+        value: [
+          { label: "RD", value: "RD" },
+          { label: "USD", value: "USD" },
+        ],
+        type: "select",
+        mask: "",
+        model: "polices",
+        display: ["create", "update"],
+        col: 4,
+      },
+      {
+        label: "Valor Asegurado",
         name: "insured_amount",
         value: "",
         type: "number",
@@ -175,7 +196,7 @@ const fieldsPages = {
         mask: "",
         model: "polices",
         display: ["create", "update"],
-        col: 4,
+        col: 6,
       },
       {
         label: "isc",
@@ -184,6 +205,17 @@ const fieldsPages = {
         type: "number",
         mask: "",
         model: "polices",
+        display: ["create", "update"],
+        col: 6,
+      },
+      {
+        label: "Prima Neta",
+        name: "neta",
+        value: "",
+        type: "number",
+        mask: "",
+        model: "polices",
+        disabled:true,
         display: ["create", "update"],
         col: 4,
       },
@@ -194,6 +226,7 @@ const fieldsPages = {
         type: "number",
         mask: "",
         model: "polices",
+        disabled:true,
         display: ["create", "update"],
         col: 4,
       },
@@ -204,22 +237,11 @@ const fieldsPages = {
         type: "number",
         mask: "",
         model: "polices",
+        disabled:true,
         display: ["create", "update"],
         col: 4,
       },
-      {
-        label: "Cliente",
-        name: "client_id",
-        value: [
-          { label: "RD", value: "RD" },
-          { label: "USD", value: "USD" },
-        ],
-        type: "select",
-        mask: "",
-        model: "polices",
-        display: ["create", "update"],
-        col: 4,
-      },
+
 
       {
         label: "Información del beneficiario adicional",

@@ -15,6 +15,7 @@ class PolicyController {
   @observable fields = PolicesForm.fieldsPages;
   @observable listPolicies = [];
   @observable Policies = [];
+  @observable comission = [];
   @observable PolicyById = [];
   @observable allUsers = [];
   @observable isActive = false;
@@ -67,6 +68,11 @@ class PolicyController {
   @computed
   get getListPolicies() {
     return this.listPolicies;
+  }
+
+  @computed
+  get getExactComissionCompany() {
+    return this.comission;
   }
   @computed
   get getPageSelect(){
@@ -151,6 +157,12 @@ class PolicyController {
     if (result.data && result.status === 200) this.PolicyById = result.data;
     if (!result.data || result.status !== 200) this.PolicyById = [];
     console.log("result", result);
+  }
+
+  async getCommissionCompany(id,id_branch){
+    const result = await Policies.comissionCompany(id,id_branch);
+    if (result.data && result.status === 200) return result.data;
+    if (!result.data || result.status !== 200) return [];
   }
 
   async deletePolicyById(id) {

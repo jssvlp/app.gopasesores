@@ -11,6 +11,8 @@ function getBranchesByInsurances(id) {
   return api.get("/insurances/" + id + "/branches");
 }
 
+
+
 function getInsurancesAll() {
   return api.get("/insurances/list/all");
 }
@@ -41,4 +43,5 @@ export {
   filterDateInsurance,
   getInsurancesAll,
   getBranchesByInsurances,
+
 };

@@ -11,6 +11,9 @@ function getPoliciesById(id) {
 function getPoliciesAll() {
   return api.get("/policies/list/all");
 }
+function comissionCompany(id,id_branch) {
+  return api.get("/commisions/insurance/" + id + "/branch/"+id_branch);
+}
 
 function savePolicy(body) {
   return api.post("/policies/", body);
@@ -37,4 +40,5 @@ export {
   updatePolicy,
   filterDatePolicy,
   getPoliciesAll,
+  comissionCompany
 };

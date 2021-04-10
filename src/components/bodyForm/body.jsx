@@ -159,6 +159,21 @@ class body extends Component {
               let result = parseInt(second) / parseInt(first)
               values[field[i].model] && (values[field[i].model][rules[x].fieldResult] = result.toFixed(2));
             }
+            if (rules[x].rule === "multi") {
+
+              let first =  values[field[i].model] ? values[field[i].model][rules[x].fieldFrom] : 0;
+              let second =  values[field[i].model] ? values[field[i].model][field[i].name] : 0;
+              let result = parseInt(second) * parseInt(first)
+              values[field[i].model] && (values[field[i].model][rules[x].fieldResult] = result.toFixed(2));
+            }
+
+            if (rules[x].rule === "porcentage") {
+
+              let first =  values[field[i].model] ? values[field[i].model][rules[x].fieldFrom] : 0;
+              let second =  values[field[i].model] ? values[field[i].model][field[i].name] : 0;
+              let result = (parseInt(second)/100) * parseInt(first)
+              values[field[i].model] && (values[field[i].model][rules[x].fieldResult] = result.toFixed(2));
+            }
           }
         }
       }
