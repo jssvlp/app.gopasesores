@@ -627,7 +627,7 @@ class Polices extends Component {
                             <Button
                                 onClick={() => this.createPolicy(item.id)}
                                 bsStyle="warning"
-                                bsSize="md"
+                                bsSize="sm"
                                 fill
 
                             >
@@ -639,7 +639,7 @@ class Polices extends Component {
                             <Button
                                 onClick={() => this.props.history.push("sinisters")}
                                 bsStyle="success"
-                                bsSize="md"
+                                bsSize="sm"
 
 
                             >
@@ -682,30 +682,51 @@ class Polices extends Component {
                                   })]
                                   }
                                   bsStyle="default"
-                                  bsSize="md"
+                                  bsSize="sm"
                                   fill
-                                  wd
+
                               >
-                                Pagos <i className="fa fa-dollar"></i>
+                                Acuerdo de Pago <i className="fa fa-dollar"></i>
                               </Button>
                           )}
+
+                          &nbsp;&nbsp;
+                          {this.state.permissionPayment && this.state.permissionPayment.length>0&&(
+                              <Button
+                                  onClick={() => [localStorage.setItem("idPolicy", item.id),localStorage.setItem("prime", item.prime),  this.props.history.push({
+                                    pathname:"/admin/payments",
+                                    state:{
+                                      idPolicy:item.id
+                                    }
+                                  })]
+                                  }
+                                  onClick={() => this.props.history.push("payclient")}
+                                  bsStyle="success"
+                                  bsSize="sm"
+                                  fill
+
+                              >
+                                Cobros <i className="fa fa-dollar"></i>
+                              </Button>
+                          )}
+
 
                           &nbsp;&nbsp;
                           <Button
                               onClick={() => this.openDetail(item.id)}
                               bsStyle="info"
-                              bsSize="md"
+                              bsSize="sm"
                               fill
-                              wd
+
                           >
                             Editar <i className="fa fa-edit"></i>
                           </Button>
                           &nbsp;&nbsp;
                           <Button
                               bsStyle="danger"
-                              bsSize="md"
+                              bsSize="sm"
                               fill
-                              wd
+
                               onClick={(e) => this.deletePolicyById(item.id)}
                           >
                             Eliminar <i className="fa fa-trash"></i>

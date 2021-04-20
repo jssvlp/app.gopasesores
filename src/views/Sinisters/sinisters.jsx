@@ -14,7 +14,7 @@ class Sinisters extends Component {
             body:{
                 Sinisters:{
                     Sinister_code:"",
-                },     
+                },
                 documents: [],
             },
             errors:{
@@ -39,6 +39,8 @@ class Sinisters extends Component {
         this.selectedItem = this.selectedItem.bind(this);
         this.filterDate = this.filterDate.bind(this);
         this.showPolices = this.showPolices.bind(this);
+        this.optionDrop = this.optionDrop.bind(this)
+
     }
 
      componentDidMount(){
@@ -73,16 +75,16 @@ class Sinisters extends Component {
             create: !this.state.create,
             body:{
                 sinisters:{
-                    policy_id:id  
-                },  
+                    policy_id:id
+                },
                 documents: [],
                 update:false,
             },
         })
-        
+
     }
 
-   
+
 
    async setValue(name,value,modelName,mask = null){
         const {sinisters} = this.props
@@ -95,7 +97,7 @@ class Sinisters extends Component {
             this.setState({body:body,errors:this.setErrors(name,value,modelName,mask)})
             return
         }
-        
+
         let model = body[modelName]
         console.log('model', modelName,name)
         model[name] = value
@@ -106,16 +108,16 @@ class Sinisters extends Component {
     setErrors(name,value,model,mask){
         let errorsArray = this.state.errors
         let errors = [];
-        
+
         if(model) errors = errorsArray[model];
         if(!model) errors = errorsArray;
-        
-        
+
+
 
         if(mask) !value.endsWith('_')? errors[name] = false : errors[name] = true
         if(!mask) value? errors[name] = false: errors[name] = true;
 
-        model?errorsArray[model] = errors : errorsArray = errors 
+        model?errorsArray[model] = errors : errorsArray = errors
         //console.log('errors', errorsArray)
         return errorsArray;
     }
@@ -125,9 +127,9 @@ class Sinisters extends Component {
         let errors = this.state.errors
         for (const i in body) {
            let value = body[i];
-           
+
            if(typeof value==='object'){
-            
+
                for (const key in value) {
                    let model = errors[i]
                     value&&(model[key] = false)
@@ -137,7 +139,7 @@ class Sinisters extends Component {
            if(typeof value==='string'){
             value&&(errors[i] = false)
         }
-           
+
         }
     }
 
@@ -154,7 +156,7 @@ class Sinisters extends Component {
             this.reloadTable();
         }
         if(!result.success) this.props.alertMessage(result.message,'Favor verificar los datos','error')
-        
+
 
 
     }
@@ -185,7 +187,7 @@ class Sinisters extends Component {
         console.log('Sinistersss', sinisters.SinisterByIdInfo)
         delete sinisters.SinisterByIdInfo.sinister.updated_at
         delete sinisters.SinisterByIdInfo.sinister.created_at
-        
+
         let body ={
             sinisters:sinisters.SinisterByIdInfo.sinister,
             sinister_id:id,
@@ -243,7 +245,7 @@ class Sinisters extends Component {
             console.log('items[i]', items[i])
             let result = await sinisters.deleteSinisterById(items[i]);
             !result.success&& allErrorsDelete.push(items[i])
-           
+
         }
         this.props.alertLoading("Eliminando Espere un momento....",false)
         if(allErrorsDelete.length>0){
@@ -272,19 +274,34 @@ class Sinisters extends Component {
         alert("lalo: "+id)
     }
 
- 
-  
+    async optionDrop(id,paid = false,data){
+        const {sinisters} = this.props
+        let body =  {status : data,sinister_id:id};
+        const result = await sinisters.updateSinister(body)
+        if(result.success){
+            this.props.alertMessage('Se ha actualizado el estado del Sinistro','Puede verificar en la lista el Sinistro actualizado','success')
+            this.setState({
+                create: false
+            })
+            this.reloadTable();
+        }
+        if(!result.success) this.props.alertMessage(result.message,'Favor verificar los datos','error')
+
+    }
+
+
+
     render() {
         const {sinisters,users} = this.props
-        
+
         console.log('this.state.type Sinister', this.state,sinisters.fields)
         const steps = [
-            { 
-                name:sinisters.fields.sinisters.title, 
+            {
+                name:sinisters.fields.sinisters.title,
                 errors: this.state.errors.sinisters,
-                component: <BodyContent 
-                            fields={sinisters.fields.sinisters.fields} 
-                            fieldValues={this.state.body} 
+                component: <BodyContent
+                            fields={sinisters.fields.sinisters.fields}
+                            fieldValues={this.state.body}
                             setValue={this.setValue}
                             errors={this.state.errors.sinisters}
                             alertMessage={this.props.alertMessage}
@@ -292,6 +309,7 @@ class Sinisters extends Component {
                             view={this.state.update?'update':'create'}
                             method={this.state.update&&this.updateSinister}
                             buttonName={this.state.update?"Actualizar":"Guardar"}
+
                             />
             },
             {
@@ -314,39 +332,40 @@ class Sinisters extends Component {
                   />
                 ),
               },
-            
+
           ];
         return (
             <div className={!this.state.create?"main-content":""}>
              {this.state.create&&(
-                 <Wizzard 
+                 <Wizzard
                  steps={steps}
-                 closeWizard={this.closeWizard} 
+                 closeWizard={this.closeWizard}
                  subtitle={ ""}
-                 title={this.state.update?'DETALLE DEL SINISTRO': 'CREANDO UN NUEVO  SINISTRO'} 
+                 title={this.state.update?'DETALLE DEL SINISTRO': 'CREANDO UN NUEVO  SINISTRO'}
                  />
                  )}
-               
+
                 {!this.state.create&&(
                     <Datatable
                     permissions={users.infoUser}
                     location={this.props.location}
                     buttonAction={this.showPolices}
-                    thArray={sinisters.headers} 
+                    thArray={sinisters.headers}
                     tdArray={sinisters.getDataSinisters}
                     loading={sinisters.loading}
                     selectedItem={this.selectedItem}
-                    items={this.state.seletectedItems} 
+                    items={this.state.seletectedItems}
                     deleteMethod={this.deleteSinister}
                     changePage={this.changePage}
                     create={null}
                     openDetail={this.openDetail}
+                    dropMethod={this.optionDrop }
                     titleBtn={"Nuevo"}
                     />
                 )}
 
 
-                
+
             </div>
         )
     }

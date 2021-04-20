@@ -6,7 +6,6 @@ const fieldErrors = {
         "sinister_date":true,
         "notice_date":true,
         "assigned_provider":true,
-        "status":true,
         "facts_description":true
     },
     documents:[]
@@ -22,6 +21,7 @@ const headers = [
     "Tipo",
     "Estado",
     "Fecha del Sinistro",
+    "Accion"
 ];
 
 const fieldsPages = {
@@ -29,8 +29,8 @@ const fieldsPages = {
         "title": "Informacion del Sinistro",
         fields:[
             {
-                label: '', 
-                name:'espace', 
+                label: '',
+                name:'espace',
                 value:'',
                 type:'br',
                 mask:'',
@@ -39,19 +39,19 @@ const fieldsPages = {
                 col:12
             },
             {
-                label: 'No. Sinistro Aseguradora', 
-                name:'sinister_company_number', 
-                value:'', 
+                label: 'No. Sinistro Aseguradora',
+                name:'sinister_company_number',
+                value:'',
                 type:'text',
                 mask:'',
                 display:['create','update'],
-                model:'sinisters', 
+                model:'sinisters',
                 col:4
             },
 
             {
-                label: 'Tipo de Siniestro', 
-                name:'type', 
+                label: 'Tipo de Siniestro',
+                name:'type',
                 value:[
                     { label: "Accidente de transito", value: "Accidente de transito" }
                 ],
@@ -62,81 +62,68 @@ const fieldsPages = {
                 col:4
             },
             {
-                label: 'Fecha de Sinistro', 
-                name:'sinister_date', 
-                value:'', 
+                label: 'Fecha de Sinistro',
+                name:'sinister_date',
+                value:'',
                 type:'date',
                 mask:'',
                 display:['create','update'],
-                model:'sinisters', 
+                model:'sinisters',
                 col:4
             },
-            
+
 
             {
-                label: 'Fecha de Aviso a Asesores', 
-                name:'notice_date', 
-                value:'', 
+                label: 'Fecha de Aviso a Asesores',
+                name:'notice_date',
+                value:'',
                 type:'date',
                 mask:'',
                 display:['create','update'],
-                model:'sinisters', 
+                model:'sinisters',
                 col:6
             },
 
 
             {
-                label: 'Fecha de Aviso a la Aseguradora', 
-                name:'insurance_notice_date', 
-                value:'', 
+                label: 'Fecha de Aviso a la Aseguradora',
+                name:'insurance_notice_date',
+                value:'',
                 type:'date',
                 mask:'',
                 display:['create','update'],
-                model:'sinisters', 
+                model:'sinisters',
                 col:6
             },
 
 
             {
-                label: 'Proveedor Asignado', 
-                name:'assigned_provider', 
+                label: 'Proveedor Asignado',
+                name:'assigned_provider',
                 value:[
                     { label: "Proveedor", value: "Proveedor" }
-                ], 
+                ],
                 type:'select',
                 mask:'',
                 display:['create','update'],
-                model:'sinisters', 
+                model:'sinisters',
                 col:12
             },
 
             {
-                label: 'Descripcion', 
-                name:'facts_description', 
-                value:'', 
+                label: 'Descripcion',
+                name:'facts_description',
+                value:'',
                 type:'textarea',
                 mask:'',
                 display:['create','update'],
-                model:'sinisters', 
+                model:'sinisters',
                 col:12
-            },
-            
-            {
-                label: 'Estado', 
-                name:'status', 
-                value:[
-                    { label: "Solicitado", value: "Solicitado" }
-                ], 
-                type:'select',
-                mask:'',
-                display:['create','update'],
-                model:'sinisters', 
-                col:6
             },
 
             {
-                label: '', 
-                name:'espace', 
+                label: '',
+                name:'espace',
                 value:'',
                 type:'br',
                 mask:'',
@@ -144,7 +131,7 @@ const fieldsPages = {
                 display:['create','update'],
                 col:6
             },
-          
+
         ]
     },
     documents: {
@@ -178,10 +165,10 @@ const fieldsPages = {
           },
         ],
       },
-   
-   
+
+
 }
-    
+
 
 
 

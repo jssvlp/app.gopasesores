@@ -81,7 +81,7 @@ import { inject,observer} from "mobx-react";
       let data = result.split('%')
       let name = data[1];
       let id = data[3];
-      let paid = data[4];
+      let parameters = data[4];
       let options = data[2].split(',')
       return(
           <Nav pullRight>
@@ -97,7 +97,7 @@ import { inject,observer} from "mobx-react";
                   id="basic-nav-dropdown-2"
               >
                   {options.map((data,i)=>
-                      <MenuItem eventKey={i} onClick={()=>this.props.dropMethod(id,paid)}>{data}</MenuItem>
+                      <MenuItem eventKey={i} onClick={()=>this.props.dropMethod(id,parameters,data)}>{data}</MenuItem>
                   )}
               </NavDropdown>
           </Nav>

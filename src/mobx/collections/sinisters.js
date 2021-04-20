@@ -42,7 +42,7 @@ import {SinistersForm} from '../../jsonForms/index'
     get getTypeSinister(){
         return this.typeSinister;
     }
-    
+
 
      statusLoading(status){
         this.load = status;
@@ -54,10 +54,9 @@ import {SinistersForm} from '../../jsonForms/index'
     }
 
 
-   
 
 
- 
+
 
     async initValues(){
         const fieldsAll = this.fields;
@@ -75,9 +74,9 @@ import {SinistersForm} from '../../jsonForms/index'
                     });
                   }
             }
-            
+
         }
-   
+
 
     }
 
@@ -101,21 +100,23 @@ import {SinistersForm} from '../../jsonForms/index'
         if(result.status === 200 && result.data){
             let data = result.data.data;
             let json = [];
-            
+
             for (const i in data) {
                 json.push([
-                    data[i].id, 
+                    data[i].id,
                     data[i].assigned_provider,
-                    data[i].sinister_company_number, 
+                    data[i].sinister_company_number,
                     data[i].policy.policy_number,
                     data[i].policy.currency + "$ "+ data[i].policy.insured_amount,
                     data[i].policy.prime,
                     data[i].type,
                     data[i].status,
                     data[i].sinister_date,
+                    "drop%Cambiar Estado%Reportado,Datos incompletos,En proceso,Pagado%"+ data[i].id
+
                 ])
             }
-            
+
             result.data.data = json
             this.Sinisters =  result.data
             console.log('this.Sinisters', result.data)
@@ -125,8 +126,8 @@ import {SinistersForm} from '../../jsonForms/index'
         }
         this.load = false;
     }
-    
-    
+
+
     async filterSinister(field,page,body){
         const result = await Sinisters.filterDateSinister(field,page,body);
         if(result.status === 200 && result.data){
@@ -135,23 +136,23 @@ import {SinistersForm} from '../../jsonForms/index'
             let json = [];
             for (const i in data) {
                 json.push([
-                    data[i].id, 
+                    data[i].id,
                     data[i].name,
-                    data[i].path, 
+                    data[i].path,
                     data[i].created_at,
                 ])
             }
-            
+
             result.data.data = json
             this.Sinisters =  result.data
-           
+
             console.log('this.Sinisters', result.data)
 
         }else{
             this.Sinisters = []
         }
         this.load = false;
-    
+
     }
 
     async saveSinister(body){
