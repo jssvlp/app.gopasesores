@@ -47,7 +47,7 @@ class Employees extends Component {
             const result = await employees.getEmployeeByUser(this.props.location.state.userId)
             console.log('result editprofile', result)
             result.success&& this.openDetail(result.employee.id)
-            
+
         }
         employees.statusLoading(true);
          this.reloadTable();
@@ -57,6 +57,20 @@ class Employees extends Component {
         employees.statusLoading(false);
         console.log('this.props', this.props)
 
+    }
+
+    async componentDidUpdate(prevProps, prevState, snapshot){
+        const {employees} = this.props;
+        let body = this.state.body.employee
+        if(body && body.type === "Referidor"){
+            let fieldUsers = employees.fields.user.fields;
+            let field = fieldUsers.map((data,i)=>{
+                if(data.name === "password"){
+                    console.log('encontramos el campo')
+                    data.hidden = true;
+                }
+            })
+        }
     }
 
     reloadTable(){
@@ -79,10 +93,10 @@ class Employees extends Component {
                 update:false,
             },
         })
-        
+
     }
 
-   
+
 
    async setValue(name,value,modelName,mask = null){
         const {employees} = this.props
@@ -95,7 +109,7 @@ class Employees extends Component {
             this.setState({body:body,errors:this.setErrors(name,value,modelName,mask)})
             return
         }
-        
+
         let model = body[modelName]
         console.log('model', modelName)
         model[name] = value
@@ -106,16 +120,16 @@ class Employees extends Component {
     setErrors(name,value,model,mask){
         let errorsArray = this.state.errors
         let errors = [];
-        
+
         if(model) errors = errorsArray[model];
         if(!model) errors = errorsArray;
-        
-        
+
+
 
         if(mask) !value.endsWith('_')? errors[name] = false : errors[name] = true
         if(!mask) value === 0? errors[name] = false: value? errors[name] = false: errors[name] = true;
 
-        model?errorsArray[model] = errors : errorsArray = errors 
+        model?errorsArray[model] = errors : errorsArray = errors
         //console.log('errors', errorsArray)
         return errorsArray;
     }
@@ -125,9 +139,9 @@ class Employees extends Component {
         let errors = this.state.errors
         for (const i in body) {
            let value = body[i];
-           
+
            if(typeof value==='object'){
-            
+
                for (const key in value) {
                    let model = errors[i]
                     value&&(model[key] = false)
@@ -137,7 +151,7 @@ class Employees extends Component {
            if(typeof value==='string'){
             value&&(errors[i] = false)
         }
-           
+
         }
     }
 
@@ -154,7 +168,7 @@ class Employees extends Component {
             this.reloadTable();
         }
         if(!result.success) this.props.alertMessage(result.message,'Favor verificar los datos','error')
-        
+
 
 
     }
@@ -189,7 +203,7 @@ class Employees extends Component {
         delete employees.EmployeeByIdInfo.employee.user.created_at
         employees.EmployeeByIdInfo.employee.user.password = ""
         this.state.errors['user']['password'] = false
-        
+
 
         let body ={
             employee:employees.EmployeeByIdInfo.employee,
@@ -247,7 +261,7 @@ class Employees extends Component {
             console.log('items[i]', items[i])
             let result = await employees.deleteEmployeeById(items[i]);
             !result.success&& allErrorsDelete.push(items[i])
-           
+
         }
         this.props.alertLoading("Eliminando Espere un momento....",false)
         if(allErrorsDelete.length>0){
@@ -272,63 +286,63 @@ class Employees extends Component {
 
     }
 
- 
-  
+
+
     render() {
         const {employees,users} = this.props
-        
+
         const steps = [
-            { 
-                name:employees.fields.employee.title, 
+            {
+                name:employees.fields.employee.title,
                 errors: this.state.errors.employee,
-                component: <BodyContent 
-                            fields={employees.fields.employee.fields} 
+                component: <BodyContent
+                            fields={employees.fields.employee.fields}
                             rules={employees.fields.employee.rules}
-                            fieldValues={this.state.body} 
+                            fieldValues={this.state.body}
                             setValue={this.setValue}
                             errors={this.state.errors.employee}
                             alertMessage={this.props.alertMessage}
                             view={this.state.update?'update':'create'}
                             method={this.state.update&&this.updateEmployee}
-                            buttonName={"Actualizar"} 
-                            /> 
+                            buttonName={"Actualizar"}
+                            />
             },
-            { 
-                name: employees.fields.user.title, 
+            {
+                name: employees.fields.user.title,
                 errors:this.state.errors.user,
-                component: <BodyContent 
-                            fields={employees.fields.user.fields} 
-                            fieldValues={this.state.body} 
+                component: <BodyContent
+                            fields={employees.fields.user.fields}
+                            fieldValues={this.state.body}
                             setValue={this.setValue}
                             view={this.state.update?'update':'create'}
                             errors={this.state.errors.user}
-                            alertMessage={this.props.alertMessage} 
+                            alertMessage={this.props.alertMessage}
                             method={this.state.update?this.updateEmployee:this.saveEmployee}
                             buttonName={this.state.update?"Actualizar":"Guardar"}
-                            /> 
+                            />
             },
-            
+
           ];
         return (
             <div className={!this.state.create?"main-content":""}>
              {this.state.create&&(
-                 <Wizzard 
-                 steps={steps} 
-                 closeWizard={this.closeWizard} 
+                 <Wizzard
+                 steps={steps}
+                 closeWizard={this.closeWizard}
                  subtitle={ ""}
-                 title={this.state.update?'DETALLE DEL EMPLEADO': 'CREANDO UN NUEVO  EMPLEADO'} 
+                 title={this.state.update?'DETALLE DEL EMPLEADO': 'CREANDO UN NUEVO  EMPLEADO'}
                  />
                  )}
-               
+
                 {!this.state.create&&(
                     <Datatable
                     permissions={users.infoUser}
                     location={this.props.location}
-                    thArray={employees.headers} 
+                    thArray={employees.headers}
                     tdArray={employees.getDataEmployees}
                     loading={employees.loading}
                     selectedItem={this.selectedItem}
-                    items={this.state.seletectedItems} 
+                    items={this.state.seletectedItems}
                     deleteMethod={this.deleteEmployee}
                     changePage={this.changePage}
                     create={this.openModal}
@@ -338,7 +352,7 @@ class Employees extends Component {
                 )}
 
 
-                
+
             </div>
         )
     }

@@ -12,6 +12,7 @@ class clients extends Component {
     super(props);
     this.state = {
       modal: false,
+      isDelete:false,
       body: {
         people: {
           client_code: "",
@@ -41,6 +42,7 @@ class clients extends Component {
       dateEnd: moment().format("YYYY-MM-DD"),
     };
     this.changePage = this.changePage.bind(this);
+    this.sureDelete = this.sureDelete.bind(this);
     this.openModal = this.openModal.bind(this);
     this.setValue = this.setValue.bind(this);
     this.saveClient = this.saveClient.bind(this);
@@ -300,8 +302,27 @@ class clients extends Component {
     });
   }
 
-  async deleteClient() {
+  sureDelete(){
+    this.props.alertMessageTwoOptions(
+        "Esta seguro que quiere borrar estos registros?",
+        "esta accion no se puede deshacer luego de confirmar",
+        "warning",
+        this.deleteClient
+    )
+
+  }
+
+  async deleteClient(isDelete) {
     const { clients } = this.props;
+
+    alert(isDelete)
+    if(!isDelete){
+      this.setState({
+        seletectedItems: [],
+      });
+      return true;
+    }
+
     let items = this.state.seletectedItems;
     let allErrorsDelete = [];
     this.props.alertLoading("Eliminando Espere un momento....", true);
@@ -462,7 +483,7 @@ class clients extends Component {
             view={this.state.update ? "update" : "create"}
             selectedItem={this.selectedItem}
             items={this.state.seletectedItems}
-            deleteMethod={this.deleteClient}
+            deleteMethod={this.sureDelete}
             changePage={this.changePage}
             create={this.openDialog}
             openDetail={this.openDetail}
@@ -472,21 +493,21 @@ class clients extends Component {
           />
         )}
 
-        {/* <Modal 
+        {/* <Modal
                 body={
-                    <ClientBody 
-                    fields={clients.fields} 
-                    fieldValues={this.state.body} 
+                    <ClientBody
+                    fields={clients.fields}
+                    fieldValues={this.state.body}
                     setValue={this.setValue}
                     errors={this.state.errors}
                     />
                 }
                 title="Crear un nuevo Cliente de Empresa"
-                alertMessage={this.props.alertMessage}  
-                modalShow={this.state.modal} 
+                alertMessage={this.props.alertMessage}
+                modalShow={this.state.modal}
                 modalCreate={this.openModal}
-                errors={this.state.errors} 
-                saveMethod={this.saveClient} 
+                errors={this.state.errors}
+                saveMethod={this.saveClient}
                 /> */}
       </div>
     );

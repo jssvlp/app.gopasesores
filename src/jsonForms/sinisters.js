@@ -6,7 +6,8 @@ const fieldErrors = {
         "sinister_date":true,
         "notice_date":true,
         "assigned_provider":true,
-        "facts_description":true
+        "facts_description":true,
+        "estimated_amount":true
     },
     documents:[]
 };
@@ -107,7 +108,17 @@ const fieldsPages = {
                 mask:'',
                 display:['create','update'],
                 model:'sinisters',
-                col:12
+                col:6
+            },
+            {
+                label: 'Monto estimado',
+                name:'estimated_amount',
+                value:'',
+                type:'number',
+                mask:'',
+                display:['create','update'],
+                model:'sinisters',
+                col:6
             },
 
             {

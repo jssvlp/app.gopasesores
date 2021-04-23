@@ -250,7 +250,6 @@ import { inject,observer} from "mobx-react";
                                           </td>
                                       }
                                     if(prop.length-1===i) return  <td key={i}>{item}</td>;
-
                                     return <td   onClick={()=>this.state.permissions.includes('detail') || this.state.permissions.includes('update')?this.props.openDetail&&this.props.openDetail(prop[0]):{}} key={i}>{item}</td>
 
                                   })}

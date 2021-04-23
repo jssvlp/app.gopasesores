@@ -55,20 +55,21 @@ class Dashboard extends Component {
     this.alertMessage = this.alertMessage.bind(this);
     this.htmlAlert = this.htmlAlert.bind(this);
     this.alertLoading = this.alertLoading.bind(this);
+    this.alertMessageTwoOptions = this.alertMessageTwoOptions.bind(this)
   }
   componentDidMount() {
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel);
     }
-    
+
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
   }
-  
+
   componentDidUpdate(e) {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
@@ -156,7 +157,7 @@ class Dashboard extends Component {
       responseAlert: repsonse
     });
   }
-  
+
   alertMessage(title,subtitle,option) {
     this.setState({
       alert: (
@@ -172,6 +173,28 @@ class Dashboard extends Component {
         >
          {subtitle}
         </SweetAlert>
+      ),
+      responseAlert: true
+    });
+  }
+
+  async alertMessageTwoOptions(title,subtitle,option,method) {
+    this.setState({
+      alert: (
+          <SweetAlert
+              success={option ==='success'}
+              error={option ==='error'}
+              warning={option ==='warning'}
+              style={{ display: "block", marginTop: "-100px" }}
+              title={title}
+              showConfirm={true}
+              showCancel={true}
+              onConfirm={async () => [ await method(true),this.hideAlert(false)]}
+              onCancel={async () => [await method(false),this.hideAlert(false)]}
+              confirmBtnBsStyle={option}
+          >
+            {subtitle}
+          </SweetAlert>
       ),
       responseAlert: true
     });
@@ -211,15 +234,15 @@ class Dashboard extends Component {
         >
          <center><i className="fa fa-spin fa-circle-o-notch" style={{fontSize:20}}/></center>
         </SweetAlert>
-        
+
       )
     });
    !option&&this.hideAlert()
   }
 
- 
 
-  
+
+
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
@@ -227,21 +250,22 @@ class Dashboard extends Component {
       }
       if (prop.layout === "/admin") {
         return (
-         
+
             <Route
               path={prop.layout + prop.path}
               key={key}
-              render={routeProps => ( 
+              render={routeProps => (
               <Protect path={prop.path} layout={prop.layout }>
                 <prop.component
                   {...routeProps}
                   handleClick={this.handleNotificationClick}
                   alertMessage={this.alertMessage}
                   htmlAlert={this.htmlAlert}
+                  alertMessageTwoOptions = {this.alertMessageTwoOptions}
                   alertLoading={this.alertLoading}
                 />
               </Protect>
-                
+
               )}
             />
         );
@@ -264,6 +288,7 @@ class Dashboard extends Component {
           hasImage={this.state.hasImage}
           mini={this.state.mini}
           alertMessage={this.alertMessage}
+          alertMessageTwoOptions={this.alertMessageTwoOptions}
           htmlAlert={this.htmlAlert}
           alertLoading={this.alertLoading}
         />
@@ -281,6 +306,7 @@ class Dashboard extends Component {
             handleMiniClick={this.handleMiniClick}
             navbar={this.state.navbar}
             alertMessage={this.alertMessage}
+            alertMessageTwoOptions={this.alertMessageTwoOptions}
             htmlAlert={this.htmlAlert}
             alertLoading={this.alertLoading}
           />

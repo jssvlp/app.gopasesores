@@ -2,6 +2,7 @@ import { observable, computed } from "mobx";
 import { Component } from "react";
 import { Employees } from "../../services/index";
 import {EmployeesForm} from '../../jsonForms/index'
+import moment from "moment";
     class EmployeeController  extends Component  {
 
     @observable load = true
@@ -42,7 +43,7 @@ import {EmployeesForm} from '../../jsonForms/index'
     get getTypeEmployee(){
         return this.typeEmployee;
     }
-    
+
 
      statusLoading(status){
         this.load = status;
@@ -54,7 +55,7 @@ import {EmployeesForm} from '../../jsonForms/index'
     }
 
 
-   
+
 
 
     async  getPositions() {
@@ -107,21 +108,21 @@ import {EmployeesForm} from '../../jsonForms/index'
         if(result.status === 200 && result.data){
             let data = result.data.data;
             let json = [];
-            
+
             for (const i in data) {
                 json.push([
-                    data[i].id, 
-                    data[i].first_name, 
+                    data[i].id,
+                    data[i].first_name,
                     data[i].last_name,
-                    data[i].position_id, 
-                    data[i].type, 
-                    data[i].created_at,
+                    data[i].position_id,
+                    data[i].type,
+                    moment( data[i].created_at).format('DD/MM/YYYY'),
                 ])
             }
-            
+
             result.data.data = json
             this.Employees =  result.data
-            
+
             console.log('this.Employees', result.data)
 
         }else{
@@ -129,7 +130,7 @@ import {EmployeesForm} from '../../jsonForms/index'
         }
         this.load = false;
     }
-    
+
     async activeClicent(isActive,id){
         const result = await Employees.activeEmployee(isActive,id);
         console.log('result.data', result.data)
@@ -143,25 +144,25 @@ import {EmployeesForm} from '../../jsonForms/index'
             let json = [];
             for (const i in data) {
                 json.push([
-                    data[i].id, 
-                    data[i].first_name, 
+                    data[i].id,
+                    data[i].first_name,
                     data[i].last_name,
-                    data[i].position_id, 
-                    data[i].type, 
-                    data[i].created_at,
+                    data[i].position_id,
+                    data[i].type,
+                   moment( data[i].created_at).format('DD/MM/YYYY'),
                 ])
             }
-            
+
             result.data.data = json
             this.Employees =  result.data
-           
+
             console.log('this.Employees', result.data)
 
         }else{
             this.Employees = []
         }
         this.load = false;
-    
+
     }
 
     async saveEmployee(body){

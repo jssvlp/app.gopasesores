@@ -1,6 +1,7 @@
 import { observable, computed } from "mobx";
 import { Payments, Branches, Clients, Insurances } from "../../services/index";
 import { PaymentsForm,PaymentsClientForm } from "../../jsonForms/index";
+import moment from "moment";
 
 class PaymentController {
   @observable load = true;
@@ -253,8 +254,8 @@ class PaymentController {
           data[i].description_insured_property,
           data[i].insured_amount,
           data[i].additional_beneficiary_name,
-          data[i].validity_start_date,
-          data[i].validity_end_date,
+          moment(data[i].validity_start_date).format('DD/MM/YYYY'),
+          moment(data[i].validity_end_date).format('DD/MM/YYYY'),
         ]);
       }
 

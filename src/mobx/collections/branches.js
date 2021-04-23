@@ -2,6 +2,7 @@ import { observable, computed } from "mobx";
 import { Branches } from "../../services/index";
 import {BranchesForm} from '../../jsonForms/index'
 import branches from "views/Branches/branches";
+import moment from "moment";
 
     class BranchController   {
 
@@ -43,7 +44,7 @@ import branches from "views/Branches/branches";
     get getTypeBranch(){
         return this.typeBranch;
     }
-    
+
 
      statusLoading(status){
         this.load = status;
@@ -55,10 +56,10 @@ import branches from "views/Branches/branches";
     }
 
 
-   
 
 
- 
+
+
 
     async initValues(){
         if(this.init) return
@@ -116,7 +117,7 @@ import branches from "views/Branches/branches";
     }
 
 
-    
+
 
 
     async getAllBranches(page){
@@ -126,18 +127,18 @@ import branches from "views/Branches/branches";
         if(result.status === 200 && result.data){
             let data = result.data.data;
             let json = [];
-            
+
             console.log('result.data.data', result.data.data)
             for (const i in data) {
                 console.log('data[i]', data[i].name)
                 json.push([
-                    data[i].id, 
+                    data[i].id,
                     data[i].name,
                     data[i].main_branch_id,
-                    data[i].created_at.split('T')[0],
+                    moment( data[i].created_at).format('DD/MM/YYYY'),
                 ])
             }
-            
+
             result.data.data = json
             this.Branches =  result.data
             console.log('this.Branches', result.data)
@@ -147,8 +148,8 @@ import branches from "views/Branches/branches";
         }
         this.load = false;
     }
-    
-    
+
+
     async filterBranch(field,page,body){
         const result = await Branches.filterDateBranch(field,page,body);
         if(result.status === 200 && result.data){
@@ -156,24 +157,24 @@ import branches from "views/Branches/branches";
             let json = [];
             for (const i in data) {
                 json.push([
-                    data[i].id, 
+                    data[i].id,
                     data[i].commission_percentage,
-                    data[i].insurance_id, 
+                    data[i].insurance_id,
                     data[i].main_branch_id,
-                    data[i].created_at,
+                    moment( data[i].created_at).format('DD/MM/YYYY'),
                 ])
             }
-            
+
             result.data.data = json
             this.Branches =  result.data
-           
+
             console.log('this.Branches', result.data)
 
         }else{
             this.Branches = []
         }
         this.load = false;
-    
+
     }
 
     async saveBranch(body){

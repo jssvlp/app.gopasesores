@@ -2,6 +2,7 @@ import { observable, computed } from "mobx";
 import { Component,React } from "react";
 import { Clients, Employees } from "../../services/index";
 import { ClientsForm } from "../../jsonForms/index";
+import moment from "moment";
 
 class ClientController{
   @observable load = true;
@@ -126,11 +127,12 @@ class ClientController{
         json.push([
           data[i].id,
           data[i].name,
+          data[i].owner_name,
           data[i].cell_phone_number,
           data[i].document_number,
           data[i].type === "people" ? "Persona" : "Empresa",
           data[i].email,
-          data[i].created_at,
+          moment( data[i].created_at).format('DD/MM/YYYY'),
           data[i].has_policies === 1?"b%Ver Polizas%"+ data[i].id:""
 
         ]);
@@ -164,8 +166,8 @@ class ClientController{
           data[i].document_number,
           data[i].type === "people" ? "Persona" : "Empresa",
           data[i].email,
-          data[i].created_at,
-          
+          moment( data[i].created_at).format('DD/MM/YYYY'),
+
         ]);
       }
 
@@ -179,8 +181,15 @@ class ClientController{
     this.load = false;
   }
 
+
   async saveClient(body) {
     console.log("body", body);
+    let email = body.contact_info.email
+
+    let commission = body.people.commission_percentage;
+    delete body.people.commission_percentage
+    delete body.contact_info.email
+
     let owner_id =
       body.type === "company" ? body.company.owner_id : body.people.owner_id;
     let related_client_id =
@@ -197,6 +206,8 @@ class ClientController{
       authorize_data_processing: body.authorize_data_processing,
       comment: body.comment,
       type: body.type,
+      email: email,
+      commission_percentage:commission,
       company: body.company,
       documents: body.documents,
       contact_info: Object.assign({}, body.contact_info),
@@ -210,6 +221,10 @@ class ClientController{
 
   async updateClient(body) {
     console.log("body", body);
+    let email = body.contact_info.email
+    let commission = body.people.commission_percentage;
+    delete body.contact_info.email
+    delete body.people.commission_percentage
     let owner_id =
       body.type === "company" ? body.company.owner_id : body.people.owner_id;
     let related_client_id =
@@ -226,6 +241,8 @@ class ClientController{
       owner_id: owner_id,
       related_client_id: related_client_id,
       type: body.type,
+      email: email,
+      commission_percentage: commission,
       company: body.company,
       documents: body.documents,
       contact_info: Object.assign({}, body.contact_info),

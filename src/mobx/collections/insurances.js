@@ -1,6 +1,7 @@
 import { observable, computed } from "mobx";
 import { Insurances } from "../../services/index";
 import { InsurancesForm } from "../../jsonForms/index";
+import moment from "moment";
 
 class InsuranceController {
   @observable load = true;
@@ -93,7 +94,7 @@ class InsuranceController {
           data[i].phone,
           data[i].email,
           data[i].account,
-          data[i].created_at,
+          moment( data[i].created_at).format('DD/MM/YYYY'),
         ]);
       }
 
@@ -120,7 +121,7 @@ class InsuranceController {
           data[i].phone,
           data[i].email,
           data[i].account,
-          data[i].created_at,
+          moment( data[i].created_at).format('DD/MM/YYYY'),
         ]);
       }
 
