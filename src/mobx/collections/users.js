@@ -36,7 +36,7 @@ import { Users } from "../../services/index";
         return this.isAuthUser;
     }
 
-    
+
     async getUsersById(id){
         const result =  await Users.getUsersById(id);
         this.user = result.data
@@ -51,7 +51,7 @@ import { Users } from "../../services/index";
 
 
 
-    
+
 
     isAuth(status){
         if(status === 401) this.isAuthUser = false;
@@ -59,16 +59,16 @@ import { Users } from "../../services/index";
     }
 
 
-   
+
     async loginServices(body){
-        
+
         const result = await Users.login(body)
-        
+
         if(result.status !== 200 && !result.data) this.user = [];
         if(result.status === 200 && result.data) this.user = result.data
-        
+
         return this.user
-        
+
     }
 
 
@@ -77,20 +77,20 @@ import { Users } from "../../services/index";
         console.log('result.state', result)
         if(result.status === 200 && result.data){
             this.allUsers = result.data.users
-            
+
         }else{
             this.allUsers = []
         }
-        
+
     }
 
     async forgetPassword(id){
         const result = await Users.forgetPassword(id);
         if(result.status === 200 && result.data){
-            
+
             console.log('resilt.data', result.data)
            return result.data.result
-            
+
         }else{
            return []
         }
@@ -104,7 +104,7 @@ import { Users } from "../../services/index";
             return result.data.user
         }
         return []
-        
+
     }
 
 

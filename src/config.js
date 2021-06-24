@@ -1,11 +1,11 @@
 //=================================== CHANGE ENVIRONMENT ==================================
-const option = 'development'
+const option = 'local'
 //=========================================================================================
 
 function env(env) {
     switch (env) {
         case 'local':
-            return 'http://localhost:4200/api'
+            return 'http://192.241.154.148:8000/api'
         case 'development':
             return 'https://apigop.ddns.net/api'
         default:
