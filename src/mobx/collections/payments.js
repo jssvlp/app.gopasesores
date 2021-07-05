@@ -126,6 +126,7 @@ class PaymentController {
   }
 
   async getPaymentsAllPayment() {
+    
     const result = await Payments.getPayments();
     if (result.data && result.status === 200) this.AllListPayment = result.data;
   }

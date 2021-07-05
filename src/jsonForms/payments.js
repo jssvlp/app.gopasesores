@@ -2,9 +2,9 @@
 const fieldErrors = {
     payments:{
         "dues":true,
-        "months":true,
+        //"months":true,
         "coment":true,
-        "payment_date":true,
+        //"payment_date":true,
         "commision_value":true,
     },
     documents:[]
@@ -49,23 +49,23 @@ const fieldsPages = {
                 mask:'',
                 display:['create','update'],
                 model:'payments', 
-                col:6
+                col:12
             },
 
-            {
-                label: 'Meses', 
-                name:'months', 
-                value:[
-                    { label: "3 meses", value: 3 },
-                    { label: "6 meses", value: 6 },
-                    { label: "9 meses", value: 9 },
-                ],
-                type:'select',
-                mask:'',
-                model:'payments',
-                display:['create','update'],
-                col:6
-            },
+            // {
+            //     label: 'Meses', 
+            //     name:'months', 
+            //     value:[
+            //         { label: "3 meses", value: 3 },
+            //         { label: "6 meses", value: 6 },
+            //         { label: "9 meses", value: 9 },
+            //     ],
+            //     type:'select',
+            //     mask:'',
+            //     model:'payments',
+            //     display:['create','update'],
+            //     col:6
+            // },
             {
                 label: 'Comentario', 
                 name:'coment', 
@@ -78,16 +78,16 @@ const fieldsPages = {
             },
             
 
-            {
-                label: 'Fecha de Pago', 
-                name:'payment_date', 
-                value:'', 
-                type:'date',
-                mask:'',
-                display:['create','update'],
-                model:'payments', 
-                col:4
-            },
+            // {
+            //     label: 'Fecha de Pago', 
+            //     name:'payment_date', 
+            //     value:'', 
+            //     type:'date',
+            //     mask:'',
+            //     display:['create','update'],
+            //     model:'payments', 
+            //     col:4
+            // },
 
 
             {
@@ -114,17 +114,17 @@ const fieldsPages = {
                 col:4
             },
 
-            {
-                label: 'Pago de cuota',
-                name:'result_payment',
-                value:'',
-                disabled: true,
-                type:'number',
-                mask:'',
-                display:['create','update'],
-                model:'payments',
-                col:4
-            },
+            // {
+            //     label: 'Pago de cuota',
+            //     name:'result_payment',
+            //     value:'',
+            //     disabled: true,
+            //     type:'number',
+            //     mask:'',
+            //     display:['create','update'],
+            //     model:'payments',
+            //     col:4
+            // },
 
 
            

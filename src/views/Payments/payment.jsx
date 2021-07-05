@@ -47,6 +47,7 @@ class payments extends Component {
         payments.statusLoading(true);
         let idPolicy = localStorage.getItem("idPolicy");
         let prime = localStorage.getItem("prime");
+        console.log('policiiii',idPolicy);
         if(idPolicy){
            this.reloadTable(idPolicy);
             this.setState({
@@ -59,9 +60,13 @@ class payments extends Component {
         payments.statusLoading(false);
 
     }
+    componentWillReceiveProps(props,states){
+        console.log('policiiii',props);
+    }
     componentDidUpdate(){
         console.log('this.state $%^$%#$%:>> ', this.state);
     }
+    
 
     reloadTable(idPayment){
         const {payments} = this.props;
@@ -307,6 +312,7 @@ class payments extends Component {
             },
             
           ];
+          console.log(`payments.AllListPayment!!!!`, payments.AllListPayment)
         return (
             <div className={!this.state.create?"main-content":""}>
              {this.state.create&&(

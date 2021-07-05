@@ -225,7 +225,7 @@ import { inject,observer} from "mobx-react";
                           </tr>
                           </thead>
                           <tbody>
-                          {this.props.tdArray.data&&this.props.tdArray.data.map((prop, key) => {
+                          {this.props.tdArray.data&& typeof this.props.tdArray.data ==='object' && this.props.tdArray.data.map((prop, key) => {
                               return (
                               <tr key={key} style={{cursor:'pointer'}}>
                               <td key={key}><Checkbox checked={ this.props.items.filter(e=>e ===prop[0]).length>0}  onClick={(e)=>this.props.selectedItem&&this.props.selectedItem(prop[0],e)} number={key+prop[0]+prop[1]+(this.props.view?this.props.view:'none')}/></td>
