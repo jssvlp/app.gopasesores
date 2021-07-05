@@ -312,7 +312,7 @@ class payments extends Component {
             },
             
           ];
-          console.log(`payments.AllListPayment!!!!`, payments.AllListPayment)
+          console.log(`payments.AllListPayment!!!!`, payments.AllListPaymentByPolicy)
         return (
             <div className={!this.state.create?"main-content":""}>
              {this.state.create&&(
@@ -330,7 +330,7 @@ class payments extends Component {
                     location={this.props.location}
                     buttonAction={this.showPolices}
                     thArray={payments.headers} 
-                    tdArray={{data:payments.AllListPayment}}
+                    tdArray={{data:payments.AllListPaymentByPolicy}}
                     loading={payments.loading}
                     selectedItem={this.selectedItem}
                     items={this.state.seletectedItems} 

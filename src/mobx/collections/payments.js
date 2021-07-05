@@ -6,6 +6,7 @@ import moment from "moment";
 class PaymentController {
   @observable load = true;
   @observable AllListPayment = [];
+  @observable AllListPaymentByPolicy = [];
   @observable AllListPaymentInsurence = [];
   @observable fieldErrors = PaymentsForm.fieldErrors;
   @observable headers = PaymentsForm.headers;
@@ -46,6 +47,10 @@ class PaymentController {
   @computed
   get getAllListPayment() {
     return this.AllListPayment;
+  }
+  @computed
+  get getAllListPaymentByPolicy() {
+    return this.AllListPaymentByPolicy;
   }
   @computed
   get getAllListPaymentInsurence() {
@@ -152,7 +157,7 @@ class PaymentController {
 
       this.existPayments = (json.length>0)
       result.data = json;
-      this.AllListPayment = result.data;
+      this.AllListPaymentByPolicy = result.data;
 
     }
   }
