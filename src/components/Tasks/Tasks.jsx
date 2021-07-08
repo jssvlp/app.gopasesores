@@ -21,53 +21,93 @@ import Checkbox from "components/CustomCheckbox/CustomCheckbox.jsx";
 import Button from "components/CustomButton/CustomButton.jsx";
 
 export class Tasks extends Component {
-  handleCheckbox = event => {
+  months = [
+    "ENERO",
+    "FEBRERO",
+    "MARZO",
+    "ABRIL",
+    "MAYO",
+    "JUNIO",
+    "JULIO",
+    "AGOSTO",
+    "SEPTIEMBRE",
+    "OCTUBRE",
+    "NOVIEMBRE",
+    "DICIEMBRE",
+  ];
+
+  formatDate = ($date) => {
+    let current_date = new Date($date);
+    let formated_date =
+      current_date.getDay() + " de " + this.months[current_date.getMonth()];
+
+    formated_date = formated_date.toLowerCase();
+
+    return formated_date;
+  };
+
+  handleCheckbox = (event) => {
     const target = event.target;
     console.log(event.target);
     this.setState({
-      [target.name]: target.checked
+      [target.name]: target.checked,
     });
   };
   render() {
-    const edit = <Tooltip id="edit_tooltip">Edit Task</Tooltip>;
-    const remove = <Tooltip id="remove_tooltip">Remove</Tooltip>;
-    const tasks_title = [
-      'Sign contract for "What are conference organizers afraid of?"',
-      "Lines From Great Russian Literature? Or E-mails From My Boss?",
-      "Flooded: One year later, assessing what was lost and what was found when a ravaging rain swept through metro Detroi",
-      "Create 4 Invisible User Experiences you Never Knew About",
-      'Read "Following makes Medium better"',
-      "Unfollow 5 enemies from twitter"
-    ];
+    console.log("this.props", this.props);
     var tasks = [];
-    var number;
-    for (var i = 0; i < tasks_title.length; i++) {
-      number = "checkbox" + i;
-      tasks.push(
-        <tr key={i}>
-          <td>
-            <Checkbox
-              number={number}
-              isChecked={i === 1 || i === 2 ? true : false}
-            />
-          </td>
-          <td>{tasks_title[i]}</td>
-          <td className="td-actions text-right">
-            <OverlayTrigger placement="top" overlay={edit}>
-              <Button bsStyle="info" simple type="button" bsSize="xs">
-                <i className="fa fa-edit" />
-              </Button>
-            </OverlayTrigger>
 
-            <OverlayTrigger placement="top" overlay={remove}>
-              <Button bsStyle="danger" simple type="button" bsSize="xs">
-                <i className="fa fa-times" />
-              </Button>
-            </OverlayTrigger>
-          </td>
-        </tr>
-      );
-    }
+    return (
+      <tbody>
+        {this.props.data &&
+          this.props.data.map((item, i) => (
+            <tr
+              key={i}
+              style={{
+                border: item.is_today ? "" : "",
+                backgroundColor: item.is_today ? "#053e7a" : "white",
+                color: item.is_today ? "white" : "black",
+                borderRadius: 40,
+              }}
+            >
+              <td>{item.first_name + " " + item.last_name}</td>
+              <td>
+                {item.is_today
+                  ? "¡Hoy es su cumpleaños!"
+                  : item.is_tomorrow
+                  ? "Mañana"
+                  : this.formatDate(item.birth_date)}
+              </td>
+              {item.is_today && (
+                <td className="td-actions text-right">
+                  <i
+                    className="fa fa-birthday-cake"
+                    style={{ fontSize: 20, color: "white" }}
+                  />
+                </td>
+              )}
+
+              {item.is_tomorrow && (
+                <td className="td-actions text-right">
+                  <i
+                    className="pe-7s-clock text-info"
+                    style={{ fontSize: 20 }}
+                  />
+                </td>
+              )}
+              {!item.is_tomorrow && !item.is_today && (
+                <td className="td-actions text-right">
+                  <i
+                    className="pe-7s-bell text-warning"
+                    style={{ fontSize: 20 }}
+                  />
+                </td>
+              )}
+            </tr>
+          ))}
+      </tbody>
+    );
+
     return <tbody>{tasks}</tbody>;
   }
 }

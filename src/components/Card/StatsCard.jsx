@@ -25,13 +25,15 @@ export class StatsCard extends Component {
           <div className="row">
             <div className="col-xs-5">
               <div className="icon-big text-center icon-warning">
-                {this.props.bigIcon || <Skeleton circle={true} height={50} width={50} />}
+                {this.props.bigIcon || (
+                  <Skeleton circle={true} height={50} width={50} />
+                )}
               </div>
             </div>
             <div className="col-xs-7">
               <div className="numbers">
-                <p>{this.props.statsText ||  <Skeleton />}</p>
-                {this.props.statsValue ||  <Skeleton />}
+                <p>{this.props.statsText || <Skeleton />}</p>
+                {this.props.statsValue}
               </div>
             </div>
           </div>
@@ -39,7 +41,7 @@ export class StatsCard extends Component {
         <div className="footer">
           <hr />
           <div className="stats">
-            {this.props.statsIcon } {this.props.statsIconText ||  <Skeleton />}
+            {this.props.statsIcon} {this.props.statsIconText || <Skeleton />}
           </div>
         </div>
       </div>

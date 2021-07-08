@@ -3,10 +3,15 @@ import api from '../api/create';
 
 
 
-function getClients(page) {
+function getClients(page,limit = 10) {
 
-    return api.get('/clients?page='+page)
+    return api.get('/clients?page='+page+'per_page='+limit)
 
+}
+
+
+function getClientsAll(){
+    return api.get('/clients/list/all')
 }
 
 
@@ -15,6 +20,15 @@ function getClientsById(id) {
     return api.get('/clients/'+id)
 
 }
+
+function getActivitiesEconomic(id) {
+
+    return api.get('/economicActivities')
+
+}
+
+
+
 
 
 function saveClient(body) {
@@ -35,6 +49,19 @@ function updateClient(id,body) {
 
 }
 
+function activeClient(isActive,id) {
+
+    return api.put('/clients/'+id+'/'+isActive)
+
+}
+
+function filterDateClient(field,page,body) {
+    console.log('field,body', field,body)
+    return api.post('/clients/filterby/'+field+'?per_page='+page,body)
+    
+
+}
+
 
 
 export {
@@ -42,5 +69,9 @@ export {
     saveClient,
     getClientsById,
     deleteClient,
-    updateClient
+    updateClient,
+    filterDateClient,
+    activeClient,
+    getClientsAll,
+    getActivitiesEconomic
 }

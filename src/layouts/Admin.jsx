@@ -14,14 +14,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { Component } from "react";
+import React, { Component,StrictMode } from "react";
 import { Switch, Route } from "react-router-dom";
 // this is used to create scrollbars on windows devices like the ones from apple devices
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // react component that creates notifications (like some alerts with messages)
 import NotificationSystem from "react-notification-system";
-
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
@@ -31,10 +30,10 @@ import image from "assets/img/full-screen-image-3.jpg";
 // dinamically create dashboard routes
 import routes from "routes.js";
 import SweetAlert from "react-bootstrap-sweetalert";
-
+import Select from "react-select";
+import Protect from './protect';
 // style for notifications
 import { style } from "variables/Variables.jsx";
-
 
 var ps;
 
@@ -56,18 +55,21 @@ class Dashboard extends Component {
     this.alertMessage = this.alertMessage.bind(this);
     this.htmlAlert = this.htmlAlert.bind(this);
     this.alertLoading = this.alertLoading.bind(this);
+    this.alertMessageTwoOptions = this.alertMessageTwoOptions.bind(this)
   }
   componentDidMount() {
     this.setState({ _notificationSystem: this.refs.notificationSystem });
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(this.refs.mainPanel);
     }
+
   }
   componentWillUnmount() {
     if (navigator.platform.indexOf("Win") > -1) {
       ps.destroy();
     }
   }
+
   componentDidUpdate(e) {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
@@ -155,7 +157,7 @@ class Dashboard extends Component {
       responseAlert: repsonse
     });
   }
-  
+
   alertMessage(title,subtitle,option) {
     this.setState({
       alert: (
@@ -176,20 +178,47 @@ class Dashboard extends Component {
     });
   }
 
+  async alertMessageTwoOptions(title,subtitle,option,method) {
+    this.setState({
+      alert: (
+          <SweetAlert
+              success={option ==='success'}
+              error={option ==='error'}
+              warning={option ==='warning'}
+              style={{ display: "block", marginTop: "-100px" }}
+              title={title}
+              showConfirm={true}
+              showCancel={true}
+              onConfirm={async () => [ await method(true),this.hideAlert(false)]}
+              onCancel={async () => [await method(false),this.hideAlert(false)]}
+              confirmBtnBsStyle={option}
+          >
+            {subtitle}
+          </SweetAlert>
+      ),
+      responseAlert: true
+    });
+  }
+
   htmlAlert(title,method) {
     this.setState({
       alert: (
         <SweetAlert
-          style={{ display: "block", marginTop: "-100px" }}
+          style={{ display: "block",paddingBottom:100 }}
           title={title}
           onCancel={() => this.hideAlert(false)}
           showConfirm={false}
         >
-          <select className="form-control" onChange={(e)=>[method(e.target.value), this.hideAlert(false)]}>
-                <option selected disabled>Seleccione</option>
-                <option value="people">Persona</option>
-                <option value="company">Empresa</option>
-            </select>
+            <Select
+            className="react-select primary"
+            classNamePrefix="react-select"
+            onChange={(e)=> [method(e.value), this.hideAlert(false)]}
+            options={[
+              {label: 'Persona',value:'people'},
+              {label: 'Empresa',value:'company'},
+            ]}
+            placeholder={"Seleccione el tipo"}
+            />
         </SweetAlert>
       )
     });
@@ -205,11 +234,15 @@ class Dashboard extends Component {
         >
          <center><i className="fa fa-spin fa-circle-o-notch" style={{fontSize:20}}/></center>
         </SweetAlert>
-        
+
       )
     });
    !option&&this.hideAlert()
   }
+
+
+
+
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
@@ -217,19 +250,24 @@ class Dashboard extends Component {
       }
       if (prop.layout === "/admin") {
         return (
-          <Route
-            path={prop.layout + prop.path}
-            key={key}
-            render={routeProps => (
-              <prop.component
-                {...routeProps}
-                handleClick={this.handleNotificationClick}
-                alertMessage={this.alertMessage}
-                htmlAlert={this.htmlAlert}
-                alertLoading={this.alertLoading}
-              />
-            )}
-          />
+
+            <Route
+              path={prop.layout + prop.path}
+              key={key}
+              render={routeProps => (
+              <Protect path={prop.path} layout={prop.layout }>
+                <prop.component
+                  {...routeProps}
+                  handleClick={this.handleNotificationClick}
+                  alertMessage={this.alertMessage}
+                  htmlAlert={this.htmlAlert}
+                  alertMessageTwoOptions = {this.alertMessageTwoOptions}
+                  alertLoading={this.alertLoading}
+                />
+              </Protect>
+
+              )}
+            />
         );
       } else {
         return null;
@@ -239,6 +277,7 @@ class Dashboard extends Component {
   render() {
     return (
       <div className="wrapper">
+      <StrictMode>
        {this.state.alert}
       <Provider  {...stores}>
         <NotificationSystem ref="notificationSystem" style={style} />
@@ -249,6 +288,7 @@ class Dashboard extends Component {
           hasImage={this.state.hasImage}
           mini={this.state.mini}
           alertMessage={this.alertMessage}
+          alertMessageTwoOptions={this.alertMessageTwoOptions}
           htmlAlert={this.htmlAlert}
           alertLoading={this.alertLoading}
         />
@@ -266,6 +306,7 @@ class Dashboard extends Component {
             handleMiniClick={this.handleMiniClick}
             navbar={this.state.navbar}
             alertMessage={this.alertMessage}
+            alertMessageTwoOptions={this.alertMessageTwoOptions}
             htmlAlert={this.htmlAlert}
             alertLoading={this.alertLoading}
           />
@@ -285,6 +326,7 @@ class Dashboard extends Component {
           /> */}
         </div>
         </Provider>
+        </StrictMode>
       </div>
     );
   }

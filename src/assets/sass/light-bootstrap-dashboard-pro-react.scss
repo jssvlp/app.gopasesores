@@ -15,7 +15,6 @@
 
 */
 
-
 // variables and mixins
 @import "lbd/variables";
 @import "lbd/mixins";
@@ -73,25 +72,46 @@
 @import "lbd/responsive";
 @import "lbd/tabs-navs-pagination";
 
-
 //my app========================================
 @import "../../views/Login/login";
 @import "styles/colors";
 
-
-.background{
-    background: radial-gradient(ellipse farthest-corner at 0 155%,  $p_color 0%, $p_color 70%, $s_color 70%) no-repeat ;
-    margin: 0;
-    height: 100%;
+.background {
+  background: radial-gradient(
+      ellipse farthest-corner at 0 155%,
+      $p_color 0%,
+      $p_color 70%,
+      $s_color 70%
+    )
+    no-repeat;
+  margin: 0;
+  height: 100%;
 }
-.modal-90w{
-    width: 0VW;
-     height: 90VH;
+.modal-90w {
+  width: 0vw;
+  height: 90vh;
 }
 
-.btn-theme-color{
-    border-top-color: $p_color;
-    background-color: $p_color;
+.btn-theme-color {
+  border-top-color: $p_color;
+  background-color: $p_color;
 }
 
+* {
+  box-sizing: border-box;
+}
 
+.zoom {
+  transition: transform 0.2s;
+}
+
+.zoom:hover {
+  -ms-transform: scale(1.05); /* IE 9 */
+  -webkit-transform: scale(1.05); /* Safari 3-8 */
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.ct-label {
+  fill: white;
+}

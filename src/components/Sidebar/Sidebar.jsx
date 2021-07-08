@@ -23,15 +23,18 @@ import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 
 import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.jsx";
-
+import {Storage} from '../../services/firebase/index'
 // image for avatar in Sidebar
-import avatar from "assets/img/default-avatar.png";
+import avatar from "assets/img/default-user-image.png";
 // logo for sidebar
 import logo from "assets/img/logo-gop-white.png";
 
 import routes from "routes.js";
 
 var ps;
+import { inject,observer} from "mobx-react";
+@inject('users')
+@observer
 
 class Sidebar extends Component {
   constructor(props) {
@@ -39,6 +42,9 @@ class Sidebar extends Component {
     this.state = {
       ...this.getCollapseStates(routes),
       openAvatar: false,
+      permissions:[],
+      uplodaImage:true,
+      picture:null,
       isWindows: navigator.platform.indexOf("Win") > -1 ? true : false,
       width: window.innerWidth
     };
@@ -59,6 +65,7 @@ class Sidebar extends Component {
     });
     return initialState;
   };
+  
   // this verifies if any of the collapses should be default opened on a rerender of this component
   // for example, on the refresh of the page,
   // while on the src/views/forms/RegularForms.jsx - route /admin/regular-forms
@@ -75,6 +82,7 @@ class Sidebar extends Component {
   // this function creates the links and collapses that appear in the sidebar (left menu)
   createLinks = routes => {
     return routes.map((prop, key) => {
+     
       if (prop.redirect) {
         return null;
       }
@@ -144,11 +152,25 @@ class Sidebar extends Component {
   componentDidUpdate() {
     if (navigator.platform.indexOf("Win") > -1) {
       setTimeout(() => {
-        ps.update();
+        ps&&ps.update();
       }, 350);
     }
   }
-  componentDidMount() {
+ async componentDidMount() {
+    const {users} = this.props;
+        const result = await users.getUsersById(localStorage.getItem('user-id-gop'));
+        let permissions = [];
+        console.log('users.infoUser', users.infoUser)
+        if(users.infoUser && users.infoUser.permissions){
+         let picture = await this.getImageProfile(users.infoUser.picture)
+          permissions = users.infoUser.permissions.map((item,i)=>{
+            return item.path
+          })
+          this.setState({
+            permissions:permissions,
+            picture:picture
+          })
+        }
     this.updateDimensions();
     // add event listener for windows resize
     window.addEventListener("resize", this.updateDimensions.bind(this));
@@ -164,20 +186,60 @@ class Sidebar extends Component {
     // we need to destroy the false scrollbar when we navigate
     // to a page that doesn't have this component rendered
     if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
+      ps&&ps.destroy();
     }
   }
+
+  redirectToEdit(){
+    const {users} = this.props
+    this.props.history.push({
+      pathname:'/admin/employees',
+      state:{
+        editProfile: true,
+        userId: users.infoUser&&users.infoUser.id
+      }
+    })
+  }
+  isRouterProtect(){
+    let result = routes.map((prop,i)=>{
+      return this.state.permissions.includes(prop.path)?prop.show?prop:null:null;
+    })
+    let router = result.filter( (el) => {
+      return el != null;
+    });
+    return this.createLinks(router)
+    
+  }
+
+
+  async getImageProfile(data){
+    if(data && this.state.uplodaImage){
+      let result =  await Storage.getProfileImage(data)
+      if(!result.success){
+        this.setState({
+          uplodaImage: false
+        })
+        return null
+      }
+      return result.data
+    }
+    if(!data){
+      return null
+    }
+    
+  }
   render() {
+    const {users} = this.props;
     return (
       <div
         className="sidebar"
-        data-color={"dark"}
-        data-image={this.props.image}
+       data-color={"blue"}
+        //data-image={this.props.image}
       >
         {this.props.hasImage ? (
           <div
             className="sidebar-background"
-            style={{ backgroundImage: "url(" + this.props.image + ")" }}
+            style={{backgroundColor:'#447DF7'}}
           />
         ) : (
           ""
@@ -189,7 +251,7 @@ class Sidebar extends Component {
             target="_blank"
           >
             <div className="logo-img">
-              <img src={logo} alt="react-logo" />
+            GOP
             </div>
           </a>
           <a
@@ -197,13 +259,13 @@ class Sidebar extends Component {
             className="simple-text logo-normal"
             target="_blank"
           >
-            ASESORES
+             ASESORES
           </a>
         </div>
         <div className="sidebar-wrapper" ref="sidebarWrapper">
           <div className="user">
             <div className="photo">
-              <img src={avatar} alt="Avatar" />
+              <img src={ this.state.picture|| avatar} alt="Avatar" />
             </div>
             <div className="info">
               <a
@@ -214,7 +276,7 @@ class Sidebar extends Component {
                 }}
               >
                 <span>
-                  Tania Andrew
+                  {localStorage.getItem("name-gop")||'Ningun nombre'}
                   <b
                     className={
                       this.state.openAvatar ? "caret rotate-180" : "caret"
@@ -225,21 +287,15 @@ class Sidebar extends Component {
               <Collapse in={this.state.openAvatar}>
                 <ul className="nav">
                   <li>
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
-                      <span className="sidebar-mini">MP</span>
-                      <span className="sidebar-normal">My Profile</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#pablo" onClick={e => e.preventDefault()}>
+                    <a href="#pablo" onClick={(e)=>{e.preventDefault();this.redirectToEdit()}}>
                       <span className="sidebar-mini">EP</span>
-                      <span className="sidebar-normal">Edit Profile</span>
+                      <span className="sidebar-normal">Editar Perfil</span>
                     </a>
                   </li>
                   <li>
                     <a href="#pablo" onClick={e => e.preventDefault()}>
-                      <span className="sidebar-mini">S</span>
-                      <span className="sidebar-normal">Settings</span>
+                      <span className="sidebar-mini">C</span>
+                      <span className="sidebar-normal">Configuracion</span>
                     </a>
                   </li>
                 </ul>
@@ -257,7 +313,7 @@ class Sidebar extends Component {
               we make a simple link, if not, we have to create a collapsible group,
               with the speciffic parent button and with it's children which are the links
             */}
-            {this.createLinks(routes)}
+            {this.isRouterProtect(routes)}
           </ul>
         </div>
       </div>

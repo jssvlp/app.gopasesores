@@ -5,16 +5,10 @@ import * as React from 'react';
 // import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import {   inject} from "mobx-react";
 import Logo from '../../assets/img/logo-gop.png'
-import { bounceIn } from 'react-animations';
-import Radium, {StyleRoot} from 'radium';
+import  {StyleRoot} from 'radium';
 import SweetAlert from "react-bootstrap-sweetalert";
 
-const styles = {
-  bounceIn: {
-    animation: 'x 2s',
-    animationName: Radium.keyframes(bounceIn, 'bounceIn')
-  }
-}
+
 @inject('users')
   class Login extends React.Component {
 
@@ -81,20 +75,39 @@ const styles = {
       });
     }
 
+    alertLoading(title,option) {
+      this.setState({
+        alert: (
+          <SweetAlert
+            style={{ display: "block", marginTop: "-100px" }}
+            title={title}
+            showConfirm={false}
+          >
+           <center><i className="fa fa-spin fa-circle-o-notch" style={{fontSize:20}}/></center>
+          </SweetAlert>
+          
+        )
+      });
+     !option&&this.hideAlert()
+    }
+
     async login(){
       const {users} = this.props
+      this.alertLoading("Espere un momento....",true)
       const result = await users.loginServices({email:this.state.email,password:this.state.password})
       if(result.access_token){
           localStorage.setItem("token-gop",result.access_token)
+          localStorage.setItem("name-gop",result.user_data.full_name)
+          localStorage.setItem("user-id-gop",result.user_data.id)
           window.location.href = '/admin/dashboard'
+          this.alertLoading("Espere un momento....",false)
       }else{
           this.successDelete(result.error,"Favor de verificar los datos","error");
       }
-     
+      
 
     }
     render() {
-        console.log(this.state)
         return (
             <div className="bk-color-login">
             {this.state.alert}

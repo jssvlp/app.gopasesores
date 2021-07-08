@@ -30,7 +30,8 @@ class StepsWizzard extends Component {
 
   render() {
 
-    const {steps,title,subtitle,navigation} = this.props
+    const {steps,title,subtitle,showNavigation,showSteps,stepsNavigation} = this.props
+    console.log('steps!!!!', steps)
     return (
       <div className="">
         <Grid fluid>
@@ -47,6 +48,9 @@ class StepsWizzard extends Component {
                 content={
                   <StepZilla
                     steps={steps}
+                    showNavigation={showNavigation}
+                    showSteps={showSteps}
+                    stepsNavigation={stepsNavigation}
                     nextButtonCls="btn btn-prev btn-info btn-fill pull-right btn-wd"
                     backButtonCls="btn btn-next btn-default btn-fill pull-left btn-wd"
                     nextButtonText={"Siguiente"}

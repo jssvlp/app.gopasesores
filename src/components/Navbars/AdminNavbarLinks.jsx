@@ -18,15 +18,31 @@ import React, { Component } from "react";
 import {
   Navbar,
   Nav,
-  NavItem,
   NavDropdown,
   MenuItem,
   FormGroup,
   FormControl,
   InputGroup
 } from "react-bootstrap";
-
+import { inject,observer} from "mobx-react";
+import logo from "assets/img/logo-gop.png";
+@inject('users')
+@observer
 class HeaderLinks extends Component {
+
+
+
+
+  async logout(){
+    const {users} = this.props
+    let token = localStorage.getItem('token-gop')
+    const result = await users.logout(token)
+    if(result.success){
+      localStorage.removeItem('token-gop')
+      window.location.href = '#/auth/login-page'
+    }
+    console.log('Error logout =======', result)
+  }
   render() {
     return (
       <div>
@@ -41,31 +57,8 @@ class HeaderLinks extends Component {
           </FormGroup>
         </Navbar.Form>
         <Nav pullRight>
-          <NavItem eventKey={3} href="#">
-            <i className="fa fa-line-chart" />
-            <p>Stats</p>
-          </NavItem>
-          <NavDropdown
-            eventKey={2}
-            title={
-              <div>
-                <i className="fa fa-gavel" />
-                <p className="hidden-md hidden-lg">
-                  Actions
-                  <b className="caret" />
-                </p>
-              </div>
-            }
-            noCaret
-            id="basic-nav-dropdown-1"
-          >
-            <MenuItem eventKey={2.1}>Create New Post</MenuItem>
-            <MenuItem eventKey={2.2}>Manage Something</MenuItem>
-            <MenuItem eventKey={2.3}>Do Nothing</MenuItem>
-            <MenuItem eventKey={2.4}>Submit to live</MenuItem>
-            <MenuItem divider />
-            <MenuItem eventKey={2.5}>Another action</MenuItem>
-          </NavDropdown>
+        
+        <img src={logo} alt="logo" width={70}/>
           <NavDropdown
             eventKey={3}
             title={
@@ -115,9 +108,9 @@ class HeaderLinks extends Component {
             <MenuItem eventKey={4.4}>
               <i className="pe-7s-lock" /> Lock Screen
             </MenuItem>
-            <MenuItem eventKey={4.5}>
+            <MenuItem eventKey={4.5} onClick={()=>this.logout()}>
               <div className="text-danger">
-                <i className="pe-7s-close-circle" /> Log out
+                <i className="pe-7s-close-circle"  /> Cerrar Sesion
               </div>
             </MenuItem>
           </NavDropdown>

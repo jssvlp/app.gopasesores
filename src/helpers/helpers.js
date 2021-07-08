@@ -8,13 +8,13 @@ export function setValues(state,e,type) {
         case 'date':
             console.log('e', e)
             return e
-            
-            
-    
+
+
+
         default:
             break;
     }
-    
+
 }
 
 
