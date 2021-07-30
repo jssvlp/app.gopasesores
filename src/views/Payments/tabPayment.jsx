@@ -23,7 +23,7 @@ export default class Security extends Component {
                                     <i className="fa fa-money" /> Pagos Por Cobrar
                                 </NavItem>
                                 <NavItem eventKey="pay_aseguradora">
-                                    <i className="fa fa-coin" /> Pagos Por Pagar A Aseguradoras
+                                    <i className="fa fa-coin" /> Cuotas Pagadas
                                 </NavItem>
                                 <NavItem eventKey="pay_commision">
                                     <i className="fa fa-user" /> Comisiones Por Cobrar

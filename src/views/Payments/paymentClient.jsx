@@ -402,6 +402,9 @@ class paymentsClient extends Component {
                 <Modal
                     bsSize="lg"
                     show={this.state.modalDrop}
+                    onHide={()=> this.setState({
+                        modalDrop: false
+                    })}
                 >
                     <Modal.Header closeButton>
                         <Modal.Title>RECAUDAR A ASEGURADORA</Modal.Title>
@@ -453,6 +456,7 @@ class paymentsClient extends Component {
                                     <option>Efectivo</option>
                                     <option>Tarjeta crédito</option>
                                     <option>Transferencia</option>
+                                    <option>Nota de crédito</option>
                                 </select>
                                 <br/>
                             </Col>

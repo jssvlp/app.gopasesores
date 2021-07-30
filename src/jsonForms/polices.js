@@ -10,7 +10,6 @@ const fieldErrors = {
     currency: true,
     client_id: true,
     prime: true,
-    day_of_payment: true,
   },
   documents: {},
 };
@@ -121,16 +120,6 @@ const fieldsPages = {
         model: "polices",
         display: ["create", "update"],
         col: 12,
-      },
-      {
-        label: "Día de pago",
-        name: "day_of_payment",
-        value: "",
-        type: "number",
-        mask: "",
-        model: "polices",
-        display: ["create", "update"],
-        col: 6,
       },
       {
         label: "¿Es Renovable?",

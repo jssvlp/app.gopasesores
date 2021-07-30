@@ -502,7 +502,7 @@ class body extends Component {
                       onChange={(e) =>
                         onChange(
                           field.name,
-                          moment(e).format("DD/MM/YYYY"),
+                          moment(e).format("YYYY-MM-DD"),
                           field.model
                         )
                       }
