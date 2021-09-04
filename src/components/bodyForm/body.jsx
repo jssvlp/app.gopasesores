@@ -20,9 +20,9 @@ import FileBody from "./fileBody";
 import Button from "components/CustomButton/CustomButton.jsx";
 import MotorBody from "./formBranches/motor";
 import Riesgo from './formBranches/riesgo';
-
 import Select from "react-select";
 import branches from "views/Branches/branches";
+import FileView from "./fileView"
 
 const toBase64 = (file) =>
   new Promise((resolve, reject) => {
@@ -44,11 +44,13 @@ class body extends Component {
       branchesFilter: [],
       imgprofile: null,
       files: [],
+      fileViewData:[],
       fileSelected: {
         name: "",
         file: "",
         type: "",
       },
+      modalViewFile: false,
       branchSelect: false,
       modal: false,
       modalBranch: false,
@@ -59,6 +61,7 @@ class body extends Component {
     this.openModalBranch = this.openModalBranch.bind(this);
     this.onChangeFilesInput = this.onChangeFilesInput.bind(this);
     this.onValueBranchOfInsurances = this.onValueBranchOfInsurances.bind(this);
+    this.openModalFileView = this.openModalFileView.bind(this);
   }
 
   async componentWillReceiveProps(props) {
@@ -90,6 +93,12 @@ class body extends Component {
     });
   }
 
+  openModalFileView() {
+    this.setState({
+      modalViewFile: !this.state.modalViewFile,
+    });
+  }
+
   componentDidMount() {
     let values = this.props.fieldValues;
     let files = values.documents ? values.documents : [];
@@ -110,6 +119,7 @@ class body extends Component {
     for (const x in rules) {
       if ((rules[x].fieldFrom === name && rules[x].valueFrom === value) || (rules[x].fieldFrom === name && rules[x].valueFrom === "value_field")) {
         for (const i in field) {
+          
           if (field[i].name === rules[x].fieldTo) {
             if (rules[x].rule === "show") {
               field[i].hidden = false;
@@ -401,6 +411,22 @@ class body extends Component {
     return value;
   }
 
+
+  async viewFile(item, field){
+    console.log(`item`, item,field)
+    const result = await Storage.viewFile(item.url);
+    if(result.success){
+      this.openDocInNewTab(result.data)
+    }
+    console.log(`result`, result)
+
+  }
+
+   openDocInNewTab(url) {
+    window.open(url, '_blank').focus();
+   }
+  
+
   render() {
     const { onChange, errors, view } = this.props;
     const { values } = this.state;
@@ -453,6 +479,7 @@ class body extends Component {
                       type={field.type}
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "header" ? (
@@ -509,6 +536,7 @@ class body extends Component {
                       defaultValue={new Date()}
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "email" ? (
@@ -545,6 +573,7 @@ class body extends Component {
                       type={field.type}
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "password" ? (
@@ -581,6 +610,7 @@ class body extends Component {
                       type={field.type}
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "number" ? (
@@ -621,6 +651,7 @@ class body extends Component {
                       type={field.type}
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "textarea" ? (
@@ -657,6 +688,7 @@ class body extends Component {
                       type={field.type}
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "checkbox" ? (
@@ -689,6 +721,7 @@ class body extends Component {
                       }
                       disabled={field.disabled}
                     />
+                    {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                   </FormGroup>
                 </Col>
               ) : field.type === "title" ? (
@@ -812,6 +845,7 @@ class body extends Component {
                           }}
                         >
                           <div>
+                            
                             <i
                               className={"fa fa-user"}
                               style={{ color: "#23CCEF" }}
@@ -819,6 +853,11 @@ class body extends Component {
                             <label>{item.name}</label>
                           </div>
                           <div>
+                            <i
+                              className={"fa fa-eye"}
+                              style={{ color: "green", cursor: "pointer" }}
+                              onClick={()=>this.viewFile(item,field)}
+                            ></i>
                             <i
                               className={"fa fa-close"}
                               style={{ color: "red", cursor: "pointer" }}
@@ -832,6 +871,8 @@ class body extends Component {
                               }
                             ></i>
                           </div>
+                          
+
                         </div>
                       </div>
                     ))}
@@ -1026,6 +1067,7 @@ class body extends Component {
                         placeholder={field.label}
                         isDisabled={field.disabled}
                       />
+                      {errors[field.name] && <span style={{color:'red',fontSize: 10}} >Este campo es requerido</span>}
                     </FormGroup>
                   </Col>
                 )
@@ -1038,3 +1080,4 @@ class body extends Component {
 }
 
 export default body;
+

@@ -115,6 +115,25 @@ class ClientController{
     return result.data;
   }
 
+  async changeDta(e){
+    
+    let value = e.target.value.toLowerCase();
+    let result = await this.clients.data.map((data)=>{
+      return data.map(name => name && name.toString().toLowerCase().includes(value)).filter((data)=>{return data === true}).length >0? data:'';
+    }).filter((el)=>{return el !== ""})
+
+    
+    if(value.length>0){
+      this.clients.data = result
+    }else{
+      await this.getAllClients()
+    }
+  
+    console.log(`result`, result)
+    
+    
+  }
+
   async getAllClients(page) {
     await this.initValues();
     const result = await Clients.getClients(page || 1);
@@ -147,6 +166,9 @@ class ClientController{
     }
     this.load = false;
   }
+
+
+  
 
   async activeClicent(isActive, id) {
     const result = await Clients.activeClient(isActive, id);

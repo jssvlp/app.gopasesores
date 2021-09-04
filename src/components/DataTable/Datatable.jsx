@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
-import {Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination, NavDropdown, MenuItem,Nav} from "react-bootstrap";
+import {Table, Grid, Row, Col, Tooltip, OverlayTrigger, Pagination, NavDropdown, MenuItem,Nav,
+  ControlLabel,
+  InputGroup,
+  FormControl
+} from "react-bootstrap";
 
 import Button from "components/CustomButton/CustomButton.jsx";
 import Card from "components/Card/Card.jsx";
@@ -172,7 +176,7 @@ import { inject,observer} from "mobx-react";
 
                         {this.props.filter&&(
                           <div  style={{ justifyContent: 'space-around', display: 'flex', paddingRight:20}}>
-                          <Button bsStyle="dark"  style={{height:35}} onClick={()=>this.setState({filter:!this.state.filter})}><i className="fa fa-filter"  />{"Filtros"}</Button>
+                          {/* <Button bsStyle="dark"  style={{height:35}} onClick={()=>this.setState({filter:!this.state.filter})}><i className="fa fa-filter"  />{"Filtros"}</Button> */}
                             &ensp;
                             {this.props.loading&&(<Skeleton  height={30} width={180}/>)}
                             {!this.props.loading&&( <input  className="form-control" align="left" style={{width:300, height:35}} onChange={(e)=> this.props.searchFilter(e)}   placeholder="Buscar..." name="serchCompanies"  type="serch" />)}
@@ -186,6 +190,8 @@ import { inject,observer} from "mobx-react";
                     {this.state.filter&&
                       this.props.filterDate&&(
                         <div style={{ justifyContent: 'space-around', display: 'flex',}}>
+                         
+                           
                           <div>
                             <label>Desde</label>
                             <Datetime

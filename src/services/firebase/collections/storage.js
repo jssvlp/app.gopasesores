@@ -26,6 +26,8 @@ async function uploadFile(child, name, base64) {
   return result;
 }
 
+
+
 async function removeFile(child) {
   const storage = firebase.ref().child(child);
   const result = await storage
@@ -39,18 +41,38 @@ async function removeFile(child) {
   return result;
 }
 
+async function viewFile(rute) {
+  let child =  firebase.ref().child(rute)
+  console.log(`rute`, rute)
+  let result = await child.getDownloadURL()
+  .then((url) => {
+    return { data: url, success: true };
+  })
+  .catch((error) => {
+    return { data: error, success: false };
+  });
+
+  result.metadata = await child.getMetadata()
+    .then((meta)=> {return meta})
+    .catch((error)=>{return error})
+
+  return result
+  
+}
+
 async function getProfileImage(rute) {
-  let result = await firebase
-    .ref()
-    .child(rute)
-    .getDownloadURL()
+  let child =  firebase.ref().child(rute)
+    let result = await child.getDownloadURL()
     .then((url) => {
       return { data: url, success: true };
     })
     .catch((error) => {
       return { data: error, success: false };
     });
+
+    
+
   return await result;
 }
 
-export { uploadImage, getProfileImage, uploadFile, removeFile };
+export { uploadImage, getProfileImage, uploadFile, removeFile ,viewFile};

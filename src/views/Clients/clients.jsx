@@ -54,6 +54,7 @@ class clients extends Component {
     this.selectedItem = this.selectedItem.bind(this);
     this.filterDate = this.filterDate.bind(this);
     this.showPolices = this.showPolices.bind(this);
+    this.filterField = this.filterField.bind(this);
   }
 
   componentDidMount() {
@@ -361,6 +362,12 @@ class clients extends Component {
     })
 }
 
+
+filterField(e){
+  const { clients, users } = this.props;
+  console.log('this.props', clients.changeDta(e))
+}
+
   render() {
     const { clients, users } = this.props;
     console.log('this.props', users.infoUser.permissions)
@@ -474,6 +481,7 @@ class clients extends Component {
 
         {!this.state.create && (
           <Datatable
+            searchFilter={this.filterField}
             permissions={users.infoUser}
             location={this.props.location}
             thArray={clients.headers}

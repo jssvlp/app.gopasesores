@@ -9,6 +9,7 @@ const fieldErrors = {
         "commissioner": true,
         "phone":true,
         "document_id":true,
+        "document_type": true,
         "address":true
     },
     user:{
@@ -54,6 +55,33 @@ const fieldsPages = {
                 fieldTo: 'default_commission_percentage',
                 rule:'notrequire'
             },
+            {
+                fieldFrom: "document_type",
+                valueFrom: "Pasaporte",
+                fieldTo: "document_id",
+                rule: "nomask",
+              },
+              {
+                fieldFrom: "document_type",
+                valueFrom: "Cedula",
+                fieldTo: "document_id",
+                rule: "mask",
+                mask: "999-9999999-9",
+              },
+              {
+                fieldFrom: "document_type",
+                valueFrom: "RNC",
+                fieldTo: "document_id",
+                rule: "mask",
+                mask: "9999999",
+              },
+              {
+                fieldFrom: "document_type",
+                valueFrom: "Cedula de Extranjería",
+                fieldTo: "document_id",
+                rule: "nomask",
+                mask: "",
+              },
         ],
         fields:[
             {
@@ -74,7 +102,7 @@ const fieldsPages = {
                 mask:'',
                 model:'employee', 
                 display:['create','update'],
-                col:6
+                col:4
             },
             {
                 label: 'Apellidos', 
@@ -84,7 +112,7 @@ const fieldsPages = {
                 mask:'',
                 model:'employee',
                 display:['create','update'],
-                col:6
+                col:4
             },
 
             {
@@ -95,8 +123,23 @@ const fieldsPages = {
                 mask:'999-999-9999',
                 model:'employee',
                 display:['create','update'],
-                col:6
+                col:4
             },
+            {
+                label: "Tipo de Documento",
+                name: "document_type",
+                value: [
+                  { label: "Cedula", value: "Cedula" },
+                  { label: "Pasaporte", value: "Pasaporte" },
+                  { label: "RNC", value: "RNC" },
+                  { label: "Cedula de Extranjería", value: "Cedula de Extranjería" },
+                ],
+                type: "select",
+                mask: "",
+                model: "employee",
+                display: ["create", "update"],
+                col: 6,
+              },
             {
                 label: 'Cedula', 
                 name:'document_id',
